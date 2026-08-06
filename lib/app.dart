@@ -31,19 +31,32 @@ class SaitamaGomiApp extends ConsumerWidget {
     );
   }
 
-  static ThemeData _theme(Brightness brightness) => ThemeData(
-    colorScheme: ColorScheme.fromSeed(
+  static ThemeData _theme(Brightness brightness) {
+    final colorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF2F7A4F),
       brightness: brightness,
-    ),
-    useMaterial3: true,
-    // Material 3 の AppBar は、コンテンツがその下に潜ると
-    // surfaceTint（＝シード色の緑）を重ねて浮き上がって見せる仕様になっている。
-    // このアプリのヘッダーは画面名を出しているだけで、スクロール位置に応じて
-    // 色が変わる必要はなく、下方向にスクロールするたびにヘッダーが緑に光って
-    // 見えるだけなので、この着色を止める。
-    appBarTheme: const AppBarTheme(elevation: 0, scrolledUnderElevation: 0),
-  );
+    );
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      // Material 3 の AppBar は、コンテンツがその下に潜ると見た目を変える。
+      // このアプリのヘッダーは画面名を出しているだけで、スクロール位置に応じて
+      // 色が変わる必要はないので、その変化を止める。
+      //
+      // 効果は独立に2つあり、両方を止めないと色が変わってしまう
+      // （Flutter SDK の app_bar.dart の _AppBarState.build を参照）。
+      //   1. elevation に応じた surfaceTint（このアプリではシード色の緑）の重ね塗り
+      //      → scrolledUnderElevation を 0 にして止める
+      //   2. 背景色そのものの差し替え。既定では surfaceContainer（グレー系）になる
+      //      → backgroundColor を明示すると、潜っている間も同じ色が使われる
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
+      ),
+    );
+  }
 }
 
 /// 地区が未設定なら初回設定へ、設定済みなら本体へ。
