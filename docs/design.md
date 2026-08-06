@@ -54,7 +54,7 @@ DateLabel
 ```
 AreaCatalog.load()          assets/data/areas.json を読み込む（起動ごとに1回）
   areas:    確定地区の一覧。初回設定の主経路（地区を選ぶと曜日が決まる）が
-            全面的に依存するデータ（現状空。next-phase.md A章参照）
+            全面的に依存するデータ（77件投入済み。next-phase.md A章参照）
   presets:  曜日入力の雛形。地区が見つからない代替経路でのみ使う
 
 SettingsRepository           shared_preferences 経由でCollectionAreaを1件だけ保存
@@ -111,9 +111,10 @@ AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPageから遷移
 
 **現状の`AreaEditorPage`は曜日の手入力を主UIとして描いているが、これは
 [requirements.md](requirements.md) 4.1節で定めた「地区を選べば曜日は自動で決まる」という
-目標形ではなく、地区データが空である現状に合わせた暫定の姿。** `areas.json`にデータが入り
-次第、区→地区選択を主UIに置き換え、曜日の手入力（現行の`_CategoryEditor`一式）は
-「地区が見つからない」を選んだ場合の代替経路に格下げする（詳細はnext-phase.md A章）。
+目標形ではない。** `areas.json`のデータはすでに入っているので、この画面を
+区→地区選択を主UIに置き換える作業（次に着手すべき残タスク）だけが残っている。
+曜日の手入力（現行の`_CategoryEditor`一式）は「地区が見つからない」を選んだ場合の
+代替経路に格下げする（詳細はnext-phase.md A章）。
 `_applyPreset`が`CollectionArea`を受けて`_drafts`に反映する処理は、対象が`presets`か`areas`かに
 関わらず同じ形で再利用できる見込み。
 

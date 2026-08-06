@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "source": "さいたま市「家庭ごみの出し方」 https://www.city.saitama.lg.jp/001/006/010/003/",
-  "disclaimer": "収集曜日は地区ごとに異なります。ここに入っているのは出発点となる雛形で、地区の確定した曜日ではありません。市の収集日カレンダーで確認したうえで設定画面から調整してください。",
+  "version": 2,
+  "source": "さいたま市「ごみ分別辞典、収集日カレンダーをご利用ください！」 https://www.city.saitama.lg.jp/001/006/010/003/p042612.html?page=area",
+  "disclaimer": "areasは、市の「収集日カレンダー」が公開しているデータをもとに機械的に生成したものです（生成方法はscripts/update_areas_json.mjs参照）。町名地番変更や収集ルールの変更が反映されるまでにずれが生じることがあるため、初回設定で選んだあとも実際の収集日と食い違う場合は市の最新情報で確認し、設定画面から曜日を調整してください。presetsは町丁目データに一致する地区が見つからない場合の、曜日入力の出発点となる雛形です。",
   "presets": [
     {
       "id": "preset-mon-thu",
@@ -10,7 +10,14 @@
       "note": "もえるごみ以外の曜日は地区ごとに違うため入っていません。設定画面で追加してください。",
       "earlyMorning": false,
       "rules": {
-        "burnable": [{ "weekday": 1 }, { "weekday": 4 }]
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ]
       }
     },
     {
@@ -20,9 +27,2866 @@
       "note": "もえるごみ以外の曜日は地区ごとに違うため入っていません。設定画面で追加してください。",
       "earlyMorning": false,
       "rules": {
-        "burnable": [{ "weekday": 2 }, { "weekday": 5 }]
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ]
       }
     }
   ],
-  "areas": []
+  "areas": [
+    {
+      "id": "gomisuke-1",
+      "ward": "西区",
+      "name": "内野本郷・指扇領辻・清河寺・高木・中釘・西新井・平方領々家・峰岸・三橋６丁目・宮前町・西大宮１～３丁目（旧指扇地区を除く）・西大宮４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=1）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-2",
+      "ward": "西区",
+      "name": "指扇・指扇領別所・宝来・西大宮１～３丁目（旧指扇地区）",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=2）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-3",
+      "ward": "西区",
+      "name": "飯田・飯田新田・植田谷本・植田谷本村新田・佐知川・三条町・島根・昭和・塚本（大字）・塚本町１～３丁目・土屋・中野林・西遊馬・二ツ宮・プラザ・水判土・三橋５丁目・湯木町１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=3）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-4",
+      "ward": "北区",
+      "name": "日進町１丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=4）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-5",
+      "ward": "北区",
+      "name": "植竹町１・２丁目・土呂町・土呂町１・２丁目・盆栽町・見沼１～３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=5）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-6",
+      "ward": "北区",
+      "name": "大成町４丁目・東大成町１・２丁目・宮原町１・２・４丁目・吉野町１・２丁目・今羽町・本郷町",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=6）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-7",
+      "ward": "北区",
+      "name": "櫛引町２丁目・日進町２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=7）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-8",
+      "ward": "北区",
+      "name": "奈良町・日進町３丁目・別所町・宮原町３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=8）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-9",
+      "ward": "中央区",
+      "name": "大戸１～６丁目・新中里１～５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=9）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-10",
+      "ward": "中央区",
+      "name": "下落合（大字）・下落合２・３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=10）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-11",
+      "ward": "中央区",
+      "name": "鈴谷１～９丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=11）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-12",
+      "ward": "中央区",
+      "name": "下落合４～７丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=12）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-13",
+      "ward": "中央区",
+      "name": "桜丘１・２丁目・本町西１～６丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=13）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-14",
+      "ward": "中央区",
+      "name": "本町東１～７丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=14）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-15",
+      "ward": "中央区",
+      "name": "円阿弥１～７丁目・上落合１～９丁目・新都心",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=15）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-16",
+      "ward": "中央区",
+      "name": "上峰１～４丁目・八王子１～５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=16）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-17-am",
+      "ward": "大宮区",
+      "name": "吉敷町１丁目・吉敷町２丁目（線路より東）・下町１～３丁目・大門町１～３丁目・仲町１～３丁目・宮町１～５丁目",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=17）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-17-std",
+      "ward": "大宮区",
+      "name": "東町１・２丁目・天沼町１・２丁目・吉敷町３・４丁目・北袋町１・２丁目・浅間町１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=17）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-18",
+      "ward": "大宮区",
+      "name": "寿能町１・２丁目・高鼻町１～４丁目・土手町１～３丁目・堀の内町１～３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=18）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-19",
+      "ward": "大宮区",
+      "name": "三橋１丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=19）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-20",
+      "ward": "大宮区",
+      "name": "三橋２～４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=20）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-21",
+      "ward": "大宮区",
+      "name": "大成町２・３丁目・大原６・７丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=21）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-22",
+      "ward": "大宮区",
+      "name": "櫛引町１丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=22）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-23-am",
+      "ward": "大宮区",
+      "name": "吉敷町２丁目（線路より西）・桜木町１～３丁目",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=23）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-23-std",
+      "ward": "大宮区",
+      "name": "大成町１丁目・上小町・桜木町４丁目・錦町",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=23）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-24",
+      "ward": "見沼区",
+      "name": "南中野・南中丸",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=24）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-25",
+      "ward": "見沼区",
+      "name": "加田屋１・２丁目・加田屋新田・片柳（大字）・片柳１・２丁目・片柳東・上山口新田・笹丸・新右エ門新田・染谷（大字）・染谷１～３丁目・中川・西山新田・西山村新田・東新井・御蔵・見山・山",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=25）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-26",
+      "ward": "見沼区",
+      "name": "東大宮１～７丁目・堀崎町・丸ヶ崎（大字）・丸ヶ崎町",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=26）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-27",
+      "ward": "見沼区",
+      "name": "小深作・島町・島町１～２丁目・春岡１～３丁目・春野１～４丁目・深作（大字）・深作１～５丁目・宮ヶ谷塔（大字）・宮ヶ谷塔１～４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=27）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-28",
+      "ward": "見沼区",
+      "name": "大谷・新堤・東宮下（大字）・東宮下１～３丁目・東門前・膝子・風渡野（大字）・風渡野１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=28）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-29",
+      "ward": "見沼区",
+      "name": "大和田町１・２丁目・蓮沼",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=29）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-30",
+      "ward": "桜区",
+      "name": "田島４丁目・西堀ラミーユ浦和ハイライズ",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=30）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-31",
+      "ward": "桜区",
+      "name": "大久保団地・上大久保・下大久保",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=31）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-32",
+      "ward": "桜区",
+      "name": "田島１～３・５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=32）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-33",
+      "ward": "桜区",
+      "name": "田島６丁目（団地）",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=33）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-34",
+      "ward": "桜区",
+      "name": "大久保領家・五関・桜田１～３丁目・神田・塚本・道場（大字）・道場１・３～５丁目・西堀・西堀１～10丁目・町谷（大字）・町谷１～４丁目・南元宿・南元宿１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=34）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-35",
+      "ward": "桜区",
+      "name": "新開・新開１～４丁目・田島７～10丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=35）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-36",
+      "ward": "桜区",
+      "name": "道場２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=36）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-37",
+      "ward": "桜区",
+      "name": "在家・栄和・栄和１～６丁目・宿・白鍬・中島・中島１～４丁目・山久保・山久保１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=37）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-38-am",
+      "ward": "浦和区",
+      "name": "高砂１丁目・仲町１丁目・東高砂町",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=38）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-38-std",
+      "ward": "浦和区",
+      "name": "神明１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=38）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-39-am",
+      "ward": "浦和区",
+      "name": "北浦和１・３丁目",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=39）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-39-std",
+      "ward": "浦和区",
+      "name": "北浦和２丁目・針ヶ谷１～３丁目・前地１～３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=39）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-40-am",
+      "ward": "浦和区",
+      "name": "高砂３丁目・仲町２丁目・東仲町",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=40）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-40-std",
+      "ward": "浦和区",
+      "name": "大原１～５丁目・上木崎１～８丁目・木崎１～５丁目・北浦和５丁目・皇山町・大東１～３丁目・針ヶ谷４丁目・三崎・領家４・７丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=40）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-41",
+      "ward": "浦和区",
+      "name": "北浦和４丁目・常盤５・９・10丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=41）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-42",
+      "ward": "浦和区",
+      "name": "駒場１・２丁目・瀬ヶ崎１～５丁目・領家１～３・５・６丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=42）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-43-am",
+      "ward": "浦和区",
+      "name": "高砂２丁目・常盤１・２丁目",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=43）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-43-std",
+      "ward": "浦和区",
+      "name": "岸町６・７丁目・高砂４丁目・常盤３・４・６～８丁目・仲町３・４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=43）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-44",
+      "ward": "浦和区",
+      "name": "岸町１～５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=44）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-45",
+      "ward": "浦和区",
+      "name": "東岸町・元町１～３丁目・本太１～５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=45）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-46",
+      "ward": "南区",
+      "name": "内谷４～７丁目・白幡１・３～６丁目・沼影１～３丁目・曲本４・５丁目・南浦和１～４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=46）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-47",
+      "ward": "南区",
+      "name": "辻２～６丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=47）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-48",
+      "ward": "南区",
+      "name": "円正寺・大谷口（大字）・太田窪",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=48）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-49",
+      "ward": "南区",
+      "name": "大谷口（飛地）・広ヶ谷戸",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=49）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-50",
+      "ward": "南区",
+      "name": "神明１・２丁目・南本町１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=50）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-51",
+      "ward": "南区",
+      "name": "根岸１～５丁目・四谷１～３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=51）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-52",
+      "ward": "南区",
+      "name": "鹿手袋１～７丁目・関１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=52）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-53",
+      "ward": "南区",
+      "name": "内谷１～３丁目・曲本１～３丁目・松本１～４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=53）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-54",
+      "ward": "南区",
+      "name": "太田窪２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=54）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-55",
+      "ward": "南区",
+      "name": "大谷場１・２丁目・太田窪４・５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=55）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-56",
+      "ward": "南区",
+      "name": "別所１～７丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=56）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-57",
+      "ward": "南区",
+      "name": "白幡２丁目・辻１・７・８丁目・文蔵１～５丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=57）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-58-am",
+      "ward": "南区",
+      "name": "南浦和団地",
+      "earlyMorning": true,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=58）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-58-std",
+      "ward": "南区",
+      "name": "大谷口（イーストシティ）・太田窪（イーストシティ）",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=58）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-59",
+      "ward": "緑区",
+      "name": "芝原１～３丁目・馬場１・２丁目・松木１～３丁目・三浦・見沼・三室・宮本１・２丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=59）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-60",
+      "ward": "緑区",
+      "name": "太田窪３丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=60）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-61",
+      "ward": "緑区",
+      "name": "大牧・大間木（大字）・大間木２・３丁目・大谷口・下山口新田・中尾・蓮見新田・東浦和１～９丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=61）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-62",
+      "ward": "緑区",
+      "name": "大崎・上野田・北原・玄蕃新田・下野田・大門・代山・高畑・寺山・中野田・南部領辻・東大門１～３丁目・間宮・美園1～6丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=62）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-63",
+      "ward": "緑区",
+      "name": "道祖土２丁目・山崎１丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=63）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-64",
+      "ward": "緑区",
+      "name": "太田窪１丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=64）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-65",
+      "ward": "緑区",
+      "name": "道祖土１・３・４丁目・原山１～４丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=65）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-66",
+      "ward": "緑区",
+      "name": "東浦和（イーストシティ）",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=66）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 3
+          },
+          {
+            "weekday": 6
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 4
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-67",
+      "ward": "岩槻区",
+      "name": "愛宕町・岩槻・加倉1564-1～1596-3・掛・金重・並木1・2丁目・西原・西原台1・2丁目・西町1～5丁目・日の出町・平林寺・本宿・馬込・南辻・南平野・箕輪・宮町1・2丁目・美幸町",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=67）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 1
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 4
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-68",
+      "ward": "岩槻区",
+      "name": "相野原・上野（大字）・上野1～6丁目・裏慈恩寺・表慈恩寺・鹿室・上里1・2丁目・古ヶ場（大字）・古ヶ場1・2丁目・小溝・慈恩寺・諏訪1～5丁目・徳力・東岩槻1～3丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=68）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 2
+          },
+          {
+            "weekday": 5
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 3
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 1
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-69",
+      "ward": "岩槻区",
+      "name": "大口・太田1～3丁目・大戸・大野島・大森・大谷・城町1・2丁目・仲町1・2丁目・長宮・新方須賀・東岩槻4～6丁目・本町3～6丁目・本丸1～4丁目・増長・南平野1～5丁目",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=69）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 2
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 2
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "gomisuke-70",
+      "ward": "岩槻区",
+      "name": "飯塚・浮谷・尾ヶ崎・尾ヶ崎新田・釣上・釣上新田・加倉1～5丁目・加倉（1564-1～1596-3を除く）・柏崎・黒谷・笹久保・笹久保新田・城南1～5丁目・真福寺・末田・高曽根・野孫・原町・東町1・2丁目・府内1～4丁目・本町1・2丁目・美園東1～3丁目・南下新井・村国・谷下・横根",
+      "earlyMorning": false,
+      "note": "さいたま市「収集日カレンダー」から自動生成（scripts/update_areas_json.mjs、取得日:2026-08-06、areaID=70）",
+      "rules": {
+        "burnable": [
+          {
+            "weekday": 1
+          },
+          {
+            "weekday": 4
+          }
+        ],
+        "nonBurnable": [
+          {
+            "weekday": 5
+          }
+        ],
+        "hazardous": [
+          {
+            "weekday": 5
+          }
+        ],
+        "recyclable1": [
+          {
+            "weekday": 3
+          }
+        ],
+        "recyclable2": [
+          {
+            "weekday": 5
+          }
+        ]
+      }
+    }
+  ]
 }
