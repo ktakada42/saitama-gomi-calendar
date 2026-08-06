@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "source": "さいたま市「家庭ごみの出し方」 https://www.city.saitama.lg.jp/001/006/010/003/",
+  "disclaimer": "収集曜日は地区ごとに異なります。ここに入っているのは出発点となる雛形で、地区の確定した曜日ではありません。市の収集日カレンダーで確認したうえで設定画面から調整してください。",
+  "presets": [
+    {
+      "id": "preset-mon-thu",
+      "ward": "",
+      "name": "もえるごみが月・木の地区",
+      "note": "もえるごみ以外の曜日は地区ごとに違うため入っていません。設定画面で追加してください。",
+      "earlyMorning": false,
+      "rules": {
+        "burnable": [{ "weekday": 1 }, { "weekday": 4 }]
+      }
+    },
+    {
+      "id": "preset-tue-fri",
+      "ward": "",
+      "name": "もえるごみが火・金の地区",
+      "note": "もえるごみ以外の曜日は地区ごとに違うため入っていません。設定画面で追加してください。",
+      "earlyMorning": false,
+      "rules": {
+        "burnable": [{ "weekday": 2 }, { "weekday": 5 }]
+      }
+    }
+  ],
+  "areas": []
+}

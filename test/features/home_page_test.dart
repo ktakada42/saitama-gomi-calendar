@@ -1,0 +1,77 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:saitama_gomi/features/home/home_page.dart';
+
+import '../support/test_app.dart';
+
+void main() {
+  testWidgets('明日が収集日なら区分と日付を大きく出す', (tester) async {
+    // 2026年8月9日は日曜。翌10日は月曜でもえるごみの日。
+    await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 9));
+
+    expect(find.text('明日'), findsOneWidget);
+    expect(find.text('8月10日(月)'), findsOneWidget);
+    expect(find.text('もえるごみ'), findsWidgets);
+    expect(find.text('朝8:30までに出す'), findsOneWidget);
+  });
+
+  testWidgets('明日に収集が無ければそう書く', (tester) async {
+    // 2026年8月6日（木）の翌日は金曜で、この地区は収集がない。
+    await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 6));
+
+    expect(find.text('収集はありません'), findsOneWidget);
+  });
+
+  testWidgets('明日に複数の区分が重なればすべて出す', (tester) async {
+    // 8月11日は第2火曜。もえないごみと資源物2類が重なる。
+    await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 10));
+
+    expect(find.text('もえないごみ'), findsWidgets);
+    expect(find.text('資源物2類'), findsWidgets);
+  });
+
+  testWidgets('早朝収集地区なら明日の期限が5:30になる', (tester) async {
+    await pumpApp(
+      tester,
+      const HomePage(),
+      area: sampleArea.copyWith(earlyMorning: true),
+      today: DateTime(2026, 8, 9),
+    );
+
+    expect(find.text('朝5:30までに出す'), findsOneWidget);
+  });
+
+  testWidgets('区と地区名をタイトルに出す', (tester) async {
+    await pumpApp(tester, const HomePage());
+
+    expect(find.text('浦和区　テスト地区'), findsOneWidget);
+  });
+
+  testWidgets('月1回の区分の次回もトップから分かる', (tester) async {
+    // 8月12日時点で、もえないごみ（第2火）の次回は9月8日。
+    await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 12));
+
+    expect(find.text('区分ごとの次の収集'), findsOneWidget);
+    expect(find.text('9月8日(火)'), findsOneWidget);
+  });
+
+  testWidgets('日をタップすると出し方が読める', (tester) async {
+    await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 9));
+
+    await tester.tap(find.text('明日'));
+    await tester.pumpAndSettle();
+
+    // カード側は「朝8:30までに出す」なので、この完全一致はシート側だけに当たる。
+    expect(find.text('朝8:30まで'), findsOneWidget);
+    expect(find.textContaining('中身の見える袋'), findsWidgets);
+  });
+
+  testWidgets('収集曜日が未設定なら設定を促す', (tester) async {
+    await pumpApp(
+      tester,
+      const HomePage(),
+      area: sampleArea.copyWith(rules: const {}),
+    );
+
+    expect(find.textContaining('収集曜日がまだ設定されていません'), findsOneWidget);
+  });
+}
