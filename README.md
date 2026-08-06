@@ -8,6 +8,14 @@ iOSファースト、Flutter実装なので将来Androidにも展開できます
 市の公式アプリと同じ情報を扱いますが、**トップページを開いた瞬間に「明日は何ごみか」が分かる**
 ことだけを目的に組み直しています。
 
+## ドキュメント
+
+- [docs/requirements.md](docs/requirements.md) — 仕様書（何を作るか）
+- [docs/design.md](docs/design.md) — 設計書（どう作ってあるか）
+- [docs/next-phase.md](docs/next-phase.md) — 次フェーズの仕様・設計（地区表取り込み、ローカル通知）
+
+以下はこのREADME内の要約。詳細は上記を参照。
+
 ## 画面
 
 | 画面 | 役割 |
@@ -103,6 +111,5 @@ git config core.hooksPath .githooks
 
 ## 今後
 
-- 市の地区表の取り込み（`areas.json` の `areas` を埋める）
-- 収集日前夜のローカル通知
-- 粗大ごみ判定・「これは出せるか」をAIに聞く機能（ファーストリリース対象外）
+[docs/next-phase.md](docs/next-phase.md) を参照。市の地区表の取り込みと収集日前夜のローカル通知が
+次に着手する2項目。粗大ごみ判定・「これは出せるか」をAIに聞く機能はファーストリリース対象外。
