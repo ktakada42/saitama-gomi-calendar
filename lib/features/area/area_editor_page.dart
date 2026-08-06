@@ -254,7 +254,10 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
     );
     await ref.read(selectedAreaProvider.notifier).save(area);
     if (!mounted) return;
-    if (!widget.isOnboarding) Navigator.of(context).pop();
+    // この画面は常に AreaPickerPage（初回設定時）か SettingsPage（変更時）から
+    // push されて開くので、保存後は常に pop してよい。初回設定時は pop した先の
+    // _Root が selectedAreaProvider の更新を検知して HomeShell に切り替わる。
+    Navigator.of(context).pop();
   }
 }
 

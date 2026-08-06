@@ -6,16 +6,23 @@ import '../support/test_app.dart';
 
 void main() {
   group('初回起動', () {
-    testWidgets('地区が未設定なら設定画面から始まる', (tester) async {
+    testWidgets('地区が未設定なら地区確認画面から始まる', (tester) async {
       await pumpRootApp(tester, area: null);
 
-      expect(find.text('お住まいの地区を設定'), findsOneWidget);
+      expect(find.text('お住まいの地区を確認'), findsOneWidget);
+      expect(find.text('郵便番号で探す'), findsOneWidget);
+      // 郵便番号は保存されない旨の案内が出ていること。
+      expect(find.textContaining('保存はされません'), findsOneWidget);
       // 設定前は本体のタブが出ていないこと。
       expect(find.text('カレンダー'), findsNothing);
     });
 
-    testWidgets('区と曜日を設定するとトップページに進む', (tester) async {
+    testWidgets('地区が見つからない場合は曜日を手入力できる', (tester) async {
       await pumpRootApp(tester, area: null);
+
+      await tester.tap(find.text('自分の地区が見つからない'));
+      await tester.pumpAndSettle();
+      expect(find.text('お住まいの地区を設定'), findsOneWidget);
 
       await tester.tap(find.text('見沼区'));
       await tester.pumpAndSettle();
@@ -28,11 +35,71 @@ void main() {
       expect(find.byIcon(Icons.calendar_month_outlined), findsOneWidget);
     });
 
-    testWidgets('曜日をひとつも選ばないと先に進めない', (tester) async {
+    testWidgets('手入力で曜日をひとつも選ばないと先に進めない', (tester) async {
       await pumpRootApp(tester, area: null);
+
+      await tester.tap(find.text('自分の地区が見つからない'));
+      await tester.pumpAndSettle();
 
       final button = find.widgetWithText(FilledButton, 'この設定ではじめる');
       expect(tester.widget<FilledButton>(button).onPressed, isNull);
+    });
+
+    testWidgets('郵便番号で1件に絞れたら選ぶだけで進める', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      await tester.enterText(find.byType(TextField), '3300001');
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+      await tester.tap(find.text('見沼区　テスト町一丁目'));
+      await tester.pumpAndSettle();
+
+      // 選んだ地区の曜日があらかじめ反映されている。
+      expect(find.text('お住まいの地区を設定'), findsOneWidget);
+      await tester.tap(find.text('この設定ではじめる'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+    });
+
+    testWidgets('郵便番号で候補が複数あれば一覧から選ぶ', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      await tester.enterText(find.byType(TextField), '3300002');
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
+      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
+
+      await tester.tap(find.text('大宮区　テスト町二丁目西側'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('この設定ではじめる'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
+    });
+
+    testWidgets('該当しない郵便番号ならその旨を伝える', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      await tester.enterText(find.byType(TextField), '3300099');
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('特定できませんでした'), findsOneWidget);
+    });
+
+    testWidgets('郵便番号を使わず一覧からも選べる', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      await tester.tap(find.text('大宮区'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
+      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
     });
   });
 
@@ -65,6 +132,27 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('岩槻区　テスト地区'), findsOneWidget);
+    });
+
+    testWidgets('地区を選び直すから郵便番号での再設定に入れる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('地区を選び直す'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('お住まいの地区を確認'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), '3300001');
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('見沼区　テスト町一丁目'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('保存する'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
     });
   });
 }

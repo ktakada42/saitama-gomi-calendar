@@ -53,7 +53,50 @@ final testCatalog = AreaCatalog.fromJson({
       },
     },
   ],
-  'areas': <dynamic>[],
+  // 郵便番号検索のテスト用に、1件に絞れるケース・複数候補が残るケースの両方を仕込む。
+  'areas': [
+    {
+      'id': 'test-area-single',
+      'ward': '見沼区',
+      'name': 'テスト町一丁目',
+      'rules': {
+        'burnable': [
+          {'weekday': 2},
+          {'weekday': 5},
+        ],
+      },
+    },
+    {
+      'id': 'test-area-multi-a',
+      'ward': '大宮区',
+      'name': 'テスト町二丁目東側',
+      'rules': {
+        'burnable': [
+          {'weekday': 1},
+          {'weekday': 4},
+        ],
+      },
+    },
+    {
+      'id': 'test-area-multi-b',
+      'ward': '大宮区',
+      'name': 'テスト町二丁目西側',
+      'earlyMorning': true,
+      'rules': {
+        'burnable': [
+          {'weekday': 3},
+          {'weekday': 6},
+        ],
+      },
+    },
+  ],
+  'postalAreas': {
+    // 1件に絞れる。
+    '3300001': ['test-area-single'],
+    // 複数候補が残る。
+    '3300002': ['test-area-multi-a', 'test-area-multi-b'],
+    // 3300099 はどの地区にも対応しない（該当なしのテスト用に意図的に未登録）。
+  },
 });
 
 /// テストの既定ビューポート（800x600）は横長で、縦画面前提のこのアプリとは

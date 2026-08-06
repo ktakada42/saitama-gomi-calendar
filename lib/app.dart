@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'features/area/area_editor_page.dart';
+import 'features/area/area_picker_page.dart';
 import 'features/shell/home_shell.dart';
 import 'providers.dart';
 
@@ -46,7 +46,7 @@ class _Root extends ConsumerWidget {
     return switch (area) {
       AsyncData(:final value) =>
         value == null
-            ? const AreaEditorPage(isOnboarding: true)
+            ? const AreaPickerPage(isOnboarding: true)
             : const HomeShell(),
       AsyncError(:final error) => Scaffold(
         body: Center(child: Text('設定の読み込みに失敗しました\n$error')),
