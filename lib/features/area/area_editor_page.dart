@@ -114,27 +114,31 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
 
   bool get _hasAnyDay => _drafts.values.any((d) => d.weekdays.isNotEmpty);
 
+  /// 地区が特定できず、曜日をゼロから手入力する経路かどうか。
+  ///
+  /// `AreaPickerPage`で地区を選んだ場合は曜日が確定した状態で渡ってくるので、
+  /// 入力を助けるための雛形（プリセット）を出す意味がない。
+  /// 「自分の地区が見つからない」を選んだときだけ雛形を出す。
+  bool get _isManualEntry => widget.initial == null;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final catalog = ref.watch(areaCatalogProvider).value;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isOnboarding ? 'お住まいの地区を設定' : '地区の設定'),
-        automaticallyImplyLeading: !widget.isOnboarding,
-      ),
+      appBar: AppBar(title: Text(_isManualEntry ? '収集曜日を自分で設定' : '収集曜日の確認')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
-          if (widget.isOnboarding) ...[
-            Text(
-              'ごみの収集曜日は地区ごとに違います。お住まいの区と、収集曜日を設定してください。'
-              '曜日は市から配布される収集日カレンダーで確認できます。',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 20),
-          ],
+          Text(
+            _isManualEntry
+                ? 'お住まいの区と、区分ごとの収集曜日を設定してください。'
+                      '曜日は市から配布される収集日カレンダーで確認できます。'
+                : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで調整できます。',
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 20),
           _SectionTitle('お住まいの区'),
           const SizedBox(height: 8),
           Wrap(
@@ -150,7 +154,9 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
             ],
           ),
           const SizedBox(height: 24),
-          if (catalog != null && catalog.presets.isNotEmpty) ...[
+          if (_isManualEntry &&
+              catalog != null &&
+              catalog.presets.isNotEmpty) ...[
             _SectionTitle('入力の出発点'),
             const SizedBox(height: 4),
             Text(
@@ -202,15 +208,9 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
               border: OutlineInputBorder(),
             ),
           ),
-          if (catalog != null && catalog.disclaimer.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            Text(
-              catalog.disclaimer,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
+          // データの出典・但し書きはここには出さない。
+          // 曜日を確認・調整している最中に読ませる情報ではないので、
+          // 設定画面の「このアプリについて」にまとめてある。
         ],
       ),
       bottomNavigationBar: SafeArea(

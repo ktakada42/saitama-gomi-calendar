@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/area_catalog.dart';
@@ -36,6 +37,25 @@ class SelectedArea extends AsyncNotifier<CollectionArea?> {
 
 final selectedAreaProvider =
     AsyncNotifierProvider<SelectedArea, CollectionArea?>(SelectedArea.new);
+
+/// 外観設定（ライト／ダーク／システム）。デフォルトはライトモード。
+class ThemeModeController extends AsyncNotifier<ThemeMode> {
+  @override
+  Future<ThemeMode> build() async {
+    final repository = await ref.watch(settingsRepositoryProvider.future);
+    return repository.readThemeMode();
+  }
+
+  Future<void> save(ThemeMode mode) async {
+    final repository = await ref.read(settingsRepositoryProvider.future);
+    await repository.writeThemeMode(mode);
+    state = AsyncData(mode);
+  }
+}
+
+final themeModeProvider = AsyncNotifierProvider<ThemeModeController, ThemeMode>(
+  ThemeModeController.new,
+);
 
 /// 今日の日付（時刻は落としてある）。
 ///

@@ -44,6 +44,8 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           const Divider(height: 1),
+          const _ThemeModeTile(),
+          const Divider(height: 1),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
@@ -104,29 +106,39 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           const Divider(height: 32),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          // 出典・データの但し書きは、普段は畳んでおく。
+          // 収集日を知りたいだけの利用者には不要な情報だが、
+          // 情報の正確さを確かめたい人には必要なので、設定の最下部に置く。
+          ExpansionTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('このアプリについて'),
+            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '分別区分と出し方はさいたま市の案内をもとにした要約です。'
+                '判断に迷うものや最新の情報は市の公式ページで確認してください。',
+                style: theme.textTheme.bodySmall,
+              ),
+              if (catalog != null && catalog.disclaimer.isNotEmpty) ...[
+                const SizedBox(height: 12),
                 Text(
-                  'このアプリについて',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  catalog.disclaimer,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '分別区分と出し方はさいたま市の案内をもとにした要約です。'
-                  '判断に迷うものや最新の情報は市の公式ページで確認してください。',
-                  style: theme.textTheme.bodySmall,
-                ),
-                if (catalog != null && catalog.source.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Text(catalog.source, style: theme.textTheme.bodySmall),
-                ],
               ],
-            ),
+              if (catalog != null && catalog.source.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  catalog.source,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),
@@ -154,5 +166,62 @@ class SettingsPage extends ConsumerWidget {
     if (weeks == null) return '毎週$weekdays曜日';
     final sorted = weeks.toList()..sort();
     return '第${sorted.join('・第')}$weekdays曜日';
+  }
+}
+
+/// 外観（ライト／ダーク／システム）の切り替え。
+///
+/// 端末のダークモード設定に勝手に追従すると、カレンダーの区分色の見え方が
+/// 変わって戸惑うことがあるため、既定はライト固定にして、
+/// 追従したい人が明示的に「端末の設定に合わせる」を選べるようにしている。
+class _ThemeModeTile extends ConsumerWidget {
+  const _ThemeModeTile();
+
+  static const _labels = {
+    ThemeMode.light: 'ライト',
+    ThemeMode.dark: 'ダーク',
+    ThemeMode.system: '端末の設定に合わせる',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider).value ?? ThemeMode.light;
+
+    return ListTile(
+      leading: const Icon(Icons.brightness_6_outlined),
+      title: const Text('画面の明るさ'),
+      subtitle: Text(_labels[mode]!),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showPicker(context, ref, mode),
+    );
+  }
+
+  Future<void> _showPicker(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeMode current,
+  ) async {
+    final selected = await showModalBottomSheet<ThemeMode>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: RadioGroup<ThemeMode>(
+          groupValue: current,
+          onChanged: (value) => Navigator.of(context).pop(value),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final entry in _labels.entries)
+                RadioListTile<ThemeMode>(
+                  value: entry.key,
+                  title: Text(entry.value),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (selected != null) {
+      await ref.read(themeModeProvider.notifier).save(selected);
+    }
   }
 }
