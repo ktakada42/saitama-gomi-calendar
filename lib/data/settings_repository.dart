@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/collection_area.dart';
 
-/// 利用者が設定した地区の保存先。
+/// 利用者が設定した地区・外観設定の保存先。
 ///
 /// 地区はプリセットを選んだあと曜日を調整できるので、IDだけでは復元できない。
-/// そのため地区オブジェクトをまるごとJSONで持つ。保存するのはこれ1件だけで、
+/// そのため地区オブジェクトをまるごとJSONで持つ。保存するのはこれと外観設定だけで、
 /// 個人を特定する情報は含まれない。
 class SettingsRepository {
   const SettingsRepository(this._prefs);
@@ -15,6 +16,7 @@ class SettingsRepository {
   final SharedPreferences _prefs;
 
   static const _areaKey = 'selected_area';
+  static const _themeModeKey = 'theme_mode';
 
   static Future<SettingsRepository> open() async =>
       SettingsRepository(await SharedPreferences.getInstance());
@@ -35,4 +37,16 @@ class SettingsRepository {
       _prefs.setString(_areaKey, jsonEncode(area.toJson()));
 
   Future<void> clear() => _prefs.remove(_areaKey);
+
+  /// 外観設定。未設定ならライトモード（システムのダークモードには自動追従しない）。
+  ThemeMode readThemeMode() {
+    final raw = _prefs.getString(_themeModeKey);
+    return ThemeMode.values.firstWhere(
+      (mode) => mode.name == raw,
+      orElse: () => ThemeMode.light,
+    );
+  }
+
+  Future<void> writeThemeMode(ThemeMode mode) =>
+      _prefs.setString(_themeModeKey, mode.name);
 }

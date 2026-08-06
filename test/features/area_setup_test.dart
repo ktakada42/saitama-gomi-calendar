@@ -22,7 +22,9 @@ void main() {
 
       await tester.tap(find.text('自分の地区が見つからない'));
       await tester.pumpAndSettle();
-      expect(find.text('お住まいの地区を設定'), findsOneWidget);
+      expect(find.text('収集曜日を自分で設定'), findsOneWidget);
+      // 地区が特定できない経路なので、入力を助ける雛形が出る。
+      expect(find.text('入力の出発点'), findsOneWidget);
 
       await tester.tap(find.text('見沼区'));
       await tester.pumpAndSettle();
@@ -57,7 +59,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // 選んだ地区の曜日があらかじめ反映されている。
-      expect(find.text('お住まいの地区を設定'), findsOneWidget);
+      expect(find.text('収集曜日の確認'), findsOneWidget);
+      // 地区が確定しているので、入力を助ける雛形は出さない。
+      expect(find.text('入力の出発点'), findsNothing);
       await tester.tap(find.text('この設定ではじめる'));
       await tester.pumpAndSettle();
 
@@ -124,7 +128,7 @@ void main() {
       await tester.tap(find.text('お住まいの地区'));
       await tester.pumpAndSettle();
 
-      expect(find.text('地区の設定'), findsOneWidget);
+      expect(find.text('収集曜日の確認'), findsOneWidget);
 
       await tester.tap(find.text('岩槻区'));
       await tester.pumpAndSettle();
@@ -153,6 +157,23 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+    });
+
+    testWidgets('画面の明るさは既定でライト、設定から切り替えられる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      // 端末がダークモードでも、既定はライト固定。
+      expect(find.text('ライト'), findsOneWidget);
+
+      await tester.tap(find.text('画面の明るさ'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('端末の設定に合わせる').last);
+      await tester.pumpAndSettle();
+
+      expect(find.text('端末の設定に合わせる'), findsOneWidget);
     });
   });
 }
