@@ -20,7 +20,6 @@ class SaitamaGomiApp extends ConsumerWidget {
       theme: _theme(Brightness.light),
       darkTheme: _theme(Brightness.dark),
       themeMode: themeMode,
-      scrollBehavior: const _AppScrollBehavior(),
       locale: const Locale('ja'),
       supportedLocales: const [Locale('ja')],
       localizationsDelegates: const [
@@ -32,31 +31,32 @@ class SaitamaGomiApp extends ConsumerWidget {
     );
   }
 
-  static ThemeData _theme(Brightness brightness) => ThemeData(
-    colorScheme: ColorScheme.fromSeed(
+  static ThemeData _theme(Brightness brightness) {
+    final colorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF2F7A4F),
       brightness: brightness,
-    ),
-    useMaterial3: true,
-  );
-}
-
-/// 縦画面固定・iOSファーストのこのアプリでは、Android由来の
-/// オーバースクロール時の発光（グロー）表示は出さず、iOSと同じ
-/// バウンス挙動だけにする。
-class _AppScrollBehavior extends MaterialScrollBehavior {
-  const _AppScrollBehavior();
-
-  @override
-  ScrollPhysics getScrollPhysics(BuildContext context) =>
-      const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
-
-  @override
-  Widget buildOverscrollIndicator(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) => child;
+    );
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      // Material 3 の AppBar は、コンテンツがその下に潜ると見た目を変える。
+      // このアプリのヘッダーは画面名を出しているだけで、スクロール位置に応じて
+      // 色が変わる必要はないので、その変化を止める。
+      //
+      // 効果は独立に2つあり、両方を止めないと色が変わってしまう
+      // （Flutter SDK の app_bar.dart の _AppBarState.build を参照）。
+      //   1. elevation に応じた surfaceTint（このアプリではシード色の緑）の重ね塗り
+      //      → scrolledUnderElevation を 0 にして止める
+      //   2. 背景色そのものの差し替え。既定では surfaceContainer（グレー系）になる
+      //      → backgroundColor を明示すると、潜っている間も同じ色が使われる
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
+      ),
+    );
+  }
 }
 
 /// 地区が未設定なら初回設定へ、設定済みなら本体へ。
