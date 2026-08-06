@@ -205,5 +205,25 @@ void main() {
 
       expect(find.text('端末の設定に合わせる'), findsOneWidget);
     });
+
+    testWidgets('前日のお知らせは既定でOFF、ONにすると時刻を選べる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      // 既定はOFF。時刻の項目もまだ出さない。
+      final toggle = find.widgetWithText(SwitchListTile, '前日にお知らせ');
+      expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
+      expect(find.text('お知らせの時刻'), findsNothing);
+
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<SwitchListTile>(toggle).value, isTrue);
+      // ONにすると時刻を選べるようになる。既定は20:00。
+      expect(find.text('お知らせの時刻'), findsOneWidget);
+      expect(find.text('20:00'), findsOneWidget);
+    });
   });
 }

@@ -40,6 +40,11 @@ CollectionCalendar(area)
 
 DateLabel
   └ 日付の日本語表記（相対表記「明日」「あさって」を含む）を作る純粋関数群
+
+CollectionReminderPlanner(calendar)
+  └ 「いつ何を通知すべきか」をCollectionReminderの一覧として計算する
+  └ OSの通知APIには触らない純粋な計算だけ。通知の中身とタイミングの判断を
+    単体テストで担保できるようにするため（next-phase.md B.4節）
 ```
 
 `CollectionCalendar`が「日付から区分を引く」ロジックの単一の入口になっており、画面側は
@@ -60,10 +65,19 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
   areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 
-SettingsRepository           shared_preferences 経由でCollectionAreaを1件だけ保存
+SettingsRepository           shared_preferences 経由で利用者の設定を保存
   readArea() / writeArea() / clear()
-  保存形式は CollectionArea.toJson() のJSON文字列まるごと。
-  IDだけでは復元できない（ユーザーがプリセットから曜日を調整できるため）
+    保存形式は CollectionArea.toJson() のJSON文字列まるごと。
+    IDだけでは復元できない（ユーザーがプリセットから曜日を調整できるため）
+  readThemeMode() / writeThemeMode()        外観（ライト/ダーク/システム）
+  readNotificationSettings() / write...()   通知のON/OFFと時刻
+    地区とは別キーにしてある。地区を選び直しても外観・通知の設定は保たれるべきなので。
+
+NotificationRepository       OSの通知センターへの予約（abstract）
+  requestPermission() / reschedule(reminders) / cancelAll()
+  実装は _PluginNotificationRepository（flutter_local_notifications）。
+  テストからは NoopNotificationRepository に差し替える
+  （ウィジェットテストではOSの通知プラグインを初期化できないため）
 ```
 
 `readArea()`は保存データのJSONパースに失敗しても例外を投げず`null`を返す。壊れた保存データで
@@ -87,10 +101,19 @@ todayProvider                Provider<DateTime>
 
 calendarProvider             Provider<CollectionCalendar?>
   selectedAreaProviderを購読し、areaがあればCollectionCalendarを作る。ないならnull
+
+themeModeProvider            AsyncNotifierProvider<ThemeModeController, ThemeMode>
+  外観設定。既定はライト（端末のダークモードに自動追従しない）
+
+notificationProvider         AsyncNotifierProvider<NotificationController, NotificationSettings>
+  通知のON/OFFと時刻。設定が変わるたび、また地区が変わるたびに
+  CollectionReminderPlannerで直近30日分を計算し直してOSに予約し直す
 ```
 
-画面が直接触るのはこの5つのproviderのみ。`AreaEditorPage`だけが
-`selectedAreaProvider.notifier`経由で書き込みを行う。
+`NotificationController`は通知を差分更新せず、毎回すべて取り消してから張り直す。
+古い予約が残らないので、地区や時刻を変えたときの状態のずれを考えなくて済む。
+地区の変更に追従するため`build()`で`selectedAreaProvider`を`ref.listen`している
+（この経路での失敗は握りつぶす。通知が出ないだけで、収集日の確認という主目的は妨げない）。
 
 ## 5. 画面構成・遷移
 
