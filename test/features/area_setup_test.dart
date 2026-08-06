@@ -54,6 +54,19 @@ void main() {
       expect(find.byType(SwitchListTile), findsOneWidget);
     });
 
+    testWidgets('地区データを読み込めなくても手入力に進める', (tester) async {
+      await pumpRootApp(tester, area: null, failCatalog: true);
+
+      // 読み込みに失敗したまま回り続けず、何が起きたかを伝える。
+      expect(find.text('地区データを読み込めませんでした。'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+
+      // 地区データが無くても、曜日を手入力すれば使える。
+      await tester.tap(find.text('収集曜日を自分で設定する'));
+      await tester.pumpAndSettle();
+      expect(find.text('収集曜日を自分で設定'), findsOneWidget);
+    });
+
     testWidgets('手入力で曜日をひとつも選ばないと先に進めない', (tester) async {
       await pumpRootApp(tester, area: null);
 

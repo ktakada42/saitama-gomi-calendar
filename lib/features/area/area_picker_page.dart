@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/area_catalog.dart';
 import '../../domain/collection_area.dart';
 import '../../providers.dart';
+import '../../ui/widgets/load_failure_view.dart';
 import 'area_editor_page.dart';
 
 /// 初回設定・地区の選び直しの入口。
@@ -41,7 +42,8 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final catalog = ref.watch(areaCatalogProvider).value;
+    final catalogState = ref.watch(areaCatalogProvider);
+    final catalog = catalogState.value;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +51,30 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
         automaticallyImplyLeading: !widget.isOnboarding,
       ),
       body: catalog == null
-          ? const Center(child: CircularProgressIndicator())
+          ? (catalogState.hasError
+                // 同梱アセットなので通常は失敗しないが、失敗したまま
+                // ローディングを回し続けると何も分からない。再試行に加えて、
+                // 地区データが無くても曜日を手入力すれば使えるので、
+                // その導線だけは残しておく。
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: LoadFailureView(
+                          message: '地区データを読み込めませんでした。',
+                          onRetry: () => ref.invalidate(areaCatalogProvider),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: TextButton(
+                          onPressed: _selectManual,
+                          child: const Text('収集曜日を自分で設定する'),
+                        ),
+                      ),
+                    ],
+                  )
+                : const Center(child: CircularProgressIndicator()))
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               children: [
