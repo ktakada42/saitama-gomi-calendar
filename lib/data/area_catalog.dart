@@ -15,6 +15,7 @@ class AreaCatalog {
     required this.presets,
     required this.disclaimer,
     required this.source,
+    required this.sourceUrl,
     required this.postalAreas,
   });
 
@@ -27,8 +28,12 @@ class AreaCatalog {
   /// データの確からしさについての但し書き。設定画面に出す。
   final String disclaimer;
 
-  /// 出典URL。
+  /// 出典の名前。設定画面に出す。
   final String source;
+
+  /// 出典のURL。設定画面でタップすると外部ブラウザで開く。
+  /// 名前と分けてあるのは、タップできる範囲をURLだけに限るため。
+  final String sourceUrl;
 
   /// 郵便番号（ハイフン無し7桁）→ 該当しうる[areas]の`id`一覧。
   ///
@@ -74,6 +79,7 @@ class AreaCatalog {
       presets: parse('presets'),
       disclaimer: json['disclaimer'] as String? ?? '',
       source: json['source'] as String? ?? '',
+      sourceUrl: json['sourceUrl'] as String? ?? '',
       postalAreas: {
         for (final entry in rawPostalAreas.entries)
           entry.key: (entry.value as List<dynamic>).cast<String>(),
