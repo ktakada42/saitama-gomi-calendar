@@ -54,9 +54,9 @@ DateLabel
 ```
 AreaCatalog.load()          assets/data/areas.json を読み込む（起動ごとに1回）
   areas:    確定地区の一覧。初回設定の主経路（地区を選ぶと曜日が決まる）が
-            全面的に依存するデータ（77件投入済み。next-phase.md A章参照）
+            全面的に依存するデータ（320件投入済み。next-phase.md A章参照）
   presets:  曜日入力の雛形。地区が見つからない代替経路でのみ使う
-  postalAreas: 郵便番号→areasのid一覧（270件）
+  postalAreas: 郵便番号→areasのid一覧（264件）
   areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 

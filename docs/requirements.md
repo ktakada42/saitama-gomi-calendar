@@ -132,23 +132,23 @@
 同梱アセット（`assets/data/areas.json`）に以下を持つ。
 
 - `areas`：町丁目から確定できる地区データ。区分ごとの収集曜日が地区単位で完全に決まって
-  いるため、初回設定（4.1節）の主経路はこのデータに全面的に依存する。市の「収集日
-  カレンダー」から機械的に生成した77件が入っている（`AreaCatalog.areasInWard()`は
-  実装・テスト済み。生成方法は[next-phase.md](next-phase.md) A章、
+  いるため、初回設定（4.1節）の主経路はこのデータに全面的に依存する。市が配布する
+  PDFマニュアルの「地区別ごみ収集曜日一覧表」から機械的に生成した320件が入っている
+  （`AreaCatalog.areasInWard()`は実装・テスト済み。生成方法は
+  [next-phase.md](next-phase.md) A章、`scripts/extract_manual_schedule.py`・
   `scripts/update_areas_json.mjs`を参照）
 - `presets`：曜日入力の出発点となる雛形。もえるごみの曜日だけが決まっている。地区が
   見つからない場合の代替経路（4.1節）でのみ使う、補助的な位置づけ
 - `postalAreas`：郵便番号（7桁）→ `areas`の`id`一覧。郵便番号入力での絞り込み
-  （4.1節）に使う。1つの郵便番号が複数の`id`にまたがることがある（270件中31件）。
+  （4.1節）に使う。1つの郵便番号が複数の`id`にまたがることがある（264件中32件）。
   `AreaCatalog.areasForPostalCode()`が参照する
 - `disclaimer`：データの確からしさについての但し書き
 - `source`：出典URL
 
-さいたま市は地区を選ぶと収集曜日を確認できる「収集日カレンダー」を公式に提供しており
-（`source`のURL先）、`areas`はここが内部で使っているデータAPIから取得した。`postalAreas`は
+`areas`は、さいたま市が住民向けに配布しているPDFマニュアル「家庭ごみの出し方マニュアル」
+（`source`のURL先）に含まれる一次資料そのものの一覧表から取得している。`postalAreas`は
 日本郵便の公開データ（郵便番号→町丁目）と`areas`の町丁目名を突き合わせて生成した。
-どちらも`scripts/update_areas_json.mjs`で再取得できるが、非公式なエンドポイントに
-依存しているためベンダー側の変更で壊れる可能性がある（詳細は[next-phase.md](next-phase.md) A章）。
+どちらも`scripts/update_areas_json.mjs`で再取得できる（詳細は[next-phase.md](next-phase.md) A章）。
 
 ### 5.5 設定の永続化
 
