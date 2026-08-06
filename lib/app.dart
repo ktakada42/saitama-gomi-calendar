@@ -20,7 +20,6 @@ class SaitamaGomiApp extends ConsumerWidget {
       theme: _theme(Brightness.light),
       darkTheme: _theme(Brightness.dark),
       themeMode: themeMode,
-      scrollBehavior: const _AppScrollBehavior(),
       locale: const Locale('ja'),
       supportedLocales: const [Locale('ja')],
       localizationsDelegates: const [
@@ -38,25 +37,13 @@ class SaitamaGomiApp extends ConsumerWidget {
       brightness: brightness,
     ),
     useMaterial3: true,
+    // Material 3 の AppBar は、コンテンツがその下に潜ると
+    // surfaceTint（＝シード色の緑）を重ねて浮き上がって見せる仕様になっている。
+    // このアプリのヘッダーは画面名を出しているだけで、スクロール位置に応じて
+    // 色が変わる必要はなく、下方向にスクロールするたびにヘッダーが緑に光って
+    // 見えるだけなので、この着色を止める。
+    appBarTheme: const AppBarTheme(elevation: 0, scrolledUnderElevation: 0),
   );
-}
-
-/// 縦画面固定・iOSファーストのこのアプリでは、Android由来の
-/// オーバースクロール時の発光（グロー）表示は出さず、iOSと同じ
-/// バウンス挙動だけにする。
-class _AppScrollBehavior extends MaterialScrollBehavior {
-  const _AppScrollBehavior();
-
-  @override
-  ScrollPhysics getScrollPhysics(BuildContext context) =>
-      const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
-
-  @override
-  Widget buildOverscrollIndicator(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) => child;
 }
 
 /// 地区が未設定なら初回設定へ、設定済みなら本体へ。
