@@ -1,3 +1,10 @@
+import 'package:flutter/cupertino.dart'
+    show
+        CupertinoDatePicker,
+        CupertinoDatePickerMode,
+        CupertinoTextThemeData,
+        CupertinoTheme,
+        CupertinoThemeData;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -226,22 +233,88 @@ class _NotificationTiles extends ConsumerWidget {
     );
   }
 
+  /// 時刻の選択。Materialの文字盤（showTimePicker）ではなく、
+  /// iOSのホイール式にする。「何時に知らせるか」は分単位で厳密に決めたい類の
+  /// 設定ではないので、5分刻みで回して選べれば十分で、文字盤より速い。
   Future<void> _pickTime(
     BuildContext context,
     WidgetRef ref,
     NotificationSettings settings,
   ) async {
-    final picked = await showTimePicker(
+    var selected = settings.timeOfDay;
+
+    final decided = await showModalBottomSheet<Duration>(
       context: context,
-      initialTime: TimeOfDay(
-        hour: settings.timeOfDay.inHours,
-        minute: settings.timeOfDay.inMinutes % 60,
-      ),
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: SizedBox(
+            height: 300,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('キャンセル'),
+                      ),
+                      Text(
+                        'お知らせの時刻',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(selected),
+                        child: const Text('決定'),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoTheme(
+                    // CupertinoDatePickerは自前の文字色を持つので、
+                    // ダークモードでも読めるようMaterial側の色を渡す。
+                    data: CupertinoThemeData(
+                      brightness: theme.brightness,
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      use24hFormat: true,
+                      minuteInterval: 5,
+                      initialDateTime: DateTime(
+                        2000,
+                        1,
+                        1,
+                        settings.timeOfDay.inHours,
+                        // 5分刻みに丸める。刻みに合わない初期値を渡すと
+                        // CupertinoDatePickerが例外を投げるため。
+                        (settings.timeOfDay.inMinutes % 60) ~/ 5 * 5,
+                      ),
+                      onDateTimeChanged: (value) {
+                        selected = Duration(
+                          hours: value.hour,
+                          minutes: value.minute,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
-    if (picked == null) return;
-    await ref
-        .read(notificationProvider.notifier)
-        .setTime(Duration(hours: picked.hour, minutes: picked.minute));
+
+    if (decided == null) return;
+    await ref.read(notificationProvider.notifier).setTime(decided);
   }
 }
 
