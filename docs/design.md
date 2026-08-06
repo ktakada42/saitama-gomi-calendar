@@ -45,6 +45,11 @@ CollectionReminderPlanner(calendar)
   └ 「いつ何を通知すべきか」をCollectionReminderの一覧として計算する
   └ OSの通知APIには触らない純粋な計算だけ。通知の中身とタイミングの判断を
     単体テストで担保できるようにするため（next-phase.md B.4節）
+
+CalendarExport(area)
+  └ 収集日をiCalendar（.ics）形式の文字列にする
+  └ 日付ごとに個別イベントを並べず、繰り返しルール（RRULE）で表すのでイベント数が少ない
+  └ 文字列を作るだけの純粋なDart。ファイル書き出しと共有はdata層（CalendarShare）
 ```
 
 `CollectionCalendar`が「日付から区分を引く」ロジックの単一の入口になっており、画面側は
@@ -66,6 +71,10 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
                        URLだけに限るため、名前とURLを分けて持つ
   areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
                              （AreaPickerPageが使う唯一の郵便番号関連API）
+
+CalendarShare                収集日を.icsに書き出して共有シートに渡す（abstract）
+  実装は_FileCalendarShare（path_provider + share_plus）。
+  テストからは NoopCalendarShare に差し替える
 
 SettingsRepository           shared_preferences 経由で利用者の設定を保存
   readArea() / writeArea() / clear()

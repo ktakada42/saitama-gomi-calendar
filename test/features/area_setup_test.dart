@@ -324,5 +324,17 @@ void main() {
 
       expect(find.text('市の公式ページを開く'), findsOneWidget);
     });
+
+    testWidgets('設定からカレンダーに追加できる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      expect(find.text('カレンダーに追加'), findsOneWidget);
+      // タップしても例外にならない（共有シート自体はテストでは開かない）。
+      await tester.tap(find.text('カレンダーに追加'));
+      await tester.pumpAndSettle();
+    });
   });
 }

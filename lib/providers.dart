@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/area_catalog.dart';
+import 'data/calendar_share.dart';
 import 'data/notification_repository.dart';
 import 'data/settings_repository.dart';
 import 'domain/collection_area.dart';
@@ -10,6 +11,11 @@ import 'domain/collection_reminder.dart';
 
 final settingsRepositoryProvider = FutureProvider<SettingsRepository>(
   (ref) => SettingsRepository.open(),
+);
+
+/// 収集日を.icsにして共有シートに渡す。テストからは差し替える。
+final calendarShareProvider = Provider<CalendarShare>(
+  (ref) => CalendarShare.create(),
 );
 
 final notificationRepositoryProvider = FutureProvider<NotificationRepository>(
