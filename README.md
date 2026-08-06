@@ -91,8 +91,16 @@ lib/features/   画面単位：home / calendar / settings / area / shell
 lib/ui/         区分の配色とアイコン、画面をまたぐ部品
 assets/data/    地区データ
 scripts/        assets/data/areas.json を市の公開データから再生成するスクリプト
+design/         アプリアイコンのマスターSVGと生成スクリプト
 test/           domain層の単体テストと画面のウィジェットテスト
 ```
+
+### アプリアイコン
+
+`design/app_icon_master.svg`（縛ったゴミ袋、120×120のシンプルなベクター）が唯一の原本。
+`bash design/generate_app_icons.sh`でiOS/Android向けの全サイズPNG（iOSはアルファチャンネル
+無しのRGB）を書き出し、`ios/`・`android/`配下に配置し直せる。デザインを直すときは
+マスターSVGを編集してこのスクリプトを再実行する。
 
 ## セットアップ
 
