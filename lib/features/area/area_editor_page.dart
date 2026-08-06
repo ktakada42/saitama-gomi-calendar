@@ -192,13 +192,24 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
           ],
           const SizedBox(height: 12),
           _SectionTitle('その他'),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            value: _earlyMorning,
-            onChanged: (value) => setState(() => _earlyMorning = value),
-            title: const Text('もえるごみの早朝収集地区'),
-            subtitle: const Text('大宮区・浦和区の一部が該当します。朝5時30分までに出す必要があります。'),
-          ),
+          // 早朝収集地区かどうかは地区データ側で確定している（★1マークの18地区）。
+          // 地区を選んで来た場合に切り替えられるようにすると、利用者が自分で
+          // 判断しなければならないように見えるので、手入力のときだけ操作させる。
+          if (_isManualEntry)
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: _earlyMorning,
+              onChanged: (value) => setState(() => _earlyMorning = value),
+              title: const Text('もえるごみの早朝収集地区'),
+              subtitle: const Text('大宮区・浦和区の一部が該当します。朝5時30分までに出す必要があります。'),
+            )
+          else if (_earlyMorning)
+            const ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.schedule),
+              title: Text('もえるごみの早朝収集地区'),
+              subtitle: Text('朝5時30分までに出す必要があります。'),
+            ),
           const SizedBox(height: 8),
           TextField(
             controller: _nameController,
