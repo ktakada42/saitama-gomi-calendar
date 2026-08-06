@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  flutter:
+    # ubuntu-latest: analyze/test はXcode不要でLinux上で完結する。
+    # macOSランナーはGitHub Actionsの無料枠消費が10倍になるため、
+    # 実際にiOSビルド（flutter build ios 等）をCIに追加する段になったら、
+    # そのステップだけ macos-latest の別ジョブに切り出すこと。
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test

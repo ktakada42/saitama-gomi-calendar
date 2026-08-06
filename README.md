@@ -1,6 +1,8 @@
 # さいたまごみカレンダー
 
 さいたま市の家庭ごみの収集日を確認するアプリです。
+（元々は [TenpAI](https://github.com/ktakada42/TenpAI) リポジトリ内で開発され、
+無関係な別アプリのため本リポジトリに履歴ごと分離した）
 iOSファースト、Flutter実装なので将来Androidにも展開できます。
 
 市の公式アプリと同じ情報を扱いますが、**トップページを開いた瞬間に「明日は何ごみか」が分かる**
@@ -87,10 +89,16 @@ test/           domain層の単体テストと画面のウィジェットテス�
 ## セットアップ
 
 ```bash
-cd saitama_gomi
 flutter pub get
 flutter test
 flutter run
+```
+
+コミット前チェック（`dart format` / `flutter analyze` / `flutter test`）をpre-commitフックとして
+有効にする場合は次を実行する。
+
+```bash
+git config core.hooksPath .githooks
 ```
 
 ## 今後

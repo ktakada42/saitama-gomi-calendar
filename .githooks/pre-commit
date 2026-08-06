@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# CI（.github/workflows/ci.yml）と同じ3チェックをコミット前にローカルで通す。
+# フォーマット漏れやテスト崩れを main に push してから気づくのを防ぐため。
+#
+# 有効化: git config core.hooksPath .githooks
+set -euo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+echo "[pre-commit] dart format --set-exit-if-changed"
+if ! dart format --output=none --set-exit-if-changed lib test; then
+  echo "[pre-commit] フォーマットが崩れています。'dart format lib test' を実行してから再コミットしてください。" >&2
+  exit 1
+fi
+
+echo "[pre-commit] flutter analyze"
+if ! flutter analyze; then
+  echo "[pre-commit] flutter analyze でエラーが出ています。上記を修正してください。" >&2
+  exit 1
+fi
+
+echo "[pre-commit] flutter test"
+if ! flutter test; then
+  echo "[pre-commit] テストが失敗しています。上記を修正してください。" >&2
+  exit 1
+fi
