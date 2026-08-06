@@ -258,5 +258,51 @@ void main() {
       expect(find.text('キャンセル'), findsOneWidget);
       expect(find.text('決定'), findsOneWidget);
     });
+
+    testWidgets('折りたたみはスクロールしても開いたままになる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      final scrollable = find.byType(Scrollable).last;
+      await tester.scrollUntilVisible(
+        find.text('もえるごみ').last,
+        200,
+        scrollable: scrollable,
+      );
+      await tester.tap(find.text('もえるごみ').last);
+      await tester.pumpAndSettle();
+      // 開くと代表品目が見える。
+      expect(find.textContaining('生ごみ'), findsWidgets);
+
+      // いったん画面外まで動かしてから戻す。ListViewはこの間にウィジェットを
+      // 捨てるので、キーが無いと閉じた状態に戻ってしまう。
+      await tester.drag(scrollable, const Offset(0, -600));
+      await tester.pumpAndSettle();
+      await tester.drag(scrollable, const Offset(0, 600));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('生ごみ'), findsWidgets);
+    });
+
+    testWidgets('このアプリについてにデータの生成方法は出さない', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('このアプリについて'),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(find.text('このアプリについて'));
+      await tester.pumpAndSettle();
+
+      // 出典は出すが、どう機械処理したか（disclaimer）は出さない。
+      expect(find.text('テスト用の出典'), findsOneWidget);
+      expect(find.text('テスト用の但し書き'), findsNothing);
+    });
   });
 }
