@@ -7,18 +7,18 @@ import '../domain/collection_area.dart';
 /// アセットに同梱した地区データ。
 ///
 /// `areas` は町丁目から確定できる地区の一覧、`presets` は曜日を入力するときの
-/// 出発点になる雛形。現時点で同梱しているのは雛形だけで、`areas` は空になっている。
-/// 市の収集日カレンダーの地区表を取り込めるようになったら `areas` を埋めれば、
-/// アプリ側のコードを変えずに「地区を選ぶ」導線がそのまま使える。
+/// 出発点になる雛形（地区が見つからない代替経路でのみ使う）。`postalAreas` は
+/// 郵便番号から`areas`を絞り込むための補助インデックス。
 class AreaCatalog {
   const AreaCatalog({
     required this.areas,
     required this.presets,
     required this.disclaimer,
     required this.source,
+    required this.postalAreas,
   });
 
-  /// 確定した収集地区。空でありうる。
+  /// 確定した収集地区。
   final List<CollectionArea> areas;
 
   /// 曜日入力の雛形。
@@ -30,8 +30,30 @@ class AreaCatalog {
   /// 出典URL。
   final String source;
 
+  /// 郵便番号（ハイフン無し7桁）→ 該当しうる[areas]の`id`一覧。
+  ///
+  /// 1つの郵便番号が複数の地区にまたがることが実際にあるため（同じ郵便番号の
+  /// 範囲内で収集パターンが分かれている場合）、必ずしも1件には絞れない。
+  final Map<String, List<String>> postalAreas;
+
   List<CollectionArea> areasInWard(String ward) =>
       areas.where((area) => area.ward == ward).toList();
+
+  /// [rawPostalCode]（ハイフンや空白が混ざっていてもよい）から特定できる地区の候補。
+  ///
+  /// 郵便番号はこの検索にだけ使い、呼び出し側でも保存しないこと
+  /// （[requirements.md](../../docs/requirements.md) 4.1節）。
+  /// 該当が無ければ空リストを返す。
+  List<CollectionArea> areasForPostalCode(String rawPostalCode) {
+    final digits = rawPostalCode.replaceAll(RegExp(r'[^0-9]'), '');
+    final ids = postalAreas[digits];
+    if (ids == null) return const [];
+    return [
+      for (final id in ids)
+        for (final area in areas)
+          if (area.id == id) area,
+    ];
+  }
 
   static const assetPath = 'assets/data/areas.json';
 
@@ -45,11 +67,17 @@ class AreaCatalog {
       for (final entry in (json[key] as List<dynamic>? ?? const []))
         CollectionArea.fromJson(entry as Map<String, dynamic>),
     ];
+    final rawPostalAreas =
+        (json['postalAreas'] as Map<String, dynamic>?) ?? const {};
     return AreaCatalog(
       areas: parse('areas'),
       presets: parse('presets'),
       disclaimer: json['disclaimer'] as String? ?? '',
       source: json['source'] as String? ?? '',
+      postalAreas: {
+        for (final entry in rawPostalAreas.entries)
+          entry.key: (entry.value as List<dynamic>).cast<String>(),
+      },
     );
   }
 }

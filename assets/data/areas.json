@@ -2888,5 +2888,861 @@
         ]
       }
     }
-  ]
+  ],
+  "postalAreas": {
+    "3300041": [
+      "gomisuke-40-std"
+    ],
+    "3300042": [
+      "gomisuke-40-std"
+    ],
+    "3300043": [
+      "gomisuke-40-std"
+    ],
+    "3300044": [
+      "gomisuke-42"
+    ],
+    "3300045": [
+      "gomisuke-40-std"
+    ],
+    "3300046": [
+      "gomisuke-40-std"
+    ],
+    "3300051": [
+      "gomisuke-42"
+    ],
+    "3300052": [
+      "gomisuke-45"
+    ],
+    "3300053": [
+      "gomisuke-39-std"
+    ],
+    "3300054": [
+      "gomisuke-45"
+    ],
+    "3300055": [
+      "gomisuke-38-am"
+    ],
+    "3300056": [
+      "gomisuke-40-am"
+    ],
+    "3300061": [
+      "gomisuke-41",
+      "gomisuke-43-am",
+      "gomisuke-43-std"
+    ],
+    "3300062": [
+      "gomisuke-38-am",
+      "gomisuke-40-am",
+      "gomisuke-43-std"
+    ],
+    "3300063": [
+      "gomisuke-38-am",
+      "gomisuke-40-am",
+      "gomisuke-43-am",
+      "gomisuke-43-std"
+    ],
+    "3300064": [
+      "gomisuke-43-std",
+      "gomisuke-44"
+    ],
+    "3300065": [
+      "gomisuke-38-std"
+    ],
+    "3300071": [
+      "gomisuke-40-std"
+    ],
+    "3300072": [
+      "gomisuke-40-std",
+      "gomisuke-42"
+    ],
+    "3300073": [
+      "gomisuke-45"
+    ],
+    "3300074": [
+      "gomisuke-39-am",
+      "gomisuke-39-std",
+      "gomisuke-40-std",
+      "gomisuke-41"
+    ],
+    "3300075": [
+      "gomisuke-39-std",
+      "gomisuke-40-std"
+    ],
+    "3300081": [
+      "gomisuke-15"
+    ],
+    "3300801": [
+      "gomisuke-18"
+    ],
+    "3300802": [
+      "gomisuke-17-am"
+    ],
+    "3300803": [
+      "gomisuke-18"
+    ],
+    "3300804": [
+      "gomisuke-18"
+    ],
+    "3300805": [
+      "gomisuke-18"
+    ],
+    "3300834": [
+      "gomisuke-17-std"
+    ],
+    "3300835": [
+      "gomisuke-17-std"
+    ],
+    "3300836": [
+      "gomisuke-21"
+    ],
+    "3300841": [
+      "gomisuke-17-std"
+    ],
+    "3300842": [
+      "gomisuke-17-std"
+    ],
+    "3300843": [
+      "gomisuke-17-am",
+      "gomisuke-17-std",
+      "gomisuke-23-am"
+    ],
+    "3300844": [
+      "gomisuke-17-am"
+    ],
+    "3300845": [
+      "gomisuke-17-am"
+    ],
+    "3300846": [
+      "gomisuke-17-am"
+    ],
+    "3300851": [
+      "gomisuke-22"
+    ],
+    "3300852": [
+      "gomisuke-21",
+      "gomisuke-23-std"
+    ],
+    "3300853": [
+      "gomisuke-23-std"
+    ],
+    "3300854": [
+      "gomisuke-23-am",
+      "gomisuke-23-std"
+    ],
+    "3300855": [
+      "gomisuke-23-std"
+    ],
+    "3300856": [
+      "gomisuke-19",
+      "gomisuke-20"
+    ],
+    "3310045": [
+      "gomisuke-1"
+    ],
+    "3310046": [
+      "gomisuke-1"
+    ],
+    "3310047": [
+      "gomisuke-2"
+    ],
+    "3310048": [
+      "gomisuke-1"
+    ],
+    "3310049": [
+      "gomisuke-1"
+    ],
+    "3310052": [
+      "gomisuke-1",
+      "gomisuke-3"
+    ],
+    "3310053": [
+      "gomisuke-3"
+    ],
+    "3310054": [
+      "gomisuke-3"
+    ],
+    "3310055": [
+      "gomisuke-3"
+    ],
+    "3310056": [
+      "gomisuke-3"
+    ],
+    "3310057": [
+      "gomisuke-3"
+    ],
+    "3310058": [
+      "gomisuke-3"
+    ],
+    "3310059": [
+      "gomisuke-3"
+    ],
+    "3310060": [
+      "gomisuke-3"
+    ],
+    "3310061": [
+      "gomisuke-3"
+    ],
+    "3310062": [
+      "gomisuke-3"
+    ],
+    "3310063": [
+      "gomisuke-3"
+    ],
+    "3310064": [
+      "gomisuke-3"
+    ],
+    "3310065": [
+      "gomisuke-3"
+    ],
+    "3310066": [
+      "gomisuke-3"
+    ],
+    "3310067": [
+      "gomisuke-3"
+    ],
+    "3310068": [
+      "gomisuke-3"
+    ],
+    "3310069": [
+      "gomisuke-3"
+    ],
+    "3310071": [
+      "gomisuke-1"
+    ],
+    "3310072": [
+      "gomisuke-1"
+    ],
+    "3310073": [
+      "gomisuke-2"
+    ],
+    "3310074": [
+      "gomisuke-2"
+    ],
+    "3310075": [
+      "gomisuke-1"
+    ],
+    "3310076": [
+      "gomisuke-1"
+    ],
+    "3310077": [
+      "gomisuke-1"
+    ],
+    "3310078": [
+      "gomisuke-1",
+      "gomisuke-2"
+    ],
+    "3310801": [
+      "gomisuke-6"
+    ],
+    "3310802": [
+      "gomisuke-6"
+    ],
+    "3310803": [
+      "gomisuke-5"
+    ],
+    "3310804": [
+      "gomisuke-5"
+    ],
+    "3310805": [
+      "gomisuke-5"
+    ],
+    "3310811": [
+      "gomisuke-6"
+    ],
+    "3310812": [
+      "gomisuke-6",
+      "gomisuke-8"
+    ],
+    "3310813": [
+      "gomisuke-5"
+    ],
+    "3310814": [
+      "gomisuke-6"
+    ],
+    "3310815": [
+      "gomisuke-6"
+    ],
+    "3310821": [
+      "gomisuke-8"
+    ],
+    "3310822": [
+      "gomisuke-8"
+    ],
+    "3310823": [
+      "gomisuke-4",
+      "gomisuke-7",
+      "gomisuke-8"
+    ],
+    "3310825": [
+      "gomisuke-7"
+    ],
+    "3360015": [
+      "gomisuke-48",
+      "gomisuke-54",
+      "gomisuke-55",
+      "gomisuke-58-std"
+    ],
+    "3360016": [
+      "gomisuke-55"
+    ],
+    "3360017": [
+      "gomisuke-46"
+    ],
+    "3360018": [
+      "gomisuke-50"
+    ],
+    "3360021": [
+      "gomisuke-56"
+    ],
+    "3360022": [
+      "gomisuke-46",
+      "gomisuke-57"
+    ],
+    "3360023": [
+      "gomisuke-50"
+    ],
+    "3360024": [
+      "gomisuke-51"
+    ],
+    "3360025": [
+      "gomisuke-57"
+    ],
+    "3360026": [
+      "gomisuke-47",
+      "gomisuke-57"
+    ],
+    "3360027": [
+      "gomisuke-46"
+    ],
+    "3360031": [
+      "gomisuke-52"
+    ],
+    "3360032": [
+      "gomisuke-51"
+    ],
+    "3360033": [
+      "gomisuke-46",
+      "gomisuke-53"
+    ],
+    "3360034": [
+      "gomisuke-46",
+      "gomisuke-53"
+    ],
+    "3360035": [
+      "gomisuke-53"
+    ],
+    "3360038": [
+      "gomisuke-52"
+    ],
+    "3360041": [
+      "gomisuke-49"
+    ],
+    "3360042": [
+      "gomisuke-48",
+      "gomisuke-49",
+      "gomisuke-58-std"
+    ],
+    "3360043": [
+      "gomisuke-48"
+    ],
+    "3360903": [
+      "gomisuke-63"
+    ],
+    "3360906": [
+      "gomisuke-59"
+    ],
+    "3360907": [
+      "gomisuke-63",
+      "gomisuke-65"
+    ],
+    "3360911": [
+      "gomisuke-59"
+    ],
+    "3360912": [
+      "gomisuke-59"
+    ],
+    "3360915": [
+      "gomisuke-59"
+    ],
+    "3360916": [
+      "gomisuke-59"
+    ],
+    "3360917": [
+      "gomisuke-59"
+    ],
+    "3360918": [
+      "gomisuke-59"
+    ],
+    "3360922": [
+      "gomisuke-61"
+    ],
+    "3360923": [
+      "gomisuke-61"
+    ],
+    "3360924": [
+      "gomisuke-61"
+    ],
+    "3360925": [
+      "gomisuke-61"
+    ],
+    "3360926": [
+      "gomisuke-61",
+      "gomisuke-66"
+    ],
+    "3360931": [
+      "gomisuke-65"
+    ],
+    "3360932": [
+      "gomisuke-61"
+    ],
+    "3360934": [
+      "gomisuke-61"
+    ],
+    "3360936": [
+      "gomisuke-60",
+      "gomisuke-64"
+    ],
+    "3360961": [
+      "gomisuke-62"
+    ],
+    "3360962": [
+      "gomisuke-62"
+    ],
+    "3360963": [
+      "gomisuke-62"
+    ],
+    "3360964": [
+      "gomisuke-62"
+    ],
+    "3360965": [
+      "gomisuke-62"
+    ],
+    "3360966": [
+      "gomisuke-62"
+    ],
+    "3360967": [
+      "gomisuke-62"
+    ],
+    "3360971": [
+      "gomisuke-62"
+    ],
+    "3360972": [
+      "gomisuke-62"
+    ],
+    "3360973": [
+      "gomisuke-62"
+    ],
+    "3360974": [
+      "gomisuke-62"
+    ],
+    "3360975": [
+      "gomisuke-62"
+    ],
+    "3360976": [
+      "gomisuke-62"
+    ],
+    "3360977": [
+      "gomisuke-62"
+    ],
+    "3370001": [
+      "gomisuke-26"
+    ],
+    "3370002": [
+      "gomisuke-27"
+    ],
+    "3370003": [
+      "gomisuke-27"
+    ],
+    "3370005": [
+      "gomisuke-27"
+    ],
+    "3370006": [
+      "gomisuke-27"
+    ],
+    "3370007": [
+      "gomisuke-26"
+    ],
+    "3370008": [
+      "gomisuke-27"
+    ],
+    "3370011": [
+      "gomisuke-27"
+    ],
+    "3370012": [
+      "gomisuke-28"
+    ],
+    "3370013": [
+      "gomisuke-28"
+    ],
+    "3370014": [
+      "gomisuke-28"
+    ],
+    "3370015": [
+      "gomisuke-29"
+    ],
+    "3370016": [
+      "gomisuke-28"
+    ],
+    "3370017": [
+      "gomisuke-28"
+    ],
+    "3370021": [
+      "gomisuke-28"
+    ],
+    "3370022": [
+      "gomisuke-25"
+    ],
+    "3370023": [
+      "gomisuke-25"
+    ],
+    "3370024": [
+      "gomisuke-25"
+    ],
+    "3370025": [
+      "gomisuke-25"
+    ],
+    "3370026": [
+      "gomisuke-25"
+    ],
+    "3370027": [
+      "gomisuke-25"
+    ],
+    "3370031": [
+      "gomisuke-25"
+    ],
+    "3370032": [
+      "gomisuke-25"
+    ],
+    "3370033": [
+      "gomisuke-25"
+    ],
+    "3370034": [
+      "gomisuke-25"
+    ],
+    "3370035": [
+      "gomisuke-25"
+    ],
+    "3370036": [
+      "gomisuke-25"
+    ],
+    "3370041": [
+      "gomisuke-24"
+    ],
+    "3370042": [
+      "gomisuke-24"
+    ],
+    "3370043": [
+      "gomisuke-25"
+    ],
+    "3370044": [
+      "gomisuke-25"
+    ],
+    "3370051": [
+      "gomisuke-26"
+    ],
+    "3370052": [
+      "gomisuke-26"
+    ],
+    "3370053": [
+      "gomisuke-29"
+    ],
+    "3380001": [
+      "gomisuke-15"
+    ],
+    "3380002": [
+      "gomisuke-10",
+      "gomisuke-12"
+    ],
+    "3380003": [
+      "gomisuke-14"
+    ],
+    "3380004": [
+      "gomisuke-13"
+    ],
+    "3380005": [
+      "gomisuke-13"
+    ],
+    "3380006": [
+      "gomisuke-16"
+    ],
+    "3380007": [
+      "gomisuke-15"
+    ],
+    "3380011": [
+      "gomisuke-9"
+    ],
+    "3380012": [
+      "gomisuke-9"
+    ],
+    "3380013": [
+      "gomisuke-11"
+    ],
+    "3380014": [
+      "gomisuke-16"
+    ],
+    "3380811": [
+      "gomisuke-37"
+    ],
+    "3380812": [
+      "gomisuke-34"
+    ],
+    "3380813": [
+      "gomisuke-37"
+    ],
+    "3380814": [
+      "gomisuke-37"
+    ],
+    "3380815": [
+      "gomisuke-34"
+    ],
+    "3380816": [
+      "gomisuke-34"
+    ],
+    "3380821": [
+      "gomisuke-37"
+    ],
+    "3380822": [
+      "gomisuke-37"
+    ],
+    "3380823": [
+      "gomisuke-37"
+    ],
+    "3380824": [
+      "gomisuke-31"
+    ],
+    "3380825": [
+      "gomisuke-31"
+    ],
+    "3380826": [
+      "gomisuke-34"
+    ],
+    "3380831": [
+      "gomisuke-34"
+    ],
+    "3380832": [
+      "gomisuke-34"
+    ],
+    "3380833": [
+      "gomisuke-34"
+    ],
+    "3380834": [
+      "gomisuke-35"
+    ],
+    "3380835": [
+      "gomisuke-34",
+      "gomisuke-36"
+    ],
+    "3380836": [
+      "gomisuke-34"
+    ],
+    "3380837": [
+      "gomisuke-30",
+      "gomisuke-32",
+      "gomisuke-33",
+      "gomisuke-35"
+    ],
+    "3390001": [
+      "gomisuke-68"
+    ],
+    "3390002": [
+      "gomisuke-68"
+    ],
+    "3390003": [
+      "gomisuke-68"
+    ],
+    "3390004": [
+      "gomisuke-68"
+    ],
+    "3390005": [
+      "gomisuke-68",
+      "gomisuke-69"
+    ],
+    "3390006": [
+      "gomisuke-68"
+    ],
+    "3390007": [
+      "gomisuke-68"
+    ],
+    "3390008": [
+      "gomisuke-68"
+    ],
+    "3390009": [
+      "gomisuke-68"
+    ],
+    "3390011": [
+      "gomisuke-69"
+    ],
+    "3390012": [
+      "gomisuke-69"
+    ],
+    "3390013": [
+      "gomisuke-69"
+    ],
+    "3390014": [
+      "gomisuke-69"
+    ],
+    "3390015": [
+      "gomisuke-69"
+    ],
+    "3390016": [
+      "gomisuke-69"
+    ],
+    "3390017": [
+      "gomisuke-69"
+    ],
+    "3390018": [
+      "gomisuke-69"
+    ],
+    "3390021": [
+      "gomisuke-70"
+    ],
+    "3390022": [
+      "gomisuke-70"
+    ],
+    "3390023": [
+      "gomisuke-70"
+    ],
+    "3390024": [
+      "gomisuke-70"
+    ],
+    "3390025": [
+      "gomisuke-70"
+    ],
+    "3390026": [
+      "gomisuke-70"
+    ],
+    "3390027": [
+      "gomisuke-70"
+    ],
+    "3390028": [
+      "gomisuke-70"
+    ],
+    "3390031": [
+      "gomisuke-70"
+    ],
+    "3390032": [
+      "gomisuke-70"
+    ],
+    "3390033": [
+      "gomisuke-70"
+    ],
+    "3390034": [
+      "gomisuke-70"
+    ],
+    "3390035": [
+      "gomisuke-70"
+    ],
+    "3390036": [
+      "gomisuke-70"
+    ],
+    "3390037": [
+      "gomisuke-70"
+    ],
+    "3390041": [
+      "gomisuke-70"
+    ],
+    "3390042": [
+      "gomisuke-70"
+    ],
+    "3390043": [
+      "gomisuke-70"
+    ],
+    "3390044": [
+      "gomisuke-70"
+    ],
+    "3390045": [
+      "gomisuke-70"
+    ],
+    "3390046": [
+      "gomisuke-70"
+    ],
+    "3390047": [
+      "gomisuke-70"
+    ],
+    "3390051": [
+      "gomisuke-67",
+      "gomisuke-69"
+    ],
+    "3390052": [
+      "gomisuke-69"
+    ],
+    "3390053": [
+      "gomisuke-69"
+    ],
+    "3390054": [
+      "gomisuke-69"
+    ],
+    "3390055": [
+      "gomisuke-70"
+    ],
+    "3390056": [
+      "gomisuke-67",
+      "gomisuke-70"
+    ],
+    "3390057": [
+      "gomisuke-69",
+      "gomisuke-70"
+    ],
+    "3390058": [
+      "gomisuke-69"
+    ],
+    "3390061": [
+      "gomisuke-67"
+    ],
+    "3390062": [
+      "gomisuke-67"
+    ],
+    "3390063": [
+      "gomisuke-67"
+    ],
+    "3390064": [
+      "gomisuke-67"
+    ],
+    "3390065": [
+      "gomisuke-67"
+    ],
+    "3390066": [
+      "gomisuke-67"
+    ],
+    "3390067": [
+      "gomisuke-67"
+    ],
+    "3390068": [
+      "gomisuke-67"
+    ],
+    "3390069": [
+      "gomisuke-67"
+    ],
+    "3390071": [
+      "gomisuke-68"
+    ],
+    "3390072": [
+      "gomisuke-68"
+    ],
+    "3390073": [
+      "gomisuke-68"
+    ],
+    "3390074": [
+      "gomisuke-67"
+    ],
+    "3390075": [
+      "gomisuke-67"
+    ],
+    "3390076": [
+      "gomisuke-67"
+    ],
+    "3390077": [
+      "gomisuke-67"
+    ],
+    "3390078": [
+      "gomisuke-67"
+    ],
+    "3390081": [
+      "gomisuke-67"
+    ],
+    "3390082": [
+      "gomisuke-67"
+    ]
+  }
 }

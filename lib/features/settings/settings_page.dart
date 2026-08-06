@@ -6,6 +6,7 @@ import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
 import '../area/area_editor_page.dart';
+import '../area/area_picker_page.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -31,6 +32,15 @@ class SettingsPage extends ConsumerWidget {
               MaterialPageRoute<void>(
                 builder: (_) => AreaEditorPage(initial: area),
               ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.search_outlined),
+            title: const Text('地区を選び直す'),
+            subtitle: const Text('郵便番号または一覧から選び直します'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
             ),
           ),
           const Divider(height: 1),

@@ -56,6 +56,9 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
   areas:    確定地区の一覧。初回設定の主経路（地区を選ぶと曜日が決まる）が
             全面的に依存するデータ（77件投入済み。next-phase.md A章参照）
   presets:  曜日入力の雛形。地区が見つからない代替経路でのみ使う
+  postalAreas: 郵便番号→areasのid一覧（270件）
+  areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
+                             （AreaPickerPageが使う唯一の郵便番号関連API）
 
 SettingsRepository           shared_preferences 経由でCollectionAreaを1件だけ保存
   readArea() / writeArea() / clear()
@@ -94,7 +97,7 @@ calendarProvider             Provider<CollectionCalendar?>
 ```
 SaitamaGomiApp (MaterialApp, ja固定)
  └ _Root  selectedAreaProviderを見て分岐
-    ├ area == null            → AreaEditorPage(isOnboarding: true)
+    ├ area == null            → AreaPickerPage(isOnboarding: true)
     ├ area != null            → HomeShell
     │   └ IndexedStack（タブ切り替えでカレンダーの表示月を失わないため）
     │       ├ HomePage      明日を最大化、今日、この先6件、区分ごとの次回
@@ -102,21 +105,39 @@ SaitamaGomiApp (MaterialApp, ja固定)
     │       └ SettingsPage  地区変更・設定中の曜日・区分ごとの出し方
     └ AsyncError             → エラー表示（設定読み込み失敗）
 
-AreaEditorPage(initial: null, isOnboarding: true)   … 初回設定
-AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPageから遷移する変更画面
+AreaPickerPage(isOnboarding: true)   … 初回設定の入口（_Rootから直接）
+AreaPickerPage(isOnboarding: false)  … SettingsPage「地区を選び直す」から遷移
+  └ 郵便番号 or 一覧で CollectionArea を選ぶ
+     → push: AreaEditorPage(initial: 選んだarea, isOnboarding: 同じ値)
+  └ 「自分の地区が見つからない」
+     → push: AreaEditorPage(initial: null, isOnboarding: 同じ値)
+
+AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「お住まいの地区」から
+                                                        遷移する、曜日を直接編集する画面
 ```
 
-初回設定と設定変更は同一Widget（`AreaEditorPage`）。`isOnboarding`でAppBarの戻るボタンと
-文言だけを切り替え、入力UI自体は共通にしている。
+`AreaPickerPage`（`lib/features/area/area_picker_page.dart`）が「地区をどう特定するか」、
+`AreaEditorPage`が「曜日をどう確認・調整するか」を担う。前者は必ず後者を
+`Navigator.push`した先に手渡す構造で、`AreaEditorPage`自体は
+[requirements.md](requirements.md) 4.1節の主経路・代替経路の両方で共有される
+（渡す`initial`が「地区データそのまま」か「null（空欄）」かの違いだけ）。
 
-**現状の`AreaEditorPage`は曜日の手入力を主UIとして描いているが、これは
-[requirements.md](requirements.md) 4.1節で定めた「地区を選べば曜日は自動で決まる」という
-目標形ではない。** `areas.json`のデータはすでに入っているので、この画面を
-区→地区選択を主UIに置き換える作業（次に着手すべき残タスク）だけが残っている。
-曜日の手入力（現行の`_CategoryEditor`一式）は「地区が見つからない」を選んだ場合の
-代替経路に格下げする（詳細はnext-phase.md A章）。
-`_applyPreset`が`CollectionArea`を受けて`_drafts`に反映する処理は、対象が`presets`か`areas`かに
-関わらず同じ形で再利用できる見込み。
+`AreaEditorPage._save()`は保存後に必ず`Navigator.pop()`する。初回設定でも
+`AreaPickerPage`からのpushを経由するようになったため、pop先は常に存在する
+（pop後、その下に隠れていた`_Root`が`selectedAreaProvider`の更新を検知して
+`HomeShell`に切り替わる）。
+
+`AreaPickerPage`が地区を選んだ結果は、`AreaEditorPage(initial: area)`の`initState`が
+`initial.rulesFor(category)`から`_drafts`を組み立てる既存の仕組み（元々は設定変更時の
+プリフィルのために存在した）にそのまま乗る。ピッカー側から`_applyPreset`等を
+呼び出す必要はない。
+
+**郵便番号の扱い**：`AreaPickerPage`は入力された郵便番号をローカルの`State`
+（`TextEditingController`）にしか持たない。`AreaCatalog.areasForPostalCode()`に渡して
+候補の`CollectionArea`を得たら、以降はその`CollectionArea`だけが`AreaEditorPage`に渡り、
+郵便番号自体はどこにも渡らない・保存されない（`SettingsRepository`が保存する
+`CollectionArea`にも郵便番号に相当するフィールドは無い）。画面上にもその旨の注記を出す
+（[requirements.md](requirements.md) 4.1節）。
 
 ホーム・カレンダーの日付タップは共通の`showDayDetailSheet`（`lib/ui/widgets/day_detail_sheet.dart`）
 を呼ぶ、モーダルボトムシート1種類に集約している。
