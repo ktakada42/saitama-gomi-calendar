@@ -80,7 +80,7 @@ class SettingsPage extends ConsumerWidget {
             ),
           ListTile(
             leading: const Icon(Icons.edit_calendar_outlined),
-            title: const Text('収集曜日を調整する'),
+            title: const Text('収集曜日を修正する'),
             subtitle: const Text('実際の収集日と違うときに直せます'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(

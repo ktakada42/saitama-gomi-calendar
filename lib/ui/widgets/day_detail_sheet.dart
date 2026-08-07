@@ -18,6 +18,12 @@ Future<void> showDayDetailSheet(
     context: context,
     showDragHandle: true,
     isScrollControlled: true,
+    // 高さの上限を決めておく。決めないと、5区分が重なる日を狭い画面で開いた
+    // ときにシートが画面いっぱいに広がり、外側を押して閉じることも
+    // つまみを掴んで下げることもできなくなる。
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+    ),
     builder: (context) => _DayDetailSheet(day: day, area: area, today: today),
   );
 }

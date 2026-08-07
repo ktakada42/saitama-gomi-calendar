@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/features/calendar/calendar_page.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
@@ -90,5 +91,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
+  });
+
+  testWidgets('5区分が重なる日でもカレンダーが溢れず、シートを閉じられる', (tester) async {
+    await pumpApp(
+      tester,
+      const CalendarPage(),
+      area: manyCategoryArea,
+      viewport: TestViewport.compact,
+    );
+    // マスは3段まで。帯を3本出したうえで「+2」を足すと4段になって溢れる。
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('11').first);
+    await tester.pumpAndSettle();
+
+    // シートが画面いっぱいに広がると、外を押しても、つまみを掴んでも
+    // 閉じられなくなる。上に余白を残す。
+    final sheet = tester.getRect(find.byType(BottomSheet));
+    expect(sheet.top, greaterThan(0));
+    expect(tester.takeException(), isNull);
+
+    // 余白を押して閉じられる。
+    await tester.tapAt(Offset(sheet.center.dx, sheet.top / 2));
+    await tester.pumpAndSettle();
+    expect(find.byType(BottomSheet), findsNothing);
   });
 }

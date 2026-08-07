@@ -255,15 +255,27 @@ class _DayCell extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  for (final category in day.categories.take(3))
+                  // マスに入るのは3段まで。4区分以上ある日は3段目を
+                  // 「+2」の表示に使う。帯を3本出したうえで「+2」を足すと
+                  // 4段になってマスから溢れる。
+                  for (final category in day.categories.take(
+                    day.categories.length > _maxStrips
+                        ? _maxStrips - 1
+                        : _maxStrips,
+                  ))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 1),
                       child: _CategoryStrip(category: category),
                     ),
-                  if (day.categories.length > 3)
+                  if (day.categories.length > _maxStrips)
                     Text(
-                      '+${day.categories.length - 3}',
-                      style: theme.textTheme.labelSmall,
+                      '+${day.categories.length - _maxStrips + 1}',
+                      // 帯と同じ行送りにする。既定の行送りだと3段目だけ
+                      // 高くなり、マスから溢れる。
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontSize: 10,
+                        height: 1.3,
+                      ),
                     ),
                 ],
               ),
@@ -274,6 +286,9 @@ class _DayCell extends StatelessWidget {
     );
   }
 }
+
+/// マスに収まる段数。区分名の帯と「+2」の表示を合わせてこの数まで。
+const _maxStrips = 3;
 
 class _CategoryStrip extends StatelessWidget {
   const _CategoryStrip({required this.category});
