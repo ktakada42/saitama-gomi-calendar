@@ -113,6 +113,9 @@ Future<void> pumpRootApp(
   WidgetTester tester, {
   CollectionArea? area = sampleArea,
   DateTime? today,
+
+  /// 同梱データの読み込みが失敗した場合の表示を確かめるためのスイッチ。
+  bool failCatalog = false,
 }) async {
   _useHandsetViewport(tester);
   SharedPreferences.setMockInitialValues({
@@ -122,7 +125,9 @@ Future<void> pumpRootApp(
     ProviderScope(
       overrides: [
         todayProvider.overrideWithValue(today ?? testToday),
-        areaCatalogProvider.overrideWith((ref) async => testCatalog),
+        areaCatalogProvider.overrideWith(
+          (ref) async => failCatalog ? throw Exception('読み込み失敗') : testCatalog,
+        ),
         // OSの通知プラグインはテスト環境では初期化できないので差し替える。
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),

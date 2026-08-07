@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/area/area_picker_page.dart';
 import 'features/shell/home_shell.dart';
+import 'ui/widgets/load_failure_view.dart';
 import 'providers.dart';
 
 class SaitamaGomiApp extends ConsumerWidget {
@@ -71,8 +72,15 @@ class _Root extends ConsumerWidget {
         value == null
             ? const AreaPickerPage(isOnboarding: true)
             : const HomeShell(),
-      AsyncError(:final error) => Scaffold(
-        body: Center(child: Text('設定の読み込みに失敗しました\n$error')),
+      // 保存データが壊れている場合はSettingsRepositoryがnullを返して
+      // 初回設定に戻すので、ここに来るのは端末のストレージ自体が読めない
+      // ような場合に限られる。利用者にできることは限られるので、
+      // 例外の中身は見せずに再試行の手段だけ出す。
+      AsyncError() => Scaffold(
+        body: LoadFailureView(
+          message: '設定を読み込めませんでした。',
+          onRetry: () => ref.invalidate(selectedAreaProvider),
+        ),
       ),
       _ => const Scaffold(body: Center(child: CircularProgressIndicator())),
     };
