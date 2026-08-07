@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/kana.dart';
 import '../../domain/waste_item.dart';
 import '../../providers.dart';
-import '../../ui/category_style.dart';
+import '../../ui/widgets/category_pill.dart';
 import '../../ui/widgets/load_failure_view.dart';
+import 'waste_item_sheet.dart';
 
 /// 品目から出し先を調べる画面。
 ///
@@ -92,6 +93,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                 query: _query,
                 scrollController: _scrollController,
                 headerKeys: _headerKeys,
+                manualUrl: value.sourceUrl,
               ),
             ),
           ],
@@ -128,25 +130,38 @@ class _Results extends StatelessWidget {
     required this.query,
     required this.scrollController,
     required this.headerKeys,
+    required this.manualUrl,
   });
 
   final List<WasteItem> items;
   final String query;
+  final String manualUrl;
   final ScrollController scrollController;
   final Map<String, GlobalKey> headerKeys;
 
   static const _headerHeight = 36.0;
 
+  /// 行の下段（subtitle）が何行になるか。
+  ///
+  /// 印を持つ品目は、注意点の下に「押せば続きがある」ことを1行足す。
+  /// 3行に膨らまないよう、そのときは注意点を1行に丸める。
+  static int subtitleLines(WasteItem item) {
+    if (item.hasDetail) return item.note.isEmpty ? 1 : 2;
+    if (item.note.isEmpty) return 0;
+    return item.note.length > 24 ? 2 : 1;
+  }
+
   /// 品目1件分の高さの見積り。
   ///
-  /// ListTileは注意点の有無と長さで1行・2行・3行に変わり、それぞれ
-  /// 56・72・88になる。索引から飛ぶ位置の当たりを付けるのに使う。
-  /// 画面外の行は組み立てられておらず実測できないので、まずこの見積りで
-  /// 飛んでから、描かれた見出しの位置を見て寄せ直す（_KanaIndex._jumpTo）。
-  static double _itemHeight(WasteItem item) {
-    if (item.note.isEmpty) return 56;
-    return item.note.length > 24 ? 88 : 72;
-  }
+  /// ListTileは下段の行数で1行・2行・3行に変わり、それぞれ56・72・88になる。
+  /// 索引から飛ぶ位置の当たりを付けるのに使う。画面外の行は組み立てられて
+  /// おらず実測できないので、まずこの見積りで飛んでから、描かれた見出しの
+  /// 位置を見て寄せ直す（_KanaIndex._jumpTo）。
+  static double _itemHeight(WasteItem item) => switch (subtitleLines(item)) {
+    0 => 56,
+    1 => 72,
+    _ => 88,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +217,9 @@ class _Results extends StatelessWidget {
       itemBuilder: (context, index) {
         final row = rows[index];
         final header = row.header;
-        if (header == null) return _ItemTile(row.item!);
+        if (header == null) {
+          return _ItemTile(row.item!, manualUrl: manualUrl);
+        }
         return _KanaHeader(
           header,
           key: headerKeys.putIfAbsent(header, GlobalKey.new),
@@ -497,82 +514,80 @@ class _KanaIndexEntry extends StatelessWidget {
   }
 }
 
+/// 一覧の1行。
+///
+/// 早見表の印（★2・▶P9参照）を持つ品目は、行に収まる短さでは事情を
+/// 伝えきれないので、押すと詳しい出し方を出す。印を持たない品目は
+/// 行の文字がすべてなので押せるようにしない。
 class _ItemTile extends StatelessWidget {
-  const _ItemTile(this.item);
+  const _ItemTile(this.item, {required this.manualUrl});
 
   final WasteItem item;
+  final String manualUrl;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final hasDetail = item.hasDetail;
     return ListTile(
       title: Text(item.name),
-      subtitle: item.note.isEmpty
+      subtitle: _subtitle(theme, hasDetail: hasDetail),
+      trailing: CategoryPill(item: item),
+      isThreeLine: _Results.subtitleLines(item) > 1,
+      onTap: hasDetail
+          ? () => showWasteItemSheet(context, item: item, manualUrl: manualUrl)
+          : null,
+    );
+  }
+
+  Widget? _subtitle(ThemeData theme, {required bool hasDetail}) {
+    final note = item.note;
+    if (!hasDetail) {
+      return note.isEmpty
           ? null
           : Text(
-              item.note,
+              note,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
-            ),
-      trailing: _CategoryPill(item),
-      isThreeLine: item.note.length > 24,
-    );
-  }
-}
-
-/// 出し先を表すピル。ホームやカレンダーの区分バッジと同じ見た目にする。
-///
-/// 5区分でない出し先（粗大ごみ・小型家電・電池・収集できないもの）にも
-/// 同じ形を使う。利用者から見ればどれも「どこに出すか」で区別はないため。
-class _CategoryPill extends StatelessWidget {
-  const _CategoryPill(this.item);
-
-  final WasteItem item;
-
-  /// 5区分に入らない出し先のアイコン。
-  static const _fallbackIcons = {
-    'oversized': Icons.chair_outlined,
-    'smallAppliance': Icons.devices_other,
-    'battery': Icons.battery_full,
-    'notAccepted': Icons.block,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final category = item.category;
-    // 5区分なら区分色を使う。収集日を持たない出し先は、区分色と
-    // 紛らわしくならないよう控えめな色にする。
-    final color = category == null
-        ? theme.colorScheme.onSurfaceVariant
-        : CategoryStyle.colorOf(category, context);
-    final icon = category == null
-        ? (_fallbackIcons[item.categoryId] ?? Icons.place_outlined)
-        : CategoryStyle.iconOf(category);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.45)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 13, color: color),
-          const SizedBox(width: 4),
+            );
+    }
+    // 押せば続きがあることを、行の中で示す。注意点と同じ行に並べると
+    // どちらも半端に切れるので、下に重ねる。
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (note.isNotEmpty)
           Text(
-            item.shortCategoryLabel,
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
+            note,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-        ],
-      ),
+        Row(
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 13,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 3),
+            Expanded(
+              child: Text(
+                item.marks.first.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

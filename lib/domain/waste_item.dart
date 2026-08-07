@@ -1,4 +1,5 @@
 import 'garbage_category.dart';
+import 'waste_note.dart';
 
 /// 分別早見表の1品目。
 ///
@@ -13,6 +14,7 @@ class WasteItem {
     required this.categoryId,
     required this.categoryLabel,
     required this.note,
+    this.markIds = const [],
   });
 
   /// 品目名。「ペットボトル」「電気スタンド」など。
@@ -32,7 +34,19 @@ class WasteItem {
   final String categoryLabel;
 
   /// 出し方の注意点。無い品目も多い。
+  ///
+  /// 早見表の「★2」「▶P9参照」といった印は含まない。冊子を前提にした
+  /// 書き方で、そのまま出しても意味が通らないため、[markIds]に分けてある。
   final String note;
+
+  /// 注意点に付いていた印のid。「star2」「page9」など。
+  final List<String> markIds;
+
+  /// 印の意味。知らない印は落とす。
+  List<NoteMark> get marks => NoteMark.resolve(markIds);
+
+  /// 一覧の行だけでは伝わらない事情を持っているか。
+  bool get hasDetail => marks.isNotEmpty;
 
   /// 5区分のいずれかならその区分。粗大ごみなど収集日を持たない出し先なら null。
   GarbageCategory? get category => GarbageCategory.fromId(categoryId);
@@ -77,5 +91,9 @@ class WasteItem {
     categoryId: json['category'] as String,
     categoryLabel: json['categoryLabel'] as String,
     note: json['note'] as String? ?? '',
+    markIds: [
+      for (final mark in (json['marks'] as List<dynamic>? ?? const []))
+        mark as String,
+    ],
   );
 }

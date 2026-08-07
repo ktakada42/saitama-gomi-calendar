@@ -212,6 +212,7 @@ def extract_page(page):
                 w["text"]
                 for w in sorted(note_parts, key=lambda w: (round(w["top"], 1), w["x0"]))
             ).strip()
+            note, marks = split_marks(note)
 
             entries.append(
                 {
@@ -220,9 +221,51 @@ def extract_page(page):
                     "category": category_id,
                     "categoryLabel": category_label,
                     "note": note,
+                    "marks": marks,
                 }
             )
     return entries
+
+
+# 注意点の中の「★2」「▶P9参照」は、冊子の脚注や別ページを指す印。
+# 冊子を持たない利用者には意味が通らないので、本文から切り出して
+# アプリ側で言葉にする（lib/domain/waste_note.dart）。
+#
+# ★は1〜6の1桁だけ。2桁で拾うと「★290㎝未満にしばる」（★2 と
+# 「90㎝未満にしばる」）を ★29 と読み違える。
+MARK_PATTERNS = (
+    (re.compile(r"★[1-6１-６]"), "star"),
+    (re.compile(r"▶?[PpＰ]([0-9０-９]{1,2})\s*参照"), "page"),
+)
+
+
+def to_ascii_digits(text):
+    return text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+
+
+def split_marks(note):
+    """注意点から印を切り出し、（本文, 印のid一覧）を返す。
+
+    印は現れた順に並べ、同じものは1つにまとめる。
+    """
+    marks = []
+    spans = []
+    for pattern, kind in MARK_PATTERNS:
+        for match in pattern.finditer(note):
+            if kind == "star":
+                mark = "star" + to_ascii_digits(match.group(0)[1:])
+            else:
+                mark = "page" + to_ascii_digits(match.group(1))
+            spans.append((match.start(), match.end(), mark))
+
+    for _, _, mark in sorted(spans):
+        if mark not in marks:
+            marks.append(mark)
+
+    for start, end, _ in sorted(spans, reverse=True):
+        note = note[:start] + note[end:]
+
+    return note.strip(), marks
 
 
 def find_table_pages(pdf):

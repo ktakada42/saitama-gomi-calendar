@@ -8,3101 +8,3865 @@
       "kanaHead": "あ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスヘ"
+      "note": "回収ボックスヘ",
+      "marks": []
     },
     {
       "name": "アルバム（写真用）",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "アルミ箔",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "油（食用油）",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めてから※液体のものは、排出禁止"
+      "note": "紙等にしみ込ませるか、固めてから※液体のものは、排出禁止",
+      "marks": []
     },
     {
       "name": "網戸",
       "kanaHead": "あ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "★2戸別収集の場合は2枚1品、最大8枚まで"
+      "note": "戸別収集の場合は2枚1品、最大8枚まで",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "足拭きマット",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "雨衣（カッパ）",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "いす",
       "kanaHead": "い",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "いちごのパック",
       "kanaHead": "い",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "イヤホン",
       "kanaHead": "い",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "インクカートリッジ",
       "kanaHead": "い",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店または区役所・支所・公民館の専用回収ボックスへ"
+      "note": "販売店または区役所・支所・公民館の専用回収ボックスへ",
+      "marks": []
     },
     {
       "name": "インスタントめんの袋",
       "kanaHead": "い",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "一斗かん",
       "kanaHead": "い",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "中身を使い切ってから"
+      "note": "中身を使い切ってから",
+      "marks": []
     },
     {
       "name": "一輪車",
       "kanaHead": "い",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "石",
       "kanaHead": "い",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "造園業者または石材店等へ"
+      "note": "造園業者または石材店等へ",
+      "marks": []
     },
     {
       "name": "衣装ケース",
       "kanaHead": "い",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "衣装ケース（プラスチック製）",
       "kanaHead": "い",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "衣類",
       "kanaHead": "い",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "洗って、乾かして（雨の日は次回に）"
+      "note": "洗って、乾かして（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "衣類乾燥機",
       "kanaHead": "い",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "飲料の紙パック",
       "kanaHead": "い",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "プラスチック部分を必ず取って、牛乳等の紙パックとして（雨の日は次回に）"
+      "note": "プラスチック部分を必ず取って、牛乳等の紙パックとして（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "飲料の紙パック（中が銀色アルミのもの）",
       "kanaHead": "い",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ウインドブレーカー",
       "kanaHead": "う",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ウォーターサーバーの容器",
       "kanaHead": "う",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1★4PETマークがある場合は、ペットボトルとして出してくださいPET・プラマークがないものはもえるごみ"
+      "note": "PETマークがある場合は、ペットボトルとして出してくださいPET・プラマークがないものはもえるごみ",
+      "marks": [
+        "star1",
+        "star4"
+      ]
     },
     {
       "name": "植木鉢（植木ポット・プラスチック製）",
       "kanaHead": "う",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★4"
+      "note": "",
+      "marks": [
+        "star4"
+      ]
     },
     {
       "name": "植木鉢（素焼き）",
       "kanaHead": "う",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ACアダプタ",
       "kanaHead": "え",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "LED電球",
       "kanaHead": "え",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "エアコン",
       "kanaHead": "え",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "延長コード",
       "kanaHead": "え",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "液晶テレビ",
       "kanaHead": "え",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "絵の具",
       "kanaHead": "え",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ＭＤ",
       "kanaHead": "え",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "おまる",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "汚物は、トイレに"
+      "note": "汚物は、トイレに",
+      "marks": []
     },
     {
       "name": "おもちゃ",
       "kanaHead": "お",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "お菓子の袋",
       "kanaHead": "お",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "オイル",
       "kanaHead": "お",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "市販の廃油パック等に染み込ませる"
+      "note": "市販の廃油パック等に染み込ませる",
+      "marks": []
     },
     {
       "name": "オイルのかん",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "中身を使い切ってから"
+      "note": "中身を使い切ってから",
+      "marks": []
     },
     {
       "name": "オイルヒーター",
       "kanaHead": "お",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照"
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "オルガン",
       "kanaHead": "お",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "オーディオコンポ",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★3"
+      "note": "",
+      "marks": [
+        "star3"
+      ]
     },
     {
       "name": "オーディオラック",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "オートバイ（原付含む）",
       "kanaHead": "お",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ▶P11参照"
+      "note": "販売店、専門業者へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "オーブントースター",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "温度計",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "温水洗浄便座（ウォシュレット）",
       "kanaHead": "お",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "かさ",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "かばん・バッグ",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "ファスナー等の金属は無理にはずさなくてよい"
+      "note": "ファスナー等の金属は無理にはずさなくてよい",
+      "marks": []
     },
     {
       "name": "かわら",
       "kanaHead": "か",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4枚1品、最大8枚まで"
+      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4枚1品、最大8枚まで",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "カイロ（使い捨て）",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "カセットコンロ（卓上式）",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "カートリッジ式ボンベ及び電池をはずす"
+      "note": "カートリッジ式ボンベ及び電池をはずす",
+      "marks": []
     },
     {
       "name": "カセットテープ",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+      "note": "中身を使い切ってから、単独の透明袋に入れて",
+      "marks": [
+        "page7"
+      ]
     },
     {
       "name": "カッター",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "刃は、紙などに包んで"
+      "note": "刃は、紙などに包んで",
+      "marks": []
     },
     {
       "name": "カップ麺の容器",
       "kanaHead": "か",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "カミソリ",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "刃は、紙などに包んで"
+      "note": "刃は、紙などに包んで",
+      "marks": []
     },
     {
       "name": "カメラ",
       "kanaHead": "か",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "カレンダー",
       "kanaHead": "か",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）※金属部分は、もえないごみ"
+      "note": "その他の紙として（雨の日は次回に）※金属部分は、もえないごみ",
+      "marks": []
     },
     {
       "name": "カーテン",
       "kanaHead": "か",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "カーペット",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "カーボン紙",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ガスボンベ（LP・プロパン）",
       "kanaHead": "か",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "ガスレンジ（テーブル）",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "電池をはずす"
+      "note": "電池をはずす",
+      "marks": []
     },
     {
       "name": "ガソリン",
       "kanaHead": "か",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "ガラス",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す",
+      "marks": []
     },
     {
       "name": "乾燥剤",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "乾電池",
       "kanaHead": "か",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "★3絶縁して単独の透明袋に入れて▶P7参照"
+      "note": "絶縁して単独の透明袋に入れて",
+      "marks": [
+        "star3",
+        "page7"
+      ]
     },
     {
       "name": "加湿器",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "加熱式電子たばこ",
       "kanaHead": "か",
       "category": "battery",
       "categoryLabel": "電池回収ボックス",
-      "note": "電池回収ボックスへ"
+      "note": "電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "感熱紙",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "懐中電灯",
       "kanaHead": "か",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "画鋲",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "袋が破れないように、紙などに包んで"
+      "note": "袋が破れないように、紙などに包んで",
+      "marks": []
     },
     {
       "name": "紙おむつ",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚物は、トイレに"
+      "note": "汚物は、トイレに",
+      "marks": []
     },
     {
       "name": "紙袋",
       "kanaHead": "か",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "花瓶",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す",
+      "marks": []
     },
     {
       "name": "貝殻",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "鏡",
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "割れたものは紙などに包み「割れ物」と書いて出す★2"
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "革製品・革ジャン",
       "kanaHead": "か",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ギター",
       "kanaHead": "き",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "急須",
       "kanaHead": "き",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "教科書",
       "kanaHead": "き",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "雑誌類として（雨の日は次回に）"
+      "note": "雑誌類として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "木の枝・木くず",
       "kanaHead": "き",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "太さが10㎝未満で長さが90㎝未満の場合のみ直径30㎝未満の束にして、1回に3束まで直接持込みは太さ長さが同条件"
+      "note": "太さが10㎝未満で長さが90㎝未満の場合のみ直径30㎝未満の束にして、1回に3束まで直接持込みは太さ長さが同条件",
+      "marks": []
     },
     {
       "name": "牛乳パック",
       "kanaHead": "き",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "洗って、開いて、乾かして、牛乳パックのみでしばる"
+      "note": "洗って、開いて、乾かして、牛乳パックのみでしばる",
+      "marks": []
     },
     {
       "name": "着物",
       "kanaHead": "き",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "脚立",
       "kanaHead": "き",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "金庫",
       "kanaHead": "き",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照※耐火性でない手提げ金庫は"
+      "note": "許可業者（㈲太盛）へ※耐火性でない手提げ金庫は",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "くぎ",
       "kanaHead": "く",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "袋が破れないように、紙などに包んで"
+      "note": "袋が破れないように、紙などに包んで",
+      "marks": []
     },
     {
       "name": "クッション",
       "kanaHead": "く",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "クーラーボックス",
       "kanaHead": "く",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "果物の外袋",
       "kanaHead": "く",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "空気入れ",
       "kanaHead": "く",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "空気清浄機",
       "kanaHead": "く",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2フロンガス使用のものは、専門業者に依頼するかフロンガスを回収済みであることがわかる証明書とともに直接持込"
+      "note": "フロンガス使用のものは、専門業者に依頼するかフロンガスを回収済みであることがわかる証明書とともに直接持込",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "草ごみ(枯れ葉など）",
       "kanaHead": "く",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "乾燥させてから、1回につき、3袋まで"
+      "note": "乾燥させてから、1回につき、3袋まで",
+      "marks": []
     },
     {
       "name": "薬（風邪薬・消毒薬など）",
       "kanaHead": "く",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "車いす（電動機つき）",
       "kanaHead": "く",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照※電動機のないものは、もえないごみ★2"
+      "note": "許可業者（㈲太盛）へ※電動機のないものは、もえないごみ",
+      "marks": [
+        "page11",
+        "star2"
+      ]
     },
     {
       "name": "車の部品",
       "kanaHead": "く",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照※タイヤ、ホイール、バッテリーは戸別収集可"
+      "note": "許可業者（㈲太盛）へ※タイヤ、ホイール、バッテリーは戸別収集可",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "靴",
       "kanaHead": "く",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "靴下",
       "kanaHead": "く",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ケチャップの容器",
       "kanaHead": "け",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "ゲーム機",
       "kanaHead": "け",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "化粧品の容器",
       "kanaHead": "け",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "原動機付自転車",
       "kanaHead": "け",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ▶P11参照"
+      "note": "販売店、専門業者へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "携帯電話・ＰＨＳ",
       "kanaHead": "け",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "販売店でも回収しています"
+      "note": "販売店でも回収しています",
+      "marks": []
     },
     {
       "name": "毛糸製品（衣類）",
       "kanaHead": "け",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "蛍光管・蛍光ランプ",
       "kanaHead": "け",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "単独の透明袋に入れて90㎝以上も出せます"
+      "note": "単独の透明袋に入れて90㎝以上も出せます",
+      "marks": []
     },
     {
       "name": "血圧計",
       "kanaHead": "け",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "こたつ",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2こたつ板を含み1品"
+      "note": "こたつ板を含み1品",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ござ",
       "kanaHead": "こ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "コップ（ガラス）",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "コピー機",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "コンクリートブロック",
       "kanaHead": "こ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで"
+      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "コート",
       "kanaHead": "こ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "コーヒーメーカー",
       "kanaHead": "こ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "ゴム手袋",
       "kanaHead": "こ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ゴルフクラブ",
       "kanaHead": "こ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ゴルフバッグ",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ゴルフボール",
       "kanaHead": "こ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "工具",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "日曜大工程度"
+      "note": "日曜大工程度",
+      "marks": []
     },
     {
       "name": "広告",
       "kanaHead": "こ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "新聞紙とまとめてしばる（雨の日は次回に）"
+      "note": "新聞紙とまとめてしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "米びつ",
       "kanaHead": "こ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "米袋",
       "kanaHead": "こ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "サイドボード",
       "kanaHead": "さ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "サイリウム（ケミカルライト）",
       "kanaHead": "さ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ"
+      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ",
+      "marks": []
     },
     {
       "name": "サンダル",
       "kanaHead": "さ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "サーフボード",
       "kanaHead": "さ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "三輪車",
       "kanaHead": "さ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "座いす",
       "kanaHead": "さ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "座卓",
       "kanaHead": "さ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "座布団",
       "kanaHead": "さ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "1回につき5枚まで"
+      "note": "1回につき5枚まで",
+      "marks": []
     },
     {
       "name": "殺虫剤（スプレーかん)",
       "kanaHead": "さ",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "中身を使い切ってから、単独の透明袋に入れて"
+      "note": "中身を使い切ってから、単独の透明袋に入れて",
+      "marks": []
     },
     {
       "name": "皿（陶器・スチール・ガラス）",
       "kanaHead": "さ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "財布",
       "kanaHead": "さ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "酒のパック",
       "kanaHead": "さ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "中がアルミ箔で加工されているため"
+      "note": "中がアルミ箔で加工されているため",
+      "marks": []
     },
     {
       "name": "酒類のびん",
       "kanaHead": "さ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "自家製果実酒のびんは除く"
+      "note": "自家製果実酒のびんは除く",
+      "marks": []
     },
     {
       "name": "雑誌",
       "kanaHead": "さ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "雑誌類でまとめてしばるカタログ、週刊誌等も一緒に（雨の日は次回に）"
+      "note": "雑誌類でまとめてしばるカタログ、週刊誌等も一緒に（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "しょう油の容器",
       "kanaHead": "し",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "中をすすいで"
+      "note": "中をすすいで",
+      "marks": []
     },
     {
       "name": "じゅうたん",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "シャツ",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "シャンプー・リンスの容器",
       "kanaHead": "し",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "シュレッダーごみ",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "リサイクルができないため。袋の空気を抜く"
+      "note": "リサイクルができないため。袋の空気を抜く",
+      "marks": []
     },
     {
       "name": "シーツ",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）（羽毛・羊毛・綿・ジェル等はもえるごみ）"
+      "note": "ひもでしばる（雨の日は次回に）（羽毛・羊毛・綿・ジェル等はもえるごみ）",
+      "marks": []
     },
     {
       "name": "ジャッキ（車用油圧型・ダルマ型）",
       "kanaHead": "し",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ジャンパー",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ジャージ",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ジューサー",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ジーパン・ジージャン",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "下敷き",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "下着",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "充電式電池",
       "kanaHead": "し",
       "category": "battery",
       "categoryLabel": "電池回収ボックス",
-      "note": "電池回収ボックスへ"
+      "note": "電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "写真",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "写真集（雑誌）",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "雑誌類でまとめてしばる（雨の日は次回に）"
+      "note": "雑誌類でまとめてしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "定規",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★４"
+      "note": "",
+      "marks": [
+        "star4"
+      ]
     },
     {
       "name": "新聞紙（折込チラシ含）",
       "kanaHead": "し",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "広告・チラシとまとめてしばる（雨の日は次回に）"
+      "note": "広告・チラシとまとめてしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "消火器",
       "kanaHead": "し",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ▶P10参照"
+      "note": "販売店、専門業者へ",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "湿布",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "照明器具",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "自家製果実酒（梅酒等）を漬けるびん",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "自転車",
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "自転車のタイヤ・チューブ（ゴム製）",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "自転車（電動機つき）",
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "除湿剤",
       "kanaHead": "し",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "水が溜まるタイプのものは容器の水を抜いて出す"
+      "note": "水が溜まるタイプのものは容器の水を抜いて出す",
+      "marks": []
     },
     {
       "name": "除湿機",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済であることがわかる証明書とともに直接持込み"
+      "note": "フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済であることがわかる証明書とともに直接持込み",
+      "marks": []
     },
     {
       "name": "障子",
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "食品トレイ",
       "kanaHead": "し",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "食器棚",
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "食器洗浄器",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "食器類（せともの・ガラス）",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す",
+      "marks": []
     },
     {
       "name": "食用油",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めて※液体のものは、排出禁止"
+      "note": "紙等にしみ込ませるか、固めて※液体のものは、排出禁止",
+      "marks": []
     },
     {
       "name": "食用油の容器(プラスチック製)",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "中身をカラにして"
+      "note": "中身をカラにして",
+      "marks": []
     },
     {
       "name": "食用油の容器（びん・かん）",
       "kanaHead": "し",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "中身をカラにして"
+      "note": "中身をカラにして",
+      "marks": []
     },
     {
       "name": "ＣＤ",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "すのこ",
       "kanaHead": "す",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "スウェット",
       "kanaHead": "す",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "スキーウェア",
       "kanaHead": "す",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "スキー・スノーボード用ブーツ",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "スキー板・スノーボード",
       "kanaHead": "す",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "スケートボード",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ステレオ",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2★3"
+      "note": "",
+      "marks": [
+        "star2",
+        "star3"
+      ]
     },
     {
       "name": "ストッキング",
       "kanaHead": "す",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ストロー",
       "kanaHead": "す",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ストーブ",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "灯油を抜き、電池をはずす★2※本体部分の灯油も抜く"
+      "note": "灯油を抜き、電池をはずす※本体部分の灯油も抜く",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "スパイク靴",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "スピーカー",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2★3"
+      "note": "",
+      "marks": [
+        "star2",
+        "star3"
+      ]
     },
     {
       "name": "スプリング入りマットレス",
       "kanaHead": "す",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "スプレーかん",
       "kanaHead": "す",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+      "note": "中身を使い切ってから、単独の透明袋に入れて",
+      "marks": [
+        "page7"
+      ]
     },
     {
       "name": "スプーン（プラスチック製）",
       "kanaHead": "す",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "スマートフォン",
       "kanaHead": "す",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "電池内蔵のものは回収ボックスへ"
+      "note": "電池内蔵のものは回収ボックスへ",
+      "marks": []
     },
     {
       "name": "スリッパ",
       "kanaHead": "す",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "スーツ",
       "kanaHead": "す",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "スーツケース",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "水槽",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "水筒",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "炊飯器",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "（パソコンの）スキャナー",
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "セーター",
       "kanaHead": "せ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ゼリーの容器",
       "kanaHead": "せ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "扇風機",
       "kanaHead": "せ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "洗剤の容器（詰め替えパック）",
       "kanaHead": "せ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "中身を出し切って注ぎ口部分を水ですすぐすすいで汚れが落ちなければもえるごみへ"
+      "note": "中身を出し切って注ぎ口部分を水ですすぐすすいで汚れが落ちなければもえるごみへ",
+      "marks": []
     },
     {
       "name": "洗濯ばさみ",
       "kanaHead": "せ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "洗濯機",
       "kanaHead": "せ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "洗面器",
       "kanaHead": "せ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "洗顔料のチューブ",
       "kanaHead": "せ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "生理用品",
       "kanaHead": "せ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "石油ポンプ（プラスチック製）",
       "kanaHead": "せ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ぞうきん",
       "kanaHead": "そ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ソファーベッド",
       "kanaHead": "そ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ソファー（スプリングなし）",
       "kanaHead": "そ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ソファー（スプリング入り）",
       "kanaHead": "そ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ソースの容器（プラスチック製）",
       "kanaHead": "そ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "掃除機",
       "kanaHead": "そ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2コードレス式・ロボット式はバッテリーをはずす"
+      "note": "コードレス式・ロボット式はバッテリーをはずす",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "たたみ（3分割できない場合）",
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10枚まで戸別収集の場合は1回につき4枚まで"
+      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10枚まで戸別収集の場合は1回につき4枚まで",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "たたみ（3分割できる場合）",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "1枚を3分割にする。1回につき1畳分まで"
+      "note": "1枚を3分割にする。1回につき1畳分まで",
+      "marks": []
     },
     {
       "name": "たばこの紙箱",
       "kanaHead": "た",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "たわし",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "たんす",
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "タイヤチェーン（材質に関係なく）",
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "タイヤ（乗用車・バイク用）",
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "タオル",
       "kanaHead": "た",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "タッパー",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ダウンジャケット",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ダンベル",
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "体温計（その他）",
       "kanaHead": "た",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "体温計（水銀使用のもの）",
       "kanaHead": "た",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "単独の透明袋に入れて"
+      "note": "単独の透明袋に入れて",
+      "marks": []
     },
     {
       "name": "体重計（デジタル式）",
       "kanaHead": "た",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "卓球のラケット",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "卵パック",
       "kanaHead": "た",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "段ボール",
       "kanaHead": "た",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "箱のままではなくたたんでひもでしばる（雨の日は次回に）"
+      "note": "箱のままではなくたたんでひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "炭酸ボンベ",
       "kanaHead": "た",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "竹",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "太さが10cm未満で長さが50cm未満の場合のみ直径30cm未満の束にして、1回に3束まで直接持込みは太さ長さが同条件"
+      "note": "太さが10cm未満で長さが50cm未満の場合のみ直径30cm未満の束にして、1回に3束まで直接持込みは太さ長さが同条件",
+      "marks": []
     },
     {
       "name": "竹串",
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙などでくるむか洗剤などの容器に入れて"
+      "note": "紙などでくるむか洗剤などの容器に入れて",
+      "marks": []
     },
     {
       "name": "脱臭剤容器",
       "kanaHead": "た",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "ちらし",
       "kanaHead": "ち",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "新聞紙・広告とまとめてしばる（雨の日は次回に）"
+      "note": "新聞紙・広告とまとめてしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "チャイルドシート",
       "kanaHead": "ち",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "チューブ（調味料の容器）",
       "kanaHead": "ち",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "注射針",
       "kanaHead": "ち",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "医療機関等へ返却"
+      "note": "医療機関等へ返却",
+      "marks": []
     },
     {
       "name": "着火剤（ジェルタイプ）",
       "kanaHead": "ち",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "直接持ち込みのみ"
+      "note": "直接持ち込みのみ",
+      "marks": []
     },
     {
       "name": "茶碗",
       "kanaHead": "ち",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "土",
       "kanaHead": "つ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "机",
       "kanaHead": "つ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "漬物石（人工石）",
       "kanaHead": "つ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "天然石は専門業者へ"
+      "note": "天然石は専門業者へ",
+      "marks": []
     },
     {
       "name": "釣り竿",
       "kanaHead": "つ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "釣り竿のリール",
       "kanaHead": "つ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "DVD",
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "てんぷら油",
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めてから"
+      "note": "紙等にしみ込ませるか、固めてから",
+      "marks": []
     },
     {
       "name": "ティッシュペーパーの箱",
       "kanaHead": "て",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ビニールは除いて、その他の紙へ（雨の日は次回に）"
+      "note": "ビニールは除いて、その他の紙へ（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "テニスラケット",
       "kanaHead": "て",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "テレビ",
       "kanaHead": "て",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "テレビ台",
       "kanaHead": "て",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "テーブル",
       "kanaHead": "て",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "手ぬぐい",
       "kanaHead": "て",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "手帳",
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "金具付きは金属部分を外して"
+      "note": "金具付きは金属部分を外して",
+      "marks": []
     },
     {
       "name": "手袋",
       "kanaHead": "て",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "鉄アレイ",
       "kanaHead": "て",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "電卓・電子手帳",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "電子オルガン",
       "kanaHead": "て",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "★5直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "star5",
+        "page9"
+      ]
     },
     {
       "name": "電子ピアノ",
       "kanaHead": "て",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "★5直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "star5",
+        "page9"
+      ]
     },
     {
       "name": "電子レンジ",
       "kanaHead": "て",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "電気ひげそり",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "電気カーペット",
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "電気コード",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ束の径が20c"
+      "note": "回収ボックスへ束の径が20c",
+      "marks": []
     },
     {
       "name": "電気スタンド",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "★2回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "電気ポット",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "電気毛布",
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "電池",
       "kanaHead": "て",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "絶縁して単独で透明袋に入れて充電式、ボタン型は電池回収ボックスへ"
+      "note": "絶縁して単独で透明袋に入れて充電式、ボタン型は電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "電球",
       "kanaHead": "て",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "LED電球も含む"
+      "note": "LED電球も含む",
+      "marks": []
     },
     {
       "name": "電話機",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "（パソコンの）ディスクドライブ",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "Ｔシャツ",
       "kanaHead": "て",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "トイレットペーパーの芯",
       "kanaHead": "と",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "トレイ（食品用）",
       "kanaHead": "と",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "トースター",
       "kanaHead": "と",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ドライヤー",
       "kanaHead": "と",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "ドレッシングの容器（プラスチック製）",
       "kanaHead": "と",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "土なべ",
       "kanaHead": "と",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "時計・腕時計",
       "kanaHead": "と",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "灯油",
       "kanaHead": "と",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "灯油かん（一斗かん・ポリタンク容器）",
       "kanaHead": "と",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "必ず中身を空にして"
+      "note": "必ず中身を空にして",
+      "marks": []
     },
     {
       "name": "灯油タンク（屋外用）",
       "kanaHead": "と",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照"
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "豆腐の容器",
       "kanaHead": "と",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "陶器",
       "kanaHead": "と",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す",
+      "marks": []
     },
     {
       "name": "なべ",
       "kanaHead": "な",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ナイフ（金属製）",
       "kanaHead": "な",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "紙などに包んで「ナイフ」と書いて出す"
+      "note": "紙などに包んで「ナイフ」と書いて出す",
+      "marks": []
     },
     {
       "name": "納豆の容器",
       "kanaHead": "な",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "長靴",
       "kanaHead": "な",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "人形",
       "kanaHead": "に",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "人形ケース",
       "kanaHead": "に",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ぬいぐるみ",
       "kanaHead": "ぬ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "布切れ",
       "kanaHead": "ぬ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ねじ",
       "kanaHead": "ね",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "袋が破れないようにまとめて"
+      "note": "袋が破れないようにまとめて",
+      "marks": []
     },
     {
       "name": "ネクタイ",
       "kanaHead": "ね",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "粘土",
       "kanaHead": "ね",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "（野菜・果物の）ネット",
       "kanaHead": "ね",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "のこぎり",
       "kanaHead": "の",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "刃は、紙などに包む"
+      "note": "刃は、紙などに包む",
+      "marks": []
     },
     {
       "name": "ノート類",
       "kanaHead": "の",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "雑誌類として（雨の日は次回に）"
+      "note": "雑誌類として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "農機具類",
       "kanaHead": "の",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照"
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "農薬",
       "kanaHead": "の",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "はかり",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "はがき",
       "kanaHead": "は",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "はさみ",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "刃は、紙などに包む"
+      "note": "刃は、紙などに包む",
+      "marks": []
     },
     {
       "name": "はしご",
       "kanaHead": "は",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ハロゲンヒーター",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ハンカチ",
       "kanaHead": "は",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ハンガー",
       "kanaHead": "は",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ハンディファン",
       "kanaHead": "は",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "バイク（原付含む）",
       "kanaHead": "は",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ▶P11参照"
+      "note": "販売店、専門業者へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "バケツ",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "バッテリー（乗用車・バイク用）",
       "kanaHead": "は",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "バッテリー（電動アシスト自転車用）",
       "kanaHead": "は",
       "category": "battery",
       "categoryLabel": "電池回収ボックス",
-      "note": "電池回収ボックスへ"
+      "note": "電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "バット（金属・木製）",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "パソコンディスプレイ",
       "kanaHead": "は",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "★3▶P11参照"
+      "note": "",
+      "marks": [
+        "star3",
+        "page11"
+      ]
     },
     {
       "name": "パソコン本体（ノート型も）",
       "kanaHead": "は",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "★3▶P11参照"
+      "note": "",
+      "marks": [
+        "star3",
+        "page11"
+      ]
     },
     {
       "name": "パネルヒーター（オイルなし）",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2オイルありの場合は×。許可業者（(有)太盛）へ▶P11参照"
+      "note": "オイルありの場合は×。許可業者（(有)太盛）へ",
+      "marks": [
+        "star2",
+        "page11"
+      ]
     },
     {
       "name": "歯ブラシ",
       "kanaHead": "は",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "電動歯ブラシは電池を抜いて、回収ボックスへ"
+      "note": "電動歯ブラシは電池を抜いて、回収ボックスへ",
+      "marks": []
     },
     {
       "name": "歯磨きチューブ",
       "kanaHead": "は",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "発泡スチロール製トレイ",
       "kanaHead": "は",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "発泡スチロール（30cm未満のもの）",
       "kanaHead": "は",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★4箱や家電品の緩衝材・梱包材など30cm以上はもえるごみ"
+      "note": "箱や家電品の緩衝材・梱包材など30cm以上はもえるごみ",
+      "marks": [
+        "star4"
+      ]
     },
     {
       "name": "花火",
       "kanaHead": "は",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "水に十分浸してから"
+      "note": "水に十分浸してから",
+      "marks": []
     },
     {
       "name": "針金",
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "針（縫い針・釣り針）",
       "kanaHead": "は",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "ごみ袋から飛び出さないように、紙などでくるむか洗剤などの容器に入れて"
+      "note": "ごみ袋から飛び出さないように、紙などでくるむか洗剤などの容器に入れて",
+      "marks": []
     },
     {
       "name": "ひげそり",
       "kanaHead": "ひ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "電池内蔵のものは回収ボックスへ"
+      "note": "電池内蔵のものは回収ボックスへ",
+      "marks": []
     },
     {
       "name": "びん（化粧品・医薬品）",
       "kanaHead": "ひ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "びん（食品・栄養ドリンクなど）",
       "kanaHead": "ひ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "中をすすいで（フタ・栓ははずしてプラスチック製のものは容"
+      "note": "中をすすいで（フタ・栓ははずしてプラスチック製のものは容",
+      "marks": []
     },
     {
       "name": "ビデオカメラ",
       "kanaHead": "ひ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "電池内蔵のものは回収ボックスへ"
+      "note": "電池内蔵のものは回収ボックスへ",
+      "marks": []
     },
     {
       "name": "ビデオテープ",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ビデオデッキ",
       "kanaHead": "ひ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★3"
+      "note": "",
+      "marks": [
+        "star3"
+      ]
     },
     {
       "name": "ビニールひも",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ビニールプール",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290cm未満にしばる"
+      "note": "90cm未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ビニール袋",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ビーズクッション",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "単体で袋に入れ、空気を抜いてください「ビーズクッション」と書いた貼り紙を付けてください"
+      "note": "単体で袋に入れ、空気を抜いてください「ビーズクッション」と書いた貼り紙を付けてください",
+      "marks": []
     },
     {
       "name": "ピアノ",
       "kanaHead": "ひ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ電子ピアノは直接持込みまたは戸別収集"
+      "note": "販売店、専門業者へ電子ピアノは直接持込みまたは戸別収集",
+      "marks": []
     },
     {
       "name": "ピンチハンガー（プラスチック製）",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ふすま",
       "kanaHead": "ふ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ふとん",
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "90㎝未満にしばる1回に1枚まで"
+      "note": "90㎝未満にしばる1回に1枚まで",
+      "marks": []
     },
     {
       "name": "ふとんたたき",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ふとん（２枚以上の場合）",
       "kanaHead": "ふ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ファクシミリ",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★3"
+      "note": "",
+      "marks": [
+        "star3"
+      ]
     },
     {
       "name": "ファンヒーター",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2タンク、本体とも灯油を抜く"
+      "note": "タンク、本体とも灯油を抜く",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "フィルムケース",
       "kanaHead": "ふ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "フォーク（プラスチック製）",
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "フライパン",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "フロッピーディスク",
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ブラインド",
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "プランター",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★4"
+      "note": "",
+      "marks": [
+        "star4"
+      ]
     },
     {
       "name": "プリンの容器",
       "kanaHead": "ふ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "プリンター",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "カートリッジは取り外す"
+      "note": "カートリッジは取り外す",
+      "marks": []
     },
     {
       "name": "プロパンガスボンベ",
       "kanaHead": "ふ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "仏壇",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2必ず解体すること"
+      "note": "必ず解体すること",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "封筒",
       "kanaHead": "ふ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）※窓付きは、フィルムをはがす"
+      "note": "その他の紙として（雨の日は次回に）※窓付きは、フィルムをはがす",
+      "marks": []
     },
     {
       "name": "風呂のフタ",
       "kanaHead": "ふ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "風呂のマット",
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ヘッドホン",
       "kanaHead": "へ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "ヘルメット",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ベッド（介護用含む）",
       "kanaHead": "へ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "枠を解体して直接持込みまたは戸別収集▶P9参照"
+      "note": "枠を解体して直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ベニヤ板",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★2厚さ10cm未満で長さ90cm未満の場合のみ"
+      "note": "厚さ10cm未満で長さ90cm未満の場合のみ",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ベビーカー（乳母車）",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ベビーバス",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ベルト",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ペットのふん",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "ふん処理袋に入れて、臭いが出ないようにしっかり口をしばってから、"
+      "note": "ふん処理袋に入れて、臭いが出ないようにしっかり口をしばってから、",
+      "marks": []
     },
     {
       "name": "ペットのトイレ用の砂",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ペットフードのかん",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ペットボトル",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "中をすすいで（フタとラベルははずして容器包装プラスチックへ）"
+      "note": "中をすすいで（フタとラベルははずして容器包装プラスチックへ）",
+      "marks": []
     },
     {
       "name": "ペンキ",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めて少しずつ"
+      "note": "紙等にしみ込ませるか、固めて少しずつ",
+      "marks": []
     },
     {
       "name": "ペンライト",
       "kanaHead": "へ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ直接持込みまたは戸別収集▶P9参照"
+      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ホットカーペット",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★290㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ホットプレート",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ホース",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "90㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": []
     },
     {
       "name": "ボウリングの玉",
       "kanaHead": "へ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで"
+      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "ボタン式電池",
       "kanaHead": "へ",
       "category": "battery",
       "categoryLabel": "電池回収ボックス",
-      "note": "電池回収ボックスへ"
+      "note": "電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "ボンベ",
       "kanaHead": "へ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ汚れが取れないため"
+      "note": "販売店、専門業者へ汚れが取れないため",
+      "marks": []
     },
     {
       "name": "ボールペン",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ボール（サッカー・野球など）",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ポテトチップスの袋",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "ポリタンク容器",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "灯油、石油等は必ず抜き、キャップ等をはずす"
+      "note": "灯油、石油等は必ず抜き、キャップ等をはずす",
+      "marks": []
     },
     {
       "name": "マグネットシート",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "保冷剤",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "包丁",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "紙などに包んで「包丁」と書いて出す"
+      "note": "紙などに包んで「包丁」と書いて出す",
+      "marks": []
     },
     {
       "name": "包帯",
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "包装用フィルム",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "包装紙",
       "kanaHead": "へ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "帽子（布製）",
       "kanaHead": "へ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "弁当の容器（プラスチック製）",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "本",
       "kanaHead": "へ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ハードカバー、カタログ、週刊誌、雑誌、まんが本等を一緒にまとめてしばる▶P7参照（雨の日は次回に）"
+      "note": "ハードカバー、カタログ、週刊誌、雑誌、まんが本等を一緒にまとめてしばる（雨の日は次回に）",
+      "marks": [
+        "page7"
+      ]
     },
     {
       "name": "本棚",
       "kanaHead": "へ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "歩行器（子供用）",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "芳香剤のケース",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "補聴器",
       "kanaHead": "へ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "防虫剤のケース",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "麻雀牌",
       "kanaHead": "へ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "（パソコンの）マウス",
       "kanaHead": "へ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "まくら",
       "kanaHead": "ま",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "まくらカバー",
       "kanaHead": "ま",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "まな板",
       "kanaHead": "ま",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "★4"
+      "note": "",
+      "marks": [
+        "star4"
+      ]
     },
     {
       "name": "マジックペン",
       "kanaHead": "ま",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "マッサージチェア",
       "kanaHead": "ま",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "マットレス（スプリングあり）",
       "kanaHead": "ま",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "マットレス（スプリングなし）",
       "kanaHead": "ま",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "マフラー（衣類）",
       "kanaHead": "ま",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "マヨネーズの容器",
       "kanaHead": "ま",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "魔法瓶（ポット）",
       "kanaHead": "ま",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ミキサー",
       "kanaHead": "み",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ミシン",
       "kanaHead": "み",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2"
+      "note": "",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ミニカー（おもちゃ）",
       "kanaHead": "み",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "味噌の容器(プラスチック製)",
       "kanaHead": "み",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため"
+      "note": "汚れが取れないため",
+      "marks": []
     },
     {
       "name": "蒸し器",
       "kanaHead": "む",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "虫かご（プラスチック製）",
       "kanaHead": "む",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "虫めがね",
       "kanaHead": "む",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "めがね",
       "kanaHead": "め",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "めがねケース",
       "kanaHead": "め",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "メモ用紙",
       "kanaHead": "め",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "名刺",
       "kanaHead": "め",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）"
+      "note": "その他の紙として（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "目薬の容器",
       "kanaHead": "め",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "モバイルバッテリー",
       "kanaHead": "も",
       "category": "battery",
       "categoryLabel": "電池回収ボックス",
-      "note": "電池回収ボックスへ"
+      "note": "電池回収ボックスへ",
+      "marks": []
     },
     {
       "name": "モーター類",
       "kanaHead": "も",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ▶P11参照"
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ]
     },
     {
       "name": "毛布",
       "kanaHead": "も",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "物干し台（コンクリート台つき）",
       "kanaHead": "も",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "物干し竿",
       "kanaHead": "も",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "物置",
       "kanaHead": "も",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "★6解体して直接持込みまたは戸別収集▶P9参照"
+      "note": "解体して直接持込みまたは戸別収集",
+      "marks": [
+        "star6",
+        "page9"
+      ]
     },
     {
       "name": "やかん",
       "kanaHead": "や",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "薬品（家庭薬品でないもの）",
       "kanaHead": "や",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ"
+      "note": "販売店、専門業者へ",
+      "marks": []
     },
     {
       "name": "薬品（家庭薬品）",
       "kanaHead": "や",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "※液体のものは、排出禁止※びんは中をからにして"
+      "note": "※液体のものは、排出禁止※びんは中をからにして",
+      "marks": []
     },
     {
       "name": "野菜の外装フィルム",
       "kanaHead": "や",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "湯たんぽ（プラスチック製）",
       "kanaHead": "ゆ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ヨーグルトの容器",
       "kanaHead": "よ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "ライター",
       "kanaHead": "ら",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+      "note": "中身を使い切ってから、単独の透明袋に入れて",
+      "marks": [
+        "page7"
+      ]
     },
     {
       "name": "ラジオ",
       "kanaHead": "ら",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます"
+      "note": "回収ボックスへもえないごみとしても出せます",
+      "marks": []
     },
     {
       "name": "ラジカセ",
       "kanaHead": "ら",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★3電池をはずす"
+      "note": "電池をはずす",
+      "marks": [
+        "star3"
+      ]
     },
     {
       "name": "ラップ類",
       "kanaHead": "ら",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "資2箱は口金部分をはずしてその他の紙へ"
+      "note": "資2箱は口金部分をはずしてその他の紙へ",
+      "marks": []
     },
     {
       "name": "ランドセル",
       "kanaHead": "ら",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "リモコン",
       "kanaHead": "り",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ"
+      "note": "回収ボックスへ",
+      "marks": []
     },
     {
       "name": "ルームランナー",
       "kanaHead": "る",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照"
+      "note": "直接持込みまたは戸別収集",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "レコード盤",
       "kanaHead": "れ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "レジャーシート",
       "kanaHead": "れ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "90㎝未満にしばる"
+      "note": "90㎝未満にしばる",
+      "marks": []
     },
     {
       "name": "レジ袋",
       "kanaHead": "れ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "レトルトパック",
       "kanaHead": "れ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "★1"
+      "note": "",
+      "marks": [
+        "star1"
+      ]
     },
     {
       "name": "レンガ",
       "kanaHead": "れ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで"
+      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで",
+      "marks": [
+        "page9"
+      ]
     },
     {
       "name": "レンジフード用カバー",
       "kanaHead": "れ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "主に不織布で90㎝未満であれば"
+      "note": "主に不織布で90㎝未満であれば",
+      "marks": []
     },
     {
       "name": "冷凍庫",
       "kanaHead": "れ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "冷蔵庫",
       "kanaHead": "れ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "家電リサイクル対象品目▶P10参照"
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ]
     },
     {
       "name": "冷風扇",
       "kanaHead": "れ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込"
+      "note": "フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "冷風機",
       "kanaHead": "れ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "★2フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込"
+      "note": "フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込",
+      "marks": [
+        "star2"
+      ]
     },
     {
       "name": "ろうそく",
       "kanaHead": "ろ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ローラーブレード(スケート）",
       "kanaHead": "ろ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     },
     {
       "name": "ワイシャツ",
       "kanaHead": "わ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）"
+      "note": "ひもでしばる（雨の日は次回に）",
+      "marks": []
     },
     {
       "name": "ワープロ",
       "kanaHead": "わ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "ワープロと明記してください"
+      "note": "ワープロと明記してください",
+      "marks": []
     },
     {
       "name": "輪ゴム",
       "kanaHead": "わ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": ""
+      "note": "",
+      "marks": []
     }
   ]
 }
