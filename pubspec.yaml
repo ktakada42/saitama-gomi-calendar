@@ -27,6 +27,10 @@ dependencies:
   timezone: ^0.11.1
   # 出典（市の公式ページ）を外部ブラウザで開くため。
   url_launcher: ^6.3.2
+  # 収集日の.icsを共有シート経由でカレンダーアプリに渡すため。
+  share_plus: ^13.3.0
+  # 上記に渡す.icsを一時ディレクトリに書き出すため。
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

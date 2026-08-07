@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
+import 'package:saitama_gomi/data/calendar_share.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
@@ -133,6 +134,8 @@ Future<void> pumpRootApp(
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),
         ),
+        // ファイル書き出しと共有シートはテスト環境では動かない。
+        calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
       ],
       child: const SaitamaGomiApp(),
     ),
@@ -163,6 +166,8 @@ Future<void> pumpApp(
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),
         ),
+        // ファイル書き出しと共有シートはテスト環境では動かない。
+        calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
       ],
       child: MaterialApp(
         locale: const Locale('ja'),
