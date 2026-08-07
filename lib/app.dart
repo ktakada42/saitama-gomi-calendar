@@ -32,11 +32,29 @@ class SaitamaGomiApp extends ConsumerWidget {
     );
   }
 
+  /// 画面の地の色。
+  ///
+  /// `ColorScheme.fromSeed`は中間色もシード色の色相に寄せるので、緑をシードに
+  /// すると地の色まで緑がかる（ライトなら#F6FBF3、ダークなら#0F1511）。
+  /// ごみを扱うアプリの地としては紙に近いクリームのほうが素直なので上書きする。
+  ///
+  /// もっと温かみのある色（#F7F3E9など）も検討したが、区分色との組み合わせで
+  /// WCAG AAのコントラスト比を割ってしまう（もえるごみで4.42、基準は4.5）。
+  /// 白寄りに留めることで、区分色を触らずに基準を満たしている
+  /// （検証は`test/ui/category_style_test.dart`）。
+  static const _lightSurface = Color(0xFFFCFAF5);
+  static const _darkSurface = Color(0xFF17150F);
+
+  /// テストからも同じ地の色を参照できるようにしておく。
+  /// コントラスト比の検証は、実際に使う地の色の上で行わないと意味がない。
+  static Color surfaceOf(Brightness brightness) =>
+      brightness == Brightness.dark ? _darkSurface : _lightSurface;
+
   static ThemeData _theme(Brightness brightness) {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: const Color(0xFF2F7A4F),
       brightness: brightness,
-    );
+    ).copyWith(surface: surfaceOf(brightness));
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
