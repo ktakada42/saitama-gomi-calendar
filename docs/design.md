@@ -3,6 +3,16 @@
 対象読者：このリポジトリに手を入れる開発者。「何を作るか」は[requirements.md](requirements.md)、
 「どう作ってあるか／どう作るか」をここに書く。
 
+## 0. 識別子
+
+Bundle ID / applicationId は **`io.github.ktakada42.saitamagomicalendar`**（iOS・Android共通）。
+
+- 逆ドメイン記法は実際に管理しているドメインを使う趣旨なので、GitHub Pages の
+  `ktakada42.github.io` に基づく。市のドメインを騙る形（`jp.saitama.*`）は避ける
+- **区切り文字は使えない**。iOSはハイフンが使えるがアンダースコアが使えず、
+  Androidはその逆なので、両OSで通るのは英数字のみ
+- 公開後は変更できない（Google Play が別アプリとして扱う）
+
 ## 1. アーキテクチャ概要
 
 4層構成。依存の向きは上から下の一方向で、下位層は上位層を知らない。
