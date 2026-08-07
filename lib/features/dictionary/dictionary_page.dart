@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/kana.dart';
 import '../../domain/waste_item.dart';
 import '../../providers.dart';
+import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
 import '../../ui/widgets/load_failure_view.dart';
 import 'waste_item_sheet.dart';
@@ -530,7 +531,7 @@ class _ItemTile extends StatelessWidget {
     final theme = Theme.of(context);
     final hasDetail = item.hasDetail;
     return ListTile(
-      title: Text(item.name),
+      title: Text(keepParenthesesTogether(item.name)),
       subtitle: _subtitle(theme, hasDetail: hasDetail),
       trailing: CategoryPill(item: item),
       isThreeLine: _Results.subtitleLines(item) > 1,
@@ -546,7 +547,7 @@ class _ItemTile extends StatelessWidget {
       return note.isEmpty
           ? null
           : Text(
-              note,
+              keepParenthesesTogether(note),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -560,7 +561,7 @@ class _ItemTile extends StatelessWidget {
       children: [
         if (note.isNotEmpty)
           Text(
-            note,
+            keepParenthesesTogether(note),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodySmall?.copyWith(

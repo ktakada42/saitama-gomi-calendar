@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../ui/paren_wrap.dart';
 import '../../domain/collection_area.dart';
 import '../../domain/collection_calendar.dart';
 import '../../domain/date_label.dart';
@@ -32,7 +33,7 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${area.ward}　${area.name}'),
+        title: Text(keepParenthesesTogether('${area.ward}　${area.name}')),
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
       ),
       body: ListView(

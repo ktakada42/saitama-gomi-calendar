@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/waste_item.dart';
+import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
 
 /// 品目1件の詳しい出し方。
@@ -45,7 +46,7 @@ class _WasteItemSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      item.name,
+                      keepParenthesesTogether(item.name),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -57,7 +58,10 @@ class _WasteItemSheet extends StatelessWidget {
               ),
               if (item.note.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                Text(item.note, style: theme.textTheme.bodyMedium),
+                Text(
+                  keepParenthesesTogether(item.note),
+                  style: theme.textTheme.bodyMedium,
+                ),
               ],
               for (final mark in marks) ...[
                 const SizedBox(height: 20),
@@ -69,7 +73,10 @@ class _WasteItemSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(mark.description, style: theme.textTheme.bodyMedium),
+                Text(
+                  keepParenthesesTogether(mark.description),
+                  style: theme.textTheme.bodyMedium,
+                ),
               ],
               const SizedBox(height: 24),
               // 要約なので、判断に迷うときは元の資料に当たれるようにする。
