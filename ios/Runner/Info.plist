@@ -10,8 +10,12 @@
 	<array>
 		<string>ja</string>
 	</array>
+	<!-- ホーム画面の名前。正式名は「さいたま市ゴミ収集カレンダー（非公式）」だが、
+	     アイコンの下は7〜9文字程度で切られるので、収まる範囲で正式名の後ろを使う。
+	     実機で確認したところ「ゴミ収集カレンダー」は入り、
+	     「さいたまゴミ収集カレンダー」は「さいたまゴミ収集…」と切れる。 -->
 	<key>CFBundleDisplayName</key>
-	<string>ごみカレンダー</string>
+	<string>ゴミ収集カレンダー</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

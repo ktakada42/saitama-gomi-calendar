@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app.dart';
 import '../../providers.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/section_header.dart';
@@ -32,10 +33,22 @@ class AboutPage extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Text(
-              'さいたま市の家庭ごみの収集日と分別区分を確認するアプリです。'
-              'さいたま市の公式アプリではありません。',
-              style: theme.textTheme.bodyMedium,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  appNameWithDisclaimer,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'さいたま市の家庭ごみの収集日と分別区分を確認するアプリです。'
+                  'さいたま市が提供する公式のアプリではありません。',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
             ),
           ),
           const SectionHeader('データの出典'),
@@ -89,7 +102,7 @@ class AboutPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => showLicensePage(
               context: context,
-              applicationName: 'さいたまごみカレンダー',
+              applicationName: appNameWithDisclaimer,
               applicationVersion: packageInfo == null
                   ? null
                   : '${packageInfo.version} (${packageInfo.buildNumber})',

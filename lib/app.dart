@@ -7,6 +7,16 @@ import 'features/shell/home_shell.dart';
 import 'ui/widgets/load_failure_view.dart';
 import 'providers.dart';
 
+/// アプリの正式名。画面に出す名前はここに集約する。
+///
+/// ホーム画面のアイコンの下だけは文字数が入りきらないので、
+/// iOSのInfo.plist・AndroidのAndroidManifest.xmlで短い名前を別に持つ。
+const appName = 'さいたま市ゴミ収集カレンダー';
+
+/// 市の公式アプリと取り違えられないよう、名乗るときは「非公式」を添える。
+/// アイコンの下のように文字数が入らない場所では省く。
+const appNameWithDisclaimer = '$appName（非公式）';
+
 class SaitamaGomiApp extends ConsumerWidget {
   const SaitamaGomiApp({super.key});
 
@@ -16,7 +26,7 @@ class SaitamaGomiApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider).value ?? ThemeMode.light;
 
     return MaterialApp(
-      title: 'さいたまごみカレンダー',
+      title: appName,
       debugShowCheckedModeBanner: false,
       theme: _theme(Brightness.light),
       darkTheme: _theme(Brightness.dark),
