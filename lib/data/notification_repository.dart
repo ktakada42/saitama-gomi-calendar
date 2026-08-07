@@ -48,7 +48,7 @@ class _PluginNotificationRepository implements NotificationRepository {
 
   static const _channelId = 'collection_reminder';
   static const _channelName = 'ごみ収集のお知らせ';
-  static const _channelDescription = '翌日に出せるごみを前夜にお知らせします';
+  static const _channelDescription = '翌日のごみの分別を前日にお知らせします。';
 
   static Future<NotificationRepository> open() async {
     tz_data.initializeTimeZones();

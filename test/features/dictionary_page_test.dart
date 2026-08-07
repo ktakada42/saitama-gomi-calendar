@@ -261,19 +261,21 @@ void main() {
     }
   });
 
-  testWidgets('見出しの帯と行は同じ左右の余白に収まる', (tester) async {
+  testWidgets('ピルの右端は見出しの帯の右端に揃う', (tester) async {
     await pumpApp(tester, const DictionaryPage());
 
-    // 帯は行と同じ幅いっぱいに敷き、その中で左右とも同じだけ空ける。
-    // 右だけ広いと、ピルが帯の右端から離れて浮いて見える。
+    // 帯は行の幅いっぱいに敷くので、行の中身に右の余白を取ると
+    // ピルだけが内側に引っ込んで、右のラインが揃わない。
     final band = tester.getRect(find.widgetWithText(Container, 'か行').first);
-    final tile = find.widgetWithText(ListTile, 'カーペット');
-    final title = tester.getRect(find.text('カーペット'));
-    final pill = tester.getRect(
-      find.descendant(of: tile, matching: find.byType(CategoryPill)),
-    );
-
-    expect(title.left - band.left, closeTo(band.right - pill.right, 0.5));
+    for (final name in ['カーペット', 'たんす']) {
+      final pill = tester.getRect(
+        find.descendant(
+          of: find.widgetWithText(ListTile, name),
+          matching: find.byType(CategoryPill),
+        ),
+      );
+      expect(pill.right, closeTo(band.right, 0.5), reason: name);
+    }
   });
 
   group('冊子の印', () {

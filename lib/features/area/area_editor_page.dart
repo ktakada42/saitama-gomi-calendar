@@ -140,20 +140,40 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 20),
-          _SectionTitle('お住まいの区'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final ward in saitamaWards)
-                ChoiceChip(
-                  label: Text(ward),
-                  selected: _ward == ward,
-                  onSelected: (_) => setState(() => _ward = ward),
-                ),
-            ],
-          ),
+          // 区を選べるのは、地区を特定できずに自分で設定する場合だけ。
+          // 市の一覧から選んだ地区で区だけ差し替えられると、
+          // 「岩槻区高砂三丁目」のような実在しない地区ができてしまう。
+          // 地区そのものを変えるのは設定の「お住まいの地区」の役目。
+          if (_isManualEntry) ...[
+            _SectionTitle('お住まいの区'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final ward in saitamaWards)
+                  ChoiceChip(
+                    label: Text(ward),
+                    selected: _ward == ward,
+                    onSelected: (_) => setState(() => _ward = ward),
+                  ),
+              ],
+            ),
+          ] else ...[
+            _SectionTitle('お住まいの地区'),
+            const SizedBox(height: 8),
+            Text(
+              keepParenthesesTogether('$_ward　${widget.initial!.name}'),
+              style: theme.textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '地区そのものを選び直すときは、設定の「お住まいの地区」から。',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
           const SizedBox(height: 24),
           if (_isManualEntry &&
               catalog != null &&
@@ -211,15 +231,17 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
               title: Text('もえるごみの早朝収集地区'),
               subtitle: Text('朝5時30分までに出す必要があります。'),
             ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: '地区の名前（任意）',
-              hintText: _defaultName,
-              border: OutlineInputBorder(),
+          if (_isManualEntry) ...[
+            const SizedBox(height: 8),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: '地区の名前（任意）',
+                hintText: _defaultName,
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
+          ],
           // データの出典・但し書きはここには出さない。
           // 曜日を確認・調整している最中に読ませる情報ではないので、
           // 設定画面の「このアプリについて」にまとめてある。
@@ -266,10 +288,12 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
     );
     await ref.read(selectedAreaProvider.notifier).save(area);
     if (!mounted) return;
-    // この画面は常に AreaPickerPage（初回設定時）か SettingsPage（変更時）から
-    // push されて開くので、保存後は常に pop してよい。初回設定時は pop した先の
-    // _Root が selectedAreaProvider の更新を検知して HomeShell に切り替わる。
-    Navigator.of(context).pop();
+    // 地区を選ぶ画面まで戻さず、いちばん最初の画面（ホーム／設定）まで戻す。
+    // 1つだけ戻すと、郵便番号の候補が並んだ画面に着地して「何の画面か」
+    // 「保存できたのか」が分からなくなる。
+    // 初回設定時は、戻った先の _Root が selectedAreaProvider の更新を
+    // 検知して HomeShell に切り替わる。
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
 

@@ -34,4 +34,15 @@ void main() {
     expect(DateLabel.headline(DateTime(2026, 8, 7), today), '明日 8月7日(金)');
     expect(DateLabel.headline(DateTime(2026, 8, 20), today), '8月20日(木)');
   });
+
+  test('狭いところでは相対表記と日付を別の行にする', () {
+    // 「あさって 8月9日(日)」は1行に収まらず、成り行きに任せると
+    // 日付の途中で切れる。切るなら相対表記との境目で切る。
+    expect(
+      DateLabel.headlineWrapped(DateTime(2026, 8, 8), today),
+      'あさって\n8月8日(土)',
+    );
+    // 相対表記が無いときは1行のまま。
+    expect(DateLabel.headlineWrapped(DateTime(2026, 8, 20), today), '8月20日(木)');
+  });
 }

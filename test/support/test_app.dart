@@ -38,6 +38,20 @@ const sampleArea = CollectionArea(
   },
 );
 
+/// 5区分すべてが同じ日に重なる地区。1日の内容が最も多くなる場合を試す。
+const manyCategoryArea = CollectionArea(
+  id: CollectionArea.customAreaId,
+  ward: '浦和区',
+  name: 'テスト地区',
+  rules: {
+    GarbageCategory.burnable: [CollectionRule.weekly(DateTime.tuesday)],
+    GarbageCategory.nonBurnable: [CollectionRule.weekly(DateTime.tuesday)],
+    GarbageCategory.hazardous: [CollectionRule.weekly(DateTime.tuesday)],
+    GarbageCategory.recyclable1: [CollectionRule.weekly(DateTime.tuesday)],
+    GarbageCategory.recyclable2: [CollectionRule.weekly(DateTime.tuesday)],
+  },
+);
+
 /// 2026年8月6日（木）。もえるごみの日で、翌日は収集なし。
 final testToday = DateTime(2026, 8, 6);
 

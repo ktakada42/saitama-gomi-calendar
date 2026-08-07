@@ -77,10 +77,54 @@ void main() {
       expect(tester.widget<FilledButton>(button).onPressed, isNull);
     });
 
+    testWidgets('郵便番号が7桁そろうまで探せない', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      final button = find.widgetWithText(FilledButton, '探す');
+      // 途中の桁で探しても「該当なし」としか返せず、入力を間違えたのか
+      // 対応する地区が無いのかが分からない。
+      expect(tester.widget<FilledButton>(button).onPressed, isNull);
+
+      await tester.enterText(find.byType(TextField), '330000');
+      await tester.pump();
+      expect(tester.widget<FilledButton>(button).onPressed, isNull);
+
+      await tester.enterText(find.byType(TextField), '3300001');
+      await tester.pump();
+      expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
+    });
+
+    testWidgets('候補から選んで保存すると、候補の画面には戻らない', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('お住まいの地区'));
+      await tester.pumpAndSettle();
+
+      // 複数の候補が出る郵便番号。
+      await tester.enterText(find.byType(TextField).first, '3300002');
+      await tester.pump();
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('大宮区　テスト町二丁目東側'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('保存する'));
+      await tester.pumpAndSettle();
+
+      // 候補が並んだ画面に着地すると、何の画面か・保存できたのかが分からない。
+      expect(find.text('大宮区　テスト町二丁目西側'), findsNothing);
+      expect(find.text('お住まいの地区を確認'), findsNothing);
+      // 設定画面まで戻り、選んだ地区が入っている。
+      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
+    });
+
     testWidgets('郵便番号で1件に絞れたら選ぶだけで進める', (tester) async {
       await pumpRootApp(tester, area: null);
 
       await tester.enterText(find.byType(TextField), '3300001');
+      // 桁がそろって「探す」が押せるようになるまで描き直す。
+      await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
 
@@ -102,6 +146,8 @@ void main() {
       await pumpRootApp(tester, area: null);
 
       await tester.enterText(find.byType(TextField), '3300002');
+      // 桁がそろって「探す」が押せるようになるまで描き直す。
+      await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
 
@@ -120,6 +166,8 @@ void main() {
       await pumpRootApp(tester, area: null);
 
       await tester.enterText(find.byType(TextField), '3300099');
+      // 桁がそろって「探す」が押せるようになるまで描き直す。
+      await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
 
@@ -162,6 +210,8 @@ void main() {
       expect(find.text('お住まいの地区を確認'), findsOneWidget);
 
       await tester.enterText(find.byType(TextField), '3300001');
+      // 桁がそろって「探す」が押せるようになるまで描き直す。
+      await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('見沼区　テスト町一丁目'));
@@ -172,22 +222,43 @@ void main() {
       expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
     });
 
-    testWidgets('収集曜日を調整するからは曜日を直せる', (tester) async {
+    testWidgets('収集曜日を修正するからは区や地区名を変えられない', (tester) async {
       await pumpRootApp(tester);
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('収集曜日を調整する'));
+      await tester.tap(find.text('収集曜日を修正する'));
+      await tester.pumpAndSettle();
+
+      // 市の一覧から選んだ地区で区だけ差し替えられると、
+      // 「岩槻区高砂三丁目」のような実在しない地区ができてしまう。
+      expect(find.widgetWithText(ChoiceChip, '岩槻区'), findsNothing);
+      expect(find.widgetWithText(TextField, '地区の名前（任意）'), findsNothing);
+      // 今の地区は読めるようにしておく。
+      expect(find.textContaining('浦和区'), findsWidgets);
+    });
+
+    testWidgets('収集曜日を修正するからは曜日を直せる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('収集曜日を修正する'));
       await tester.pumpAndSettle();
 
       expect(find.text('収集曜日の確認'), findsOneWidget);
 
-      await tester.tap(find.text('岩槻区'));
+      // もえるごみは月・木。金曜も足して保存する。
+      await tester.tap(find.text('金').first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('保存する'));
       await tester.pumpAndSettle();
 
-      expect(find.text('岩槻区　テスト地区'), findsOneWidget);
+      // 保存すると設定画面まで戻る。地区を選ぶ画面には着地しない。
+      expect(find.text('収集曜日の確認'), findsNothing);
+      // 曜日だけが変わり、地区はそのまま。
+      expect(find.text('毎週月・木・金曜日'), findsOneWidget);
+      expect(find.textContaining('テスト地区'), findsWidgets);
     });
 
     testWidgets('地区を選んで来たときは早朝収集の切り替えを出さない', (tester) async {
@@ -195,7 +266,7 @@ void main() {
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('収集曜日を調整する'));
+      await tester.tap(find.text('収集曜日を修正する'));
       await tester.pumpAndSettle();
 
       // 早朝収集地区かどうかは地区データ側で確定しているので、

@@ -34,6 +34,9 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
   /// 一覧モードで選択中の区。null は「一覧モードを開いていない」。
   String? _listWard;
 
+  /// 郵便番号が7桁そろっているか。そろうまで「探す」は押せない。
+  bool get _canSearch => _postalController.text.trim().length == 7;
+
   @override
   void dispose() {
     _postalController.dispose();
@@ -103,12 +106,17 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
                           border: OutlineInputBorder(),
                           counterText: '',
                         ),
+                        // 桁がそろった時点でボタンの活性を切り替える。
+                        onChanged: (_) => setState(() {}),
                         onSubmitted: (_) => _search(catalog),
                       ),
                     ),
                     const SizedBox(width: 8),
                     FilledButton(
-                      onPressed: () => _search(catalog),
+                      // 7桁そろうまでは押させない。途中の桁で押しても
+                      // 「該当なし」としか返せず、入力を間違えたのか
+                      // 対応する地区が無いのかが分からない。
+                      onPressed: _canSearch ? () => _search(catalog) : null,
                       child: const Text('探す'),
                     ),
                   ],
