@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
@@ -133,6 +134,15 @@ final testCatalog = AreaCatalog.fromJson({
   },
 });
 
+/// 「このアプリについて」に出すバージョン。実機のパッケージ情報は
+/// テスト環境では読めないので、決め打ちの値を渡す。
+final testPackageInfo = PackageInfo(
+  appName: 'saitama_gomi',
+  packageName: 'io.github.ktakada42.saitamagomicalendar',
+  version: '1.2.3',
+  buildNumber: '45',
+);
+
 /// テストで使う画面サイズ。
 ///
 /// テストの既定ビューポート（800x600）は横長で、縦画面前提のこのアプリとは
@@ -186,6 +196,7 @@ Future<void> pumpRootApp(
         // ファイル書き出しと共有シートはテスト環境では動かない。
         calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
         wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
+        packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: const SaitamaGomiApp(),
     ),
@@ -222,6 +233,7 @@ Future<void> pumpApp(
         // ファイル書き出しと共有シートはテスト環境では動かない。
         calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
         wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
+        packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: MaterialApp(
         locale: const Locale('ja'),

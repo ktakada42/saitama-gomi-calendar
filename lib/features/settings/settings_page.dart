@@ -10,7 +10,6 @@ import 'package:flutter/cupertino.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/settings_repository.dart' show NotificationSettings;
 import '../../domain/collection_area.dart';
@@ -18,6 +17,8 @@ import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
+import '../../ui/widgets/section_header.dart';
+import '../about/about_page.dart';
 import '../area/area_editor_page.dart';
 import '../area/area_picker_page.dart';
 
@@ -28,7 +29,6 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final area = ref.watch(selectedAreaProvider).value;
-    final catalog = ref.watch(areaCatalogProvider).value;
     if (area == null) return const SizedBox.shrink();
 
     return Scaffold(
@@ -54,7 +54,7 @@ class SettingsPage extends ConsumerWidget {
           const _ThemeModeTile(),
           const Divider(height: 1),
           _CalendarExportTile(area: area),
-          const _SectionHeader('設定中の収集曜日'),
+          const SectionHeader('設定中の収集曜日'),
           for (final category in GarbageCategory.values)
             ListTile(
               dense: true,
@@ -86,7 +86,7 @@ class SettingsPage extends ConsumerWidget {
               ),
             ),
           ),
-          const _SectionHeader('区分と出し方'),
+          const SectionHeader('区分と出し方'),
           for (final category in GarbageCategory.values) ...[
             if (category != GarbageCategory.values.first)
               const Divider(height: 1),
@@ -120,42 +120,17 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ],
-          // ここは区切り線を引かず間だけ空ける。上の一覧と地続きに見せたくない
-          // 一方で、線を足すと一覧の最後の区切りと近すぎて二重に見える。
-          const SizedBox(height: 24),
-          // 出典は普段は畳んでおく。収集日を知りたいだけの利用者には不要だが、
-          // 情報の確からしさを確かめたい人には必要なので、設定の最下部に置く。
-          // データの生成方法（areas.jsonのdisclaimer）はここには出さない。
-          // 利用者にとっては「市の資料が出典」という一点だけが意味を持ち、
-          // どう機械処理したかは読んでも判断の役に立たないため。
-          ExpansionTile(
-            shape: const Border(),
-            collapsedShape: const Border(),
-            key: const PageStorageKey('about'),
+          const SectionHeader('このアプリについて'),
+          // 出典・プライバシーポリシー・ライセンスは、ここで畳んで見せるには
+          // 量が多い。設定の一項目に押し込めず、専用の画面に分ける。
+          ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('このアプリについて'),
-            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            expandedCrossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '分別区分と出し方はさいたま市の案内をもとにした要約です。'
-                '判断に迷うものや最新の情報は市の公式ページで確認してください。',
-                style: theme.textTheme.bodySmall,
-              ),
-              if (catalog != null && catalog.source.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  catalog.source,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-              if (catalog != null && catalog.sourceUrl.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                _SourceLink(url: catalog.sourceUrl),
-              ],
-            ],
+            title: const Text('バージョンと出典'),
+            subtitle: const Text('プライバシーポリシー・ライセンス'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute<void>(builder: (_) => const AboutPage())),
           ),
         ],
       ),
@@ -183,38 +158,6 @@ class SettingsPage extends ConsumerWidget {
     if (weeks == null) return '毎週$weekdays曜日';
     final sorted = weeks.toList()..sort();
     return '第${sorted.join('・第')}$weekdays曜日';
-  }
-}
-
-/// 区切り線と見出しの組。設定の中の話題の変わり目に置く。
-///
-/// 線の上下の余白を同じにしておかないと、上の項目に張り付いて見えたり、
-/// 逆に間延びして見えたりする。各所で数字を書き分けずにここに集約する。
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const SizedBox(height: 16),
-        const Divider(height: 1),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          child: Text(
-            title,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
 
@@ -248,56 +191,6 @@ class _CalendarExportTile extends ConsumerWidget {
         context,
       ).showSnackBar(const SnackBar(content: Text('カレンダーの書き出しに失敗しました。')));
     }
-  }
-}
-
-/// 出典ページへのリンク。タップすると外部ブラウザ（Safari）で開く。
-///
-/// アプリ内WebViewではなく外部ブラウザにするのは、市の公式ページを
-/// このアプリの一部と誤解させないため。開くのはブラウザに引き渡すだけなので、
-/// 「通信しない」という方針（docs/requirements.md 6章）とは矛盾しない。
-class _SourceLink extends StatelessWidget {
-  const _SourceLink({required this.url});
-
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: () => _open(context),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.open_in_new, size: 16, color: theme.colorScheme.primary),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                '市の公式ページを開く',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                  decoration: TextDecoration.underline,
-                  decorationColor: theme.colorScheme.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _open(BuildContext context) async {
-    final opened = await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.externalApplication,
-    );
-    if (opened || !context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('ページを開けませんでした。')));
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'data/area_catalog.dart';
 import 'data/calendar_share.dart';
@@ -25,6 +26,15 @@ final notificationRepositoryProvider = FutureProvider<NotificationRepository>(
 
 final areaCatalogProvider = FutureProvider<AreaCatalog>(
   (ref) => AreaCatalog.load(),
+);
+
+/// アプリのバージョン。「このアプリについて」で出す。
+///
+/// pubspec.yamlの値を埋め込むのではなく、実際にインストールされている
+/// パッケージから読む。手元のソースではなく、その端末に入っているものが
+/// どれなのかを知りたいため。
+final packageInfoProvider = FutureProvider<PackageInfo>(
+  (ref) => PackageInfo.fromPlatform(),
 );
 
 /// 品目から出し先を引く分別早見表。

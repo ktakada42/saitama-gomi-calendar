@@ -31,6 +31,8 @@ dependencies:
   share_plus: ^13.3.0
   # 上記に渡す.icsを一時ディレクトリに書き出すため。
   path_provider: ^2.1.6
+  # 「このアプリについて」に出すバージョン番号のため。
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:
@@ -43,6 +45,8 @@ flutter:
 
   assets:
     - assets/data/
+    # ライセンス一覧に載せるため、フォントの許諾を実行時に読む。
+    - assets/fonts/NotoSansJP-OFL.txt
 
   # 日本語と英数字でフォントが混在する（SF Pro + ヒラギノ角ゴのフォールバック）
   # のを解消するため、全体をNoto Sans JPに統一する。1ファイルの可変フォント
