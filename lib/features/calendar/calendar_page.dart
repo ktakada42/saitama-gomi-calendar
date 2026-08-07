@@ -31,8 +31,22 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final month = _month ??= DateTime(today.year, today.month);
     final days = calendar.month(month.year, month.month);
 
+    final isThisMonth = month.year == today.year && month.month == today.month;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('カレンダー')),
+      appBar: AppBar(
+        title: const Text('カレンダー'),
+        actions: [
+          // 月送りとは別のボタンにする。年月の並びに混ぜると、
+          // 出たり消えたりするたびに年月が中央からずれてしまう。
+          if (!isThisMonth)
+            TextButton(
+              onPressed: () =>
+                  setState(() => _month = DateTime(today.year, today.month)),
+              child: const Text('今月に戻る'),
+            ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(12, 4, 12, 32),
         children: [
@@ -40,13 +54,6 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
             month: month,
             onPrevious: () => _shiftMonth(-1),
             onNext: () => _shiftMonth(1),
-            onToday:
-                DateLabel.yearMonth(month.year, month.month) ==
-                    DateLabel.yearMonth(today.year, today.month)
-                ? null
-                : () => setState(
-                    () => _month = DateTime(today.year, today.month),
-                  ),
           ),
           const SizedBox(height: 8),
           const _WeekdayHeader(),
@@ -80,15 +87,11 @@ class _MonthHeader extends StatelessWidget {
     required this.month,
     required this.onPrevious,
     required this.onNext,
-    required this.onToday,
   });
 
   final DateTime month;
   final VoidCallback onPrevious;
   final VoidCallback onNext;
-
-  /// 今月を表示中なら null（ボタンを消す）。
-  final VoidCallback? onToday;
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +112,6 @@ class _MonthHeader extends StatelessWidget {
             ),
           ),
         ),
-        if (onToday != null)
-          TextButton(onPressed: onToday, child: const Text('今月'))
-        else
-          const SizedBox(width: 48),
         IconButton(
           onPressed: onNext,
           icon: const Icon(Icons.chevron_right),

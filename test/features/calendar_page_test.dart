@@ -29,10 +29,25 @@ void main() {
     expect(find.text('2026年9月'), findsOneWidget);
 
     // 今月に戻るボタンは今月を見ているときは出ない。
-    await tester.tap(find.text('今月'));
+    await tester.tap(find.text('今月に戻る'));
     await tester.pumpAndSettle();
     expect(find.text('2026年8月'), findsOneWidget);
-    expect(find.text('今月'), findsNothing);
+    expect(find.text('今月に戻る'), findsNothing);
+  });
+
+  testWidgets('年月は今月に戻るボタンの有無によらず中央に来る', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    // 「今月に戻る」を月送りと同じ行に混ぜていたときは、ボタンが出た分だけ
+    // 年月が中央から左へずれていた。別のボタンにしたので動かない。
+    final width = tester.view.physicalSize.width;
+    expect(tester.getCenter(find.text('2026年8月')).dx, closeTo(width / 2, 0.5));
+
+    await tester.tap(find.byTooltip('次の月'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('今月に戻る'), findsOneWidget);
+    expect(tester.getCenter(find.text('2026年9月')).dx, closeTo(width / 2, 0.5));
   });
 
   testWidgets('前の月にも戻れる', (tester) async {
