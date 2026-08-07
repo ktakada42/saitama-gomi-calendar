@@ -100,6 +100,11 @@ class SettingsPage extends ConsumerWidget {
           ),
           for (final category in GarbageCategory.values)
             ExpansionTile(
+              // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
+              // スクロールで見えなくなった時点で開いた状態が失われてしまう。
+              // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
+              // 保持され、戻ってきても開いたままになる。
+              key: PageStorageKey('category-${category.id}'),
               leading: Icon(
                 CategoryStyle.iconOf(category),
                 color: CategoryStyle.colorOf(category, context),
@@ -119,10 +124,13 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           const Divider(height: 32),
-          // 出典・データの但し書きは、普段は畳んでおく。
-          // 収集日を知りたいだけの利用者には不要な情報だが、
-          // 情報の正確さを確かめたい人には必要なので、設定の最下部に置く。
+          // 出典は普段は畳んでおく。収集日を知りたいだけの利用者には不要だが、
+          // 情報の確からしさを確かめたい人には必要なので、設定の最下部に置く。
+          // データの生成方法（areas.jsonのdisclaimer）はここには出さない。
+          // 利用者にとっては「市の資料が出典」という一点だけが意味を持ち、
+          // どう機械処理したかは読んでも判断の役に立たないため。
           ExpansionTile(
+            key: const PageStorageKey('about'),
             leading: const Icon(Icons.info_outline),
             title: const Text('このアプリについて'),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -133,15 +141,6 @@ class SettingsPage extends ConsumerWidget {
                 '判断に迷うものや最新の情報は市の公式ページで確認してください。',
                 style: theme.textTheme.bodySmall,
               ),
-              if (catalog != null && catalog.disclaimer.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  catalog.disclaimer,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
               if (catalog != null && catalog.source.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Text(
