@@ -40,6 +40,10 @@ class SaitamaGomiApp extends ConsumerWidget {
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
+      // 既定のままだと、数字・英字はSF Pro、日本語はヒラギノ角ゴという
+      // フォールバックで2種類のフォントが混在し、同じ文中でも太字の出方が
+      // 揃わなかった。Noto Sans JPに統一して、文字種によらず同じ見た目にする。
+      fontFamily: 'Noto Sans JP',
       // Material 3 の AppBar は、コンテンツがその下に潜ると見た目を変える。
       // このアプリのヘッダーは画面名を出しているだけで、スクロール位置に応じて
       // 色が変わる必要はないので、その変化を止める。

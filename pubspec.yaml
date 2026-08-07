@@ -43,3 +43,29 @@ flutter:
 
   assets:
     - assets/data/
+
+  # 日本語と英数字でフォントが混在する（SF Pro + ヒラギノ角ゴのフォールバック）
+  # のを解消するため、全体をNoto Sans JPに統一する。1ファイルの可変フォント
+  # (variable font)なので、太さごとに別ファイルを持たずに済む
+  # （OFLライセンス、assets/fonts/NotoSansJP-OFL.txt参照）。
+  fonts:
+    - family: Noto Sans JP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 100
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 200
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 300
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 800
+        - asset: assets/fonts/NotoSansJP-Variable.ttf
+          weight: 900
