@@ -45,16 +45,39 @@ class SaitamaGomiApp extends ConsumerWidget {
   static const _lightSurface = Color(0xFFFCFAF5);
   static const _darkSurface = Color(0xFF17150F);
 
+  /// 「選ばれている」ことを示す面の色。
+  ///
+  /// これも`fromSeed`任せだと緑シードから薄緑（ライトで#B0F1C3・#D1E8D5）が
+  /// 生成され、ボトムメニューの選択インジケータや郵便番号の候補タイルが
+  /// 淡い緑に染まる。地をクリームにした（surface）のと同じ理由で、
+  /// 紙に近い色みに寄せる。
+  ///
+  /// primaryContainerは「今どれが選ばれているか」を示す強めの面、
+  /// secondaryContainerはインジケータのような控えめな面に使われる。
+  static const _lightPrimaryContainer = Color(0xFFE8E2D2);
+  static const _lightSecondaryContainer = Color(0xFFEDE8DC);
+  static const _darkPrimaryContainer = Color(0xFF3A362B);
+  static const _darkSecondaryContainer = Color(0xFF2C2921);
+
   /// テストからも同じ地の色を参照できるようにしておく。
   /// コントラスト比の検証は、実際に使う地の色の上で行わないと意味がない。
   static Color surfaceOf(Brightness brightness) =>
       brightness == Brightness.dark ? _darkSurface : _lightSurface;
 
   static ThemeData _theme(Brightness brightness) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF2F7A4F),
-      brightness: brightness,
-    ).copyWith(surface: surfaceOf(brightness));
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2F7A4F),
+          brightness: brightness,
+        ).copyWith(
+          surface: surfaceOf(brightness),
+          primaryContainer: brightness == Brightness.dark
+              ? _darkPrimaryContainer
+              : _lightPrimaryContainer,
+          secondaryContainer: brightness == Brightness.dark
+              ? _darkSecondaryContainer
+              : _lightSecondaryContainer,
+        );
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,

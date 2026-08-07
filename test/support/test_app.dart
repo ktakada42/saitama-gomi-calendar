@@ -48,18 +48,21 @@ final testDictionary = WasteDictionary.fromJson({
   'items': [
     {
       'name': 'ペットボトル',
+      'kanaHead': 'へ',
       'category': 'recyclable1',
       'categoryLabel': '資源物1類',
       'note': '中をすすいで',
     },
     {
       'name': 'カーペット',
+      'kanaHead': 'か',
       'category': 'burnable',
       'categoryLabel': 'もえるごみ',
       'note': '',
     },
     {
       'name': 'たんす',
+      'kanaHead': 'た',
       'category': 'oversized',
       'categoryLabel': '粗大ごみ・適正処理困難物',
       'note': '直接持込みまたは戸別収集',
