@@ -5,6 +5,7 @@ import 'data/area_catalog.dart';
 import 'data/calendar_share.dart';
 import 'data/notification_repository.dart';
 import 'data/settings_repository.dart';
+import 'data/waste_dictionary.dart';
 import 'domain/collection_area.dart';
 import 'domain/collection_calendar.dart';
 import 'domain/collection_reminder.dart';
@@ -24,6 +25,11 @@ final notificationRepositoryProvider = FutureProvider<NotificationRepository>(
 
 final areaCatalogProvider = FutureProvider<AreaCatalog>(
   (ref) => AreaCatalog.load(),
+);
+
+/// 品目から出し先を引く分別早見表。
+final wasteDictionaryProvider = FutureProvider<WasteDictionary>(
+  (ref) => WasteDictionary.load(),
 );
 
 /// 設定済みの地区。null は「まだ設定していない」＝初回起動。

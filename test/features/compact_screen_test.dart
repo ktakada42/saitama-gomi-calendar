@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/features/calendar/calendar_page.dart';
+import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/features/home/home_page.dart';
 import 'package:saitama_gomi/features/settings/settings_page.dart';
 
@@ -24,6 +25,15 @@ void main() {
       await pumpApp(
         tester,
         const CalendarPage(),
+        viewport: TestViewport.compact,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('分別が崩れない', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
         viewport: TestViewport.compact,
       );
       expect(tester.takeException(), isNull);
