@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/domain/garbage_category.dart';
 import 'package:saitama_gomi/ui/category_style.dart';
 
@@ -11,7 +12,9 @@ import 'package:saitama_gomi/ui/category_style.dart';
 /// `CategoryBadge`・カレンダーの区分帯（`_CategoryStrip`）は、区分の色を文字色に
 /// しつつ、同じ色を薄く敷いた背景（12%・18%alpha）の上に置く実装になっており、
 /// 前景と背景が似た色になるぶんコントラストが弱まりやすい。この2箇所を
-/// 実際の背景色（`ColorScheme.fromSeed`が生成する実際の値）で計算して確かめる。
+/// 実際の背景色（`SaitamaGomiApp.surfaceOf`が返す、アプリが実際に使う値）で
+/// 計算して確かめる。`ColorScheme.fromSeed`の生成値ではない点に注意——
+/// このアプリは地の色を上書きしているので、生成値で測っても意味がない。
 
 double _linearize(double c) =>
     c <= 0.03928 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
@@ -34,11 +37,7 @@ Color _alphaOver(Color fg, double alpha, Color bg) =>
 
 void main() {
   for (final brightness in Brightness.values) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF2F7A4F),
-      brightness: brightness,
-    );
-    final surface = scheme.surface;
+    final surface = SaitamaGomiApp.surfaceOf(brightness);
 
     group('${brightness.name}モードの区分色', () {
       for (final category in GarbageCategory.values) {
