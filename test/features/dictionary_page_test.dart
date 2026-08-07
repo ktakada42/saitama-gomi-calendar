@@ -245,6 +245,55 @@ void main() {
     expect(find.text('か'), findsNothing);
   });
 
+  group('冊子の印', () {
+    final dictionary = WasteDictionary.fromJson({
+      'source': 'テスト用の分別早見表',
+      'sourceUrl': 'https://example.com/manual',
+      'items': [
+        {
+          'name': 'いす',
+          'kanaHead': 'い',
+          'category': 'nonBurnable',
+          'categoryLabel': 'もえないごみ',
+          'note': '',
+          'marks': ['star2'],
+        },
+        {
+          'name': 'ペットボトル',
+          'kanaHead': 'へ',
+          'category': 'recyclable1',
+          'categoryLabel': '資源物1類',
+          'note': '中をすすいで',
+        },
+      ],
+    });
+
+    testWidgets('印を持つ品目は押すと詳しい出し方が出る', (tester) async {
+      await pumpApp(tester, const DictionaryPage(), dictionary: dictionary);
+
+      // 一覧には「★2」ではなく、何が書いてあるかの手がかりを出す。
+      expect(find.text('★2'), findsNothing);
+      expect(find.text('大きさで出し方が変わる'), findsOneWidget);
+
+      await tester.tap(find.text('いす'));
+      await tester.pumpAndSettle();
+
+      // 冊子の脚注を、冊子を持たない人にも通じる言葉で出す。
+      expect(find.textContaining('90cm以上2m未満'), findsOneWidget);
+      expect(find.text('市の家庭ごみの出し方マニュアル'), findsOneWidget);
+    });
+
+    testWidgets('印を持たない品目は押せない', (tester) async {
+      await pumpApp(tester, const DictionaryPage(), dictionary: dictionary);
+
+      // 行に出ている文字がすべてなので、押しても出すものがない。
+      final tile = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'ペットボトル'),
+      );
+      expect(tile.onTap, isNull);
+    });
+  });
+
   testWidgets('出典はヘッダから開いたときだけ出す', (tester) async {
     await pumpApp(tester, const DictionaryPage());
 
