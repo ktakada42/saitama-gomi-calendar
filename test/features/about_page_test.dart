@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/features/about/about_page.dart';
 
 import '../support/test_app.dart';
 
 void main() {
   group('このアプリについて', () {
+    testWidgets('非公式であることを名前で示す', (tester) async {
+      await pumpApp(tester, const AboutPage());
+
+      // 市の公式アプリと取り違えられないよう、名前の時点で断る。
+      expect(find.text(appNameWithDisclaimer), findsOneWidget);
+    });
+
     testWidgets('バージョンを出す', (tester) async {
       await pumpApp(tester, const AboutPage());
 
@@ -45,7 +53,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LicensePage), findsOneWidget);
-      expect(find.text('さいたまごみカレンダー'), findsOneWidget);
+      expect(find.text(appNameWithDisclaimer), findsWidgets);
       expect(find.text('1.2.3 (45)'), findsOneWidget);
     });
   });
