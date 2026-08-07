@@ -1,6 +1,14 @@
+import 'package:flutter/cupertino.dart'
+    show
+        CupertinoDatePicker,
+        CupertinoDatePickerMode,
+        CupertinoTextThemeData,
+        CupertinoTheme,
+        CupertinoThemeData;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/settings_repository.dart' show NotificationSettings;
 import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
@@ -35,6 +43,8 @@ class SettingsPage extends ConsumerWidget {
               MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
             ),
           ),
+          const Divider(height: 1),
+          const _NotificationTiles(),
           const Divider(height: 1),
           const _ThemeModeTile(),
           const Divider(height: 1),
@@ -172,11 +182,143 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
-/// 外観（ライト／ダーク／システム）の切り替え。
+/// 収集日前夜の通知のON/OFFと時刻。
 ///
-/// 端末のダークモード設定に勝手に追従すると、カレンダーの区分色の見え方が
-/// 変わって戸惑うことがあるため、既定はライト固定にして、
-/// 追従したい人が明示的に「端末の設定に合わせる」を選べるようにしている。
+/// 既定はOFF。通知は利用者が望んで初めて出すものなので、
+/// 勝手に許可を求めたり出したりしない。
+class _NotificationTiles extends ConsumerWidget {
+  const _NotificationTiles();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings =
+        ref.watch(notificationProvider).value ??
+        const NotificationSettings.defaults();
+
+    return Column(
+      children: [
+        SwitchListTile(
+          secondary: const Icon(Icons.notifications_outlined),
+          title: const Text('前日にお知らせ'),
+          subtitle: const Text('翌日に出せるごみを前の日に通知します'),
+          value: settings.enabled,
+          onChanged: (value) => _toggle(context, ref, value),
+        ),
+        if (settings.enabled)
+          ListTile(
+            leading: const Icon(Icons.schedule_outlined),
+            title: const Text('お知らせの時刻'),
+            subtitle: Text(settings.label),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _pickTime(context, ref, settings),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _toggle(BuildContext context, WidgetRef ref, bool value) async {
+    final controller = ref.read(notificationProvider.notifier);
+    if (!value) {
+      await controller.disable();
+      return;
+    }
+
+    final granted = await controller.enable();
+    if (granted || !context.mounted) return;
+
+    // iOSは一度拒否されるとアプリからダイアログを出せない。
+    // スイッチは自動でOFFのままなので、その理由だけ伝える。
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('通知が許可されていません。端末の「設定」アプリから通知を許可してください。')),
+    );
+  }
+
+  /// 時刻の選択。Materialの文字盤（showTimePicker）ではなく、
+  /// iOSのホイール式にする。「何時に知らせるか」は分単位で厳密に決めたい類の
+  /// 設定ではないので、5分刻みで回して選べれば十分で、文字盤より速い。
+  Future<void> _pickTime(
+    BuildContext context,
+    WidgetRef ref,
+    NotificationSettings settings,
+  ) async {
+    var selected = settings.timeOfDay;
+
+    final decided = await showModalBottomSheet<Duration>(
+      context: context,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: SizedBox(
+            height: 300,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('キャンセル'),
+                      ),
+                      Text(
+                        'お知らせの時刻',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(selected),
+                        child: const Text('決定'),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoTheme(
+                    // CupertinoDatePickerは自前の文字色を持つので、
+                    // ダークモードでも読めるようMaterial側の色を渡す。
+                    data: CupertinoThemeData(
+                      brightness: theme.brightness,
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      use24hFormat: true,
+                      minuteInterval: 5,
+                      initialDateTime: DateTime(
+                        2000,
+                        1,
+                        1,
+                        settings.timeOfDay.inHours,
+                        // 5分刻みに丸める。刻みに合わない初期値を渡すと
+                        // CupertinoDatePickerが例外を投げるため。
+                        (settings.timeOfDay.inMinutes % 60) ~/ 5 * 5,
+                      ),
+                      onDateTimeChanged: (value) {
+                        selected = Duration(
+                          hours: value.hour,
+                          minutes: value.minute,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (decided == null) return;
+    await ref.read(notificationProvider.notifier).setTime(decided);
+  }
+}
+
+/// 外観（ライト／ダーク／システム）の切り替え。
 class _ThemeModeTile extends ConsumerWidget {
   const _ThemeModeTile();
 

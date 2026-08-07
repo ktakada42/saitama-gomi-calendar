@@ -2,7 +2,7 @@
 
 A（地区表の取り込み）は[requirements.md](requirements.md) 4.1節で初回設定の**主経路**と
 定めており、データ取り込み（A.4）・UI（A.2/A.3）とも実装済み。以下は実装の記録と、
-再取得・保守のための指針。B（ローカル通知）はAとは独立に着手できる追加機能。
+再取得・保守のための指針。B（ローカル通知）も実装済み。
 
 ## A. 地区表の取り込み（実装済み）
 
@@ -114,46 +114,68 @@ ZIPコンテナを読めないため）。町丁目名がどちらのデータ�
 から外れた場合はスクリプトが警告を出す。生成結果は必ず`flutter test`
 （`test/data/area_catalog_test.dart`）と差分レビューをしてからコミットすること。
 
-## B. 収集日前夜のローカル通知
+## B. 収集日前夜のローカル通知（実装済み）
 
 ### B.1 目的
 
 ごみ出しは前夜に思い出す行動（[requirements.md](requirements.md) 1章）という設計方針の
 延長線上として、アプリを開かなくても前夜に気づける手段を用意する。
 
-### B.2 仕様
+### B.2 仕様（実装済み。[requirements.md](requirements.md) 4.6節）
 
-- 設定画面に通知のON/OFFスイッチと通知時刻を追加する（デフォルトOFF、時刻は20:00）
-- 通知対象は「翌日に収集がある区分」。複数区分ある日は1通の通知にまとめる
+- 設定画面に通知のON/OFFスイッチと通知時刻を置いた（既定はOFF、時刻は20:00）
+- 通知対象は「翌日に収集がある区分」。複数区分ある日は1通にまとめる
   （例：「明日はもえるごみ・資源物1類の日です」）
-- 年末年始の休止期間（1/1〜1/3の前夜）は通知しない
-- 通知をタップするとアプリを開き、ホーム（明日のカード）を表示する
-- 初回、通知をONにするタイミングでiOSの通知許可ダイアログを出す。拒否された場合は
-  スイッチをOFFに戻し、設定アプリへの案内を表示する
+- 収集のない日・年末年始の休止期間（1/1〜1/3）の前夜は通知しない
+- ONにするタイミングでOSの通知許可を求める。拒否された場合はONにせず、
+  端末の設定アプリから許可する必要がある旨をスナックバーで伝える
+  （iOSは一度拒否されるとアプリからダイアログを出せないため）
 
-### B.3 設計
+**未実装**：通知をタップしてホーム（明日のカード）を開く導線。
+通知を開くと結局アプリのトップに来るので実用上の不足は小さく、
+`onDidReceiveNotificationResponse`での画面遷移は別途対応でよいと判断した。
 
-- `flutter_local_notifications`を導入する（サーバー通信を持たない方針
-  ([requirements.md](requirements.md) 6章)と矛盾しないローカル通知のみのパッケージ）
-- スケジューリング方式：厳密な繰り返し通知（曜日指定の定期通知）ではなく、
-  「地区のルールが変わったとき」と「アプリを開いたとき」に、その時点からの
-  直近N日分（例：30日）を`CollectionCalendar.upcoming`で計算し、都度スケジュールし直す方式にする
-  - 理由：`CollectionRule`の第◯曜日パターンはOS標準の「毎週◯曜」繰り返し通知だけでは
-    表現できない（第2・第4のような月内の週指定があるため）。日付ごとに個別スケジュールする
-    ほうが`CollectionCalendar`の判定ロジックをそのまま使い回せて二重実装にならない
-  - 直近N日分を都度張り直すことで、地区設定を変更したときに古い通知が残る問題も解消する
-- 通知権限・スケジュール操作をラップする`NotificationRepository`を`lib/data/`に追加し、
-  `SettingsRepository`と同様に`providers.dart`から購読する設計にする（既存の
-  data層→providers層の構造をそのまま踏襲）
-- 通知ON/OFFと時刻も`SettingsRepository`が保存する対象に加える
-  （`CollectionArea`とは別キーにする。地区を変更しても通知設定は保持されるべきため）
+### B.3 設計（実装済み）
 
-### B.4 テスト方針
+```
+CollectionReminderPlanner (lib/domain/collection_reminder.dart)
+  plan(from, notifyAt, horizonDays, limit) -> List<CollectionReminder>
+  「いつ何を通知すべきか」だけを計算する純粋なDart。OSには触らない
+
+NotificationRepository (lib/data/notification_repository.dart)
+  abstract。requestPermission / reschedule / cancelAll
+  実装は _PluginNotificationRepository（flutter_local_notifications + timezone）
+  テストからは NoopNotificationRepository に差し替える
+
+NotificationController (lib/providers.dart)
+  設定の保存と、上2つをつなぐ。設定変更時と地区変更時に予約を張り直す
+```
+
+- `flutter_local_notifications`を導入した（ローカル通知のみなので、サーバー通信を
+  持たない方針（[requirements.md](requirements.md) 6章）と矛盾しない）
+- スケジューリングは、OS標準の「毎週◯曜」繰り返しではなく、直近30日分を
+  日付ごとに個別予約する方式にした
+  - 理由：`CollectionRule`の第◯曜日パターンはOS標準の繰り返し通知だけでは表現できない。
+    日付ごとに個別スケジュールするほうが`CollectionCalendar`の判定ロジックを
+    そのまま使い回せて二重実装にならない
+  - 予約は差分更新せず毎回全部張り直す。地区や時刻を変えたときに古い予約が残らないので、
+    状態のずれを考えなくて済む
+  - 通知IDは収集日から決まる（`20260807`のような年月日の連結）。同じ日には必ず
+    同じIDが振られるので、張り直しても二重登録されない
+- タイムゾーンは`Asia/Tokyo`固定。端末のタイムゾーンを見に行くと追加依存が必要になるうえ、
+  日本以外で使う想定がない
+- 通知ON/OFFと時刻は`SettingsRepository`が保存する（`CollectionArea`とは別キーなので、
+  地区を選び直しても通知設定は保たれる）
+
+### B.4 テスト方針（実装済み）
 
 `flutter_local_notifications`のOS連携部分はウィジェットテストで検証できないため、
-「地区のルールから通知すべき日付・区分の集合を計算する」ロジックを`CollectionCalendar`を
-使った純粋関数として`lib/domain/`側に切り出し、そこだけを単体テストで担保する
-（OS API呼び出し自体はテスト対象にしない）。
+「地区のルールから通知すべき日付・区分の集合を計算する」ロジックを
+`CollectionReminderPlanner`として`lib/domain/`に切り出し、そこを単体テストで担保した
+（`test/domain/collection_reminder_test.dart`、9件）。OS API呼び出し自体はテストしない。
+
+設定画面のウィジェットテストでは、`notificationRepositoryProvider`を
+`NoopNotificationRepository`に差し替えている（`test/support/test_app.dart`）。
 
 ## C. スコープ外のまま据え置くもの
 

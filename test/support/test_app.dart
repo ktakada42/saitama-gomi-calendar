@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
+import 'package:saitama_gomi/data/notification_repository.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
 import 'package:saitama_gomi/domain/garbage_category.dart';
@@ -122,6 +123,10 @@ Future<void> pumpRootApp(
       overrides: [
         todayProvider.overrideWithValue(today ?? testToday),
         areaCatalogProvider.overrideWith((ref) async => testCatalog),
+        // OSの通知プラグインはテスト環境では初期化できないので差し替える。
+        notificationRepositoryProvider.overrideWith(
+          (ref) async => const NoopNotificationRepository(),
+        ),
       ],
       child: const SaitamaGomiApp(),
     ),
@@ -148,6 +153,10 @@ Future<void> pumpApp(
       overrides: [
         todayProvider.overrideWithValue(today ?? testToday),
         areaCatalogProvider.overrideWith((ref) async => testCatalog),
+        // OSの通知プラグインはテスト環境では初期化できないので差し替える。
+        notificationRepositoryProvider.overrideWith(
+          (ref) async => const NoopNotificationRepository(),
+        ),
       ],
       child: MaterialApp(
         locale: const Locale('ja'),
