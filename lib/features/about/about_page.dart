@@ -63,20 +63,25 @@ class AboutPage extends ConsumerWidget {
               ),
             ),
           ),
-          // 収集日と分別早見表は別の資料から取っているので、それぞれ出す。
-          // どちらか一方だけを見て「出典はこれ」と受け取られないようにする。
-          if (catalog != null && catalog.source.isNotEmpty)
-            _SourceTile(label: '収集日・地区', source: catalog.source),
-          if (dictionary != null && dictionary.source.isNotEmpty)
-            _SourceTile(label: '分別早見表', source: dictionary.source),
-          if (catalog != null && catalog.sourceUrl.isNotEmpty) ...[
-            const Divider(height: 1),
+          // 収集日と分別早見表は表が別なので、それぞれ出す。どちらか一方だけを
+          // 見て「出典はこれ」と受け取られないようにする。どちらも同じ
+          // 「家庭ごみの出し方マニュアル」の中の別の表なので、開く先は同じになる。
+          if (catalog != null && catalog.source.isNotEmpty) ...[
             ExternalLinkTile(
-              icon: Icons.public,
-              title: 'さいたま市の公式ページ',
+              icon: Icons.event_note_outlined,
+              title: '収集日・地区',
+              subtitle: catalog.source,
               url: catalog.sourceUrl,
             ),
+            const Divider(height: 1),
           ],
+          if (dictionary != null && dictionary.source.isNotEmpty)
+            ExternalLinkTile(
+              icon: Icons.menu_book_outlined,
+              title: '分別早見表',
+              subtitle: dictionary.source,
+              url: dictionary.sourceUrl,
+            ),
           const SectionHeader('このアプリ'),
           ListTile(
             leading: const Icon(Icons.info_outline),
@@ -108,35 +113,6 @@ class AboutPage extends ConsumerWidget {
                   : '${packageInfo.version} (${packageInfo.buildNumber})',
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// 出典の一件。押せる項目と紛れないよう、右端には何も置かない。
-class _SourceTile extends StatelessWidget {
-  const _SourceTile({required this.label, required this.source});
-
-  final String label;
-  final String source;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(source, style: theme.textTheme.bodyMedium),
         ],
       ),
     );

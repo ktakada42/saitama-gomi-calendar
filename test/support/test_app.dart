@@ -241,6 +241,8 @@ Future<void> pumpApp(
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: MaterialApp(
+        // 色の見え方を確かめるテストがあるので、実際のテーマを当てる。
+        theme: SaitamaGomiApp.themeOf(Brightness.light),
         locale: const Locale('ja'),
         supportedLocales: const [Locale('ja')],
         localizationsDelegates: const [
