@@ -309,43 +309,24 @@ void main() {
       expect(find.textContaining('生ごみ'), findsWidgets);
     });
 
-    testWidgets('このアプリについてにデータの生成方法は出さない', (tester) async {
+    testWidgets('このアプリについては専用の画面へ進む', (tester) async {
       await pumpRootApp(tester);
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
 
+      // 設定の一覧に出典そのものは出さない。量が多いので画面を分ける。
+      expect(find.text('テスト用の出典'), findsNothing);
+
       await tester.scrollUntilVisible(
-        find.text('このアプリについて'),
+        find.text('バージョンと出典'),
         200,
         scrollable: find.byType(Scrollable).last,
       );
-      await tester.tap(find.text('このアプリについて'));
+      await tester.tap(find.text('バージョンと出典'));
       await tester.pumpAndSettle();
 
-      // 出典は出すが、どう機械処理したか（disclaimer）は出さない。
-      expect(find.text('テスト用の出典'), findsOneWidget);
-      expect(find.text('テスト用の但し書き'), findsNothing);
-    });
-
-    testWidgets('このアプリについてから市の公式ページを開ける', (tester) async {
-      await pumpRootApp(tester);
-
-      await tester.tap(find.byIcon(Icons.settings_outlined));
-      await tester.pumpAndSettle();
-
-      // 普段は畳んであるので、開くまでリンクは出ない。
-      expect(find.text('市の公式ページを開く'), findsNothing);
-
-      await tester.scrollUntilVisible(
-        find.text('このアプリについて'),
-        200,
-        scrollable: find.byType(Scrollable).last,
-      );
-      await tester.tap(find.text('このアプリについて'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('市の公式ページを開く'), findsOneWidget);
+      expect(find.widgetWithText(AppBar, 'このアプリについて'), findsOneWidget);
     });
 
     testWidgets('設定からカレンダーに追加できる', (tester) async {
