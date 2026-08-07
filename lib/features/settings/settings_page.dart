@@ -215,7 +215,7 @@ class _NotificationTiles extends ConsumerWidget {
         SwitchListTile(
           secondary: const Icon(Icons.notifications_outlined),
           title: const Text('前日にお知らせ'),
-          subtitle: const Text('翌日に出せるごみを前の日に通知します'),
+          subtitle: const Text('翌日のごみの分別を前日にお知らせします。'),
           value: settings.enabled,
           onChanged: (value) => _toggle(context, ref, value),
         ),

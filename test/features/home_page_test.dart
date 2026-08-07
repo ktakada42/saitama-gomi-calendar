@@ -74,4 +74,18 @@ void main() {
 
     expect(find.textContaining('収集曜日がまだ設定されていません'), findsOneWidget);
   });
+
+  testWidgets('この先の収集では、あさっての次の行に日付を置く', (tester) async {
+    // 「あさって 8月11日(火)」は日付の欄に1行では収まらず、成り行きに
+    // 任せると「あさって 8月11／日(火)」と日付の途中で切れていた。
+    await pumpApp(
+      tester,
+      const HomePage(),
+      today: DateTime(2026, 8, 9),
+      viewport: TestViewport.compact,
+    );
+
+    expect(find.text('あさって\n8月11日(火)'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

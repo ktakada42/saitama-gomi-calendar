@@ -253,7 +253,7 @@ class _UpcomingTile extends StatelessWidget {
             SizedBox(
               width: 96,
               child: Text(
-                DateLabel.headline(day.date, today),
+                DateLabel.headlineWrapped(day.date, today),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),

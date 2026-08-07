@@ -34,4 +34,14 @@ class DateLabel {
     final rel = relative(date, today);
     return rel == null ? monthDay(date) : '$rel ${monthDay(date)}';
   }
+
+  /// 幅の狭いところで使う見出し。相対表記は日付の上の行に置く。
+  ///
+  /// 「あさって 8月9日(日)」は1行では収まらず、成り行きに任せると
+  /// 「あさって 8月9／日(日)」と日付の途中で切れる。相対表記と日付は
+  /// 別のことを言っているので、切るならその境目で切る。
+  static String headlineWrapped(DateTime date, DateTime today) {
+    final rel = relative(date, today);
+    return rel == null ? monthDay(date) : '$rel\n${monthDay(date)}';
+  }
 }
