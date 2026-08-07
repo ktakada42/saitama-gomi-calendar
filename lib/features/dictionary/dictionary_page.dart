@@ -544,9 +544,10 @@ class _ItemTile extends StatelessWidget {
       ),
       subtitle: _subtitle(theme, hasDetail: hasDetail),
       isThreeLine: _Results.subtitleLines(item) > 1,
-      // 見出しの帯と同じ幅の中で、左右とも16空ける。既定のままだと
-      // 右だけ24空いて、ピルが帯の右端から離れて見えていた。
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      // 右は空けない。ピルの右端を見出しの帯の右端に合わせるため。
+      // 帯は行の幅いっぱいに敷くので、ここで余白を取るとピルだけが
+      // 内側に引っ込んで、右のラインが揃わない。
+      contentPadding: const EdgeInsets.only(left: 16),
       onTap: hasDetail
           ? () => showWasteItemSheet(context, item: item, manualUrl: manualUrl)
           : null,
