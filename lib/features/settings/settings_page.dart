@@ -12,6 +12,7 @@ import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/settings_repository.dart' show NotificationSettings;
+import '../../ui/paren_wrap.dart';
 import '../../domain/collection_area.dart';
 import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
@@ -42,7 +43,9 @@ class SettingsPage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.place_outlined),
             title: const Text('お住まいの地区'),
-            subtitle: Text('${area.ward}　${area.name}'),
+            subtitle: Text(
+              keepParenthesesTogether('${area.ward}　${area.name}'),
+            ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
@@ -109,10 +112,10 @@ class SettingsPage extends ConsumerWidget {
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               expandedCrossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(category.examples.join('・')),
+                Text(keepParenthesesTogether(category.examples.join('・'))),
                 const SizedBox(height: 8),
                 Text(
-                  category.howTo,
+                  keepParenthesesTogether(category.howTo),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

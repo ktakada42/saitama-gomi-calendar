@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../ui/paren_wrap.dart';
 import '../../domain/collection_area.dart';
 import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
@@ -173,7 +174,7 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
                 for (final preset in catalog.presets)
                   ActionChip(
                     avatar: const Icon(Icons.auto_fix_high, size: 18),
-                    label: Text(preset.name),
+                    label: Text(keepParenthesesTogether(preset.name)),
                     onPressed: () => _applyPreset(preset),
                   ),
               ],

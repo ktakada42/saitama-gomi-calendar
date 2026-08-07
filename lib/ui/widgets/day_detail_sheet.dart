@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../paren_wrap.dart';
 import '../../domain/collection_area.dart';
 import '../../domain/collection_calendar.dart';
 import '../../domain/date_label.dart';
@@ -111,10 +112,13 @@ class _CategoryDetail extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text(category.examples.join('・'), style: theme.textTheme.bodyMedium),
+          Text(
+            keepParenthesesTogether(category.examples.join('・')),
+            style: theme.textTheme.bodyMedium,
+          ),
           const SizedBox(height: 6),
           Text(
-            category.howTo,
+            keepParenthesesTogether(category.howTo),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),

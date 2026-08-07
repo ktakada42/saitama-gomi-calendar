@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../ui/paren_wrap.dart';
 import '../../data/area_catalog.dart';
 import '../../domain/collection_area.dart';
 import '../../providers.dart';
@@ -286,7 +287,7 @@ class _AreaTile extends StatelessWidget {
       color: highlight ? theme.colorScheme.primaryContainer : null,
       child: ListTile(
         onTap: onTap,
-        title: Text('${area.ward}　${area.name}'),
+        title: Text(keepParenthesesTogether('${area.ward}　${area.name}')),
         subtitle: area.earlyMorning ? const Text('もえるごみ早朝収集地区') : null,
         trailing: const Icon(Icons.chevron_right),
       ),
