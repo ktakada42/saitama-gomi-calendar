@@ -12,7 +12,7 @@ void main() {
     test('括弧の中に切れ目を作らない', () {
       expect(
         keepParenthesesTogether('紙パック（銀色）'),
-        '紙パック（${_wordJoiner}銀$_wordJoiner色$_wordJoiner）',
+        ['紙パック（', '銀', '色', '）'].join(_wordJoiner),
       );
     });
 

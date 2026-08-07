@@ -531,10 +531,22 @@ class _ItemTile extends StatelessWidget {
     final theme = Theme.of(context);
     final hasDetail = item.hasDetail;
     return ListTile(
-      title: Text(keepParenthesesTogether(item.name)),
+      // ピルはtrailingに置かず、品目名と同じ行に並べる。trailingは下段の
+      // 行数によって上端に揃ったり上下の中央に寄ったりして、品目名と
+      // 高さが揃わなかった。同じ行に入れれば、行数によらず必ず揃う。
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(child: Text(keepParenthesesTogether(item.name))),
+          const SizedBox(width: 8),
+          CategoryPill(item: item),
+        ],
+      ),
       subtitle: _subtitle(theme, hasDetail: hasDetail),
-      trailing: CategoryPill(item: item),
       isThreeLine: _Results.subtitleLines(item) > 1,
+      // 見出しの帯と同じ幅の中で、左右とも16空ける。既定のままだと
+      // 右だけ24空いて、ピルが帯の右端から離れて見えていた。
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       onTap: hasDetail
           ? () => showWasteItemSheet(context, item: item, manualUrl: manualUrl)
           : null,

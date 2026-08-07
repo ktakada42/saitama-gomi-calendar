@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
+import 'package:saitama_gomi/ui/widgets/category_pill.dart';
 
 import '../support/test_app.dart';
 
@@ -243,6 +244,36 @@ void main() {
     // 見出しは残るが、右端の索引は消える。
     expect(find.text('か行'), findsOneWidget);
     expect(find.text('か'), findsNothing);
+  });
+
+  testWidgets('出し先のピルは品目名と同じ高さに並ぶ', (tester) async {
+    await pumpApp(tester, const DictionaryPage());
+
+    // ピルをtrailingに置くと、下段の行数によって上端に揃ったり
+    // 上下の中央に寄ったりして、行ごとに高さが食い違っていた。
+    for (final name in ['ペットボトル', 'カーペット', 'たんす']) {
+      final tile = find.widgetWithText(ListTile, name);
+      final title = tester.getRect(find.text(name));
+      final pill = tester.getRect(
+        find.descendant(of: tile, matching: find.byType(CategoryPill)),
+      );
+      expect(pill.center.dy, closeTo(title.center.dy, 0.5), reason: name);
+    }
+  });
+
+  testWidgets('見出しの帯と行は同じ左右の余白に収まる', (tester) async {
+    await pumpApp(tester, const DictionaryPage());
+
+    // 帯は行と同じ幅いっぱいに敷き、その中で左右とも同じだけ空ける。
+    // 右だけ広いと、ピルが帯の右端から離れて浮いて見える。
+    final band = tester.getRect(find.widgetWithText(Container, 'か行').first);
+    final tile = find.widgetWithText(ListTile, 'カーペット');
+    final title = tester.getRect(find.text('カーペット'));
+    final pill = tester.getRect(
+      find.descendant(of: tile, matching: find.byType(CategoryPill)),
+    );
+
+    expect(title.left - band.left, closeTo(band.right - pill.right, 0.5));
   });
 
   group('冊子の印', () {
