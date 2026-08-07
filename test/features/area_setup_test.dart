@@ -259,6 +259,29 @@ void main() {
       expect(find.text('決定'), findsOneWidget);
     });
 
+    testWidgets('時刻を選ぶ見出しは左右のボタンと同じ高さの中央に来る', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(SwitchListTile, '前日にお知らせ'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('お知らせの時刻'));
+      await tester.pumpAndSettle();
+
+      // 見出しをボタンと同じ行に並べると、「キャンセル」と「決定」の
+      // 文字数の差だけ中央からずれる。3つとも同じ高さに揃っていること。
+      final cancel = tester.getRect(find.text('キャンセル'));
+      final title = tester.getRect(find.text('お知らせの時刻').last);
+      final ok = tester.getRect(find.text('決定'));
+      expect(title.center.dy, closeTo(cancel.center.dy, 0.5));
+      expect(title.center.dy, closeTo(ok.center.dy, 0.5));
+
+      // 見出しはシートの横幅の中央にある。
+      final sheetWidth = tester.getSize(find.byType(CupertinoDatePicker)).width;
+      expect(title.center.dx, closeTo(sheetWidth / 2, 0.5));
+    });
+
     testWidgets('折りたたみはスクロールしても開いたままになる', (tester) async {
       await pumpRootApp(tester);
 
@@ -332,6 +355,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('カレンダーに追加'), findsOneWidget);
+      // 行全体が押せるので、右端に共有アイコンは置かない。
+      // アイコンがあると「そこだけが押せる」ように見えてしまう。
+      expect(
+        find.descendant(
+          of: find.widgetWithText(ListTile, 'カレンダーに追加'),
+          matching: find.byIcon(Icons.ios_share),
+        ),
+        findsNothing,
+      );
       // タップしても例外にならない（共有シート自体はテストでは開かない）。
       await tester.tap(find.text('カレンダーに追加'));
       await tester.pumpAndSettle();

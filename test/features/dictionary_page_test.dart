@@ -86,9 +86,18 @@ void main() {
     expect(find.text('か'), findsOneWidget);
   });
 
-  testWidgets('出典を表示する', (tester) async {
+  testWidgets('出典はヘッダから開いたときだけ出す', (tester) async {
     await pumpApp(tester, const DictionaryPage());
 
+    // 品目を探している間はずっと見えている必要がないので、出しっぱなしにしない。
+    expect(find.textContaining('テスト用の分別早見表'), findsNothing);
+
+    await tester.tap(find.byTooltip('出典'));
+    await tester.pumpAndSettle();
     expect(find.textContaining('テスト用の分別早見表'), findsOneWidget);
+
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('テスト用の分別早見表'), findsNothing);
   });
 }

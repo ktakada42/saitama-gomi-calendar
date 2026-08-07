@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart'
     show
         CupertinoDatePicker,
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart'
         CupertinoTheme,
         CupertinoThemeData;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,17 +52,9 @@ class SettingsPage extends ConsumerWidget {
           const _NotificationTiles(),
           const Divider(height: 1),
           const _ThemeModeTile(),
-          _CalendarExportTile(area: area),
           const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-            child: Text(
-              '設定中の収集曜日',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          _CalendarExportTile(area: area),
+          const _SectionHeader('設定中の収集曜日'),
           for (final category in GarbageCategory.values)
             ListTile(
               dense: true,
@@ -91,18 +86,16 @@ class SettingsPage extends ConsumerWidget {
               ),
             ),
           ),
-          const Divider(height: 32),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Text(
-              '区分と出し方',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          for (final category in GarbageCategory.values)
+          const _SectionHeader('区分と出し方'),
+          for (final category in GarbageCategory.values) ...[
+            if (category != GarbageCategory.values.first)
+              const Divider(height: 1),
             ExpansionTile(
+              // 開いたときに自分で上下へ線を引くのをやめさせ、区切りは
+              // 上のDividerだけにする。既定のままだと、開いた項目の下線と
+              // 隣の項目の上線が重なって線が二重三重に見える。
+              shape: const Border(),
+              collapsedShape: const Border(),
               // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
               // スクロールで見えなくなった時点で開いた状態が失われてしまう。
               // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
@@ -126,13 +119,18 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ],
             ),
-          const Divider(height: 32),
+          ],
+          // ここは区切り線を引かず間だけ空ける。上の一覧と地続きに見せたくない
+          // 一方で、線を足すと一覧の最後の区切りと近すぎて二重に見える。
+          const SizedBox(height: 24),
           // 出典は普段は畳んでおく。収集日を知りたいだけの利用者には不要だが、
           // 情報の確からしさを確かめたい人には必要なので、設定の最下部に置く。
           // データの生成方法（areas.jsonのdisclaimer）はここには出さない。
           // 利用者にとっては「市の資料が出典」という一点だけが意味を持ち、
           // どう機械処理したかは読んでも判断の役に立たないため。
           ExpansionTile(
+            shape: const Border(),
+            collapsedShape: const Border(),
             key: const PageStorageKey('about'),
             leading: const Icon(Icons.info_outline),
             title: const Text('このアプリについて'),
@@ -188,6 +186,38 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
+/// 区切り線と見出しの組。設定の中の話題の変わり目に置く。
+///
+/// 線の上下の余白を同じにしておかないと、上の項目に張り付いて見えたり、
+/// 逆に間延びして見えたりする。各所で数字を書き分けずにここに集約する。
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 16),
+        const Divider(height: 1),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 /// 収集日を標準のカレンダーアプリに取り込む。
 ///
 /// 端末のカレンダーに直接書き込まず、.icsファイルを共有シートに渡す。
@@ -203,7 +233,8 @@ class _CalendarExportTile extends ConsumerWidget {
       leading: const Icon(Icons.calendar_month_outlined),
       title: const Text('カレンダーに追加'),
       subtitle: const Text('収集日をカレンダーアプリに取り込みます'),
-      trailing: const Icon(Icons.ios_share),
+      // 行全体を押せるので、右端に共有アイコンは置かない。
+      // アイコンがあると「そこだけが押せる」ように見えてしまう。
       onTap: () => _share(context, ref),
     );
   }
@@ -321,6 +352,16 @@ class _NotificationTiles extends ConsumerWidget {
     );
   }
 
+  /// シート上部のボタンの体裁。
+  ///
+  /// TextButtonは既定で幅64を下回らないので、「決定」のような短い文字は
+  /// 中央に寄せられて端から離れる。「キャンセル」は64を超えるため寄らない。
+  /// 結果として左右の余白が食い違うので、幅の下限を外す。
+  /// 高さは押しやすさのために48を保つ。
+  static final _pickerButtonStyle = TextButton.styleFrom(
+    minimumSize: const Size(0, 48),
+  );
+
   /// 時刻の選択。Materialの文字盤（showTimePicker）ではなく、
   /// iOSのホイール式にする。「何時に知らせるか」は分単位で厳密に決めたい類の
   /// 設定ではないので、5分刻みで回して選べれば十分で、文字盤より速い。
@@ -331,6 +372,12 @@ class _NotificationTiles extends ConsumerWidget {
   ) async {
     var selected = settings.timeOfDay;
 
+    // ホイールを回すときのクリック感はCupertinoPickerが自分で出すが、
+    // iOSのTaptic Engineは眠っていると立ち上がりに間があり、
+    // 回し始めの数回が鳴らないことがある。開いた時点で一度鳴らして
+    // 起こしておくと、最初のひと転がりから手応えが出る。
+    unawaited(HapticFeedback.selectionClick());
+
     final decided = await showModalBottomSheet<Duration>(
       context: context,
       builder: (context) {
@@ -340,24 +387,46 @@ class _NotificationTiles extends ConsumerWidget {
             height: 300,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // 見出しは左右のボタンとは別の層に置いて中央に固定する。
+                // 同じ行に3つ並べると、「キャンセル」と「決定」の文字数が
+                // 違う分だけ見出しが中央からずれる。高さを決めた箱に
+                // 重ねることで、3つとも同じ高さの中央に揃う。
+                SizedBox(
+                  height: 52,
+                  // TextButton自身が左右に12持っているので、端から16になるよう
+                  // 差分の4だけ足す。一覧の項目の左端と縦に揃う。
+                  child: Stack(
+                    fit: StackFit.expand,
                     children: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('キャンセル'),
-                      ),
-                      Text(
-                        'お知らせの時刻',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      Center(
+                        child: Text(
+                          'お知らせの時刻',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(selected),
-                        child: const Text('決定'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            style: _pickerButtonStyle,
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('キャンセル'),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            style: _pickerButtonStyle,
+                            onPressed: () => Navigator.of(context).pop(selected),
+                            child: const Text('決定'),
+                          ),
+                        ),
                       ),
                     ],
                   ),
