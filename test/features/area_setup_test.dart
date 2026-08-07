@@ -304,5 +304,25 @@ void main() {
       expect(find.text('テスト用の出典'), findsOneWidget);
       expect(find.text('テスト用の但し書き'), findsNothing);
     });
+
+    testWidgets('このアプリについてから市の公式ページを開ける', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      // 普段は畳んであるので、開くまでリンクは出ない。
+      expect(find.text('市の公式ページを開く'), findsNothing);
+
+      await tester.scrollUntilVisible(
+        find.text('このアプリについて'),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(find.text('このアプリについて'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('市の公式ページを開く'), findsOneWidget);
+    });
   });
 }

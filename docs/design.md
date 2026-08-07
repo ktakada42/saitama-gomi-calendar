@@ -62,6 +62,8 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
             全面的に依存するデータ（320件投入済み。next-phase.md A章参照）
   presets:  曜日入力の雛形。地区が見つからない代替経路でのみ使う
   postalAreas: 郵便番号→areasのid一覧（264件）
+  source / sourceUrl: 出典の名前とURL。設定画面に出す。タップできる範囲を
+                       URLだけに限るため、名前とURLを分けて持つ
   areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 

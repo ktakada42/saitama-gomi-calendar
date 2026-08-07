@@ -25,7 +25,7 @@
 //      町丁目名（丁目番号・かっこ書きを除いたベース名）でareasの各地区と突き合わせて
 //      郵便番号→地区ID候補のマップを作る。1つの郵便番号が複数の地区にまたがることが
 //      実際にあるため、「1件に絞れる」保証はしない。候補が複数残ったらUI側で選ばせる前提。
-//   3. 既存の areas.json の presets・disclaimer・source は保持し、
+//   3. 既存の areas.json の presets・disclaimer・source・sourceUrl は保持し、
 //      areas・postalAreas だけ差し替える
 
 import { writeFile, readFile, rm } from 'node:fs/promises';

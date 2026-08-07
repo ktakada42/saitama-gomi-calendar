@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart'
         CupertinoThemeData;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/settings_repository.dart' show NotificationSettings;
 import '../../domain/collection_rule.dart';
@@ -150,6 +151,10 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ],
+              if (catalog != null && catalog.sourceUrl.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _SourceLink(url: catalog.sourceUrl),
+              ],
             ],
           ),
         ],
@@ -178,6 +183,56 @@ class SettingsPage extends ConsumerWidget {
     if (weeks == null) return '毎週$weekdays曜日';
     final sorted = weeks.toList()..sort();
     return '第${sorted.join('・第')}$weekdays曜日';
+  }
+}
+
+/// 出典ページへのリンク。タップすると外部ブラウザ（Safari）で開く。
+///
+/// アプリ内WebViewではなく外部ブラウザにするのは、市の公式ページを
+/// このアプリの一部と誤解させないため。開くのはブラウザに引き渡すだけなので、
+/// 「通信しない」という方針（docs/requirements.md 6章）とは矛盾しない。
+class _SourceLink extends StatelessWidget {
+  const _SourceLink({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: () => _open(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.open_in_new, size: 16, color: theme.colorScheme.primary),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                '市の公式ページを開く',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context) async {
+    final opened = await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+    );
+    if (opened || !context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('ページを開けませんでした。')));
   }
 }
 

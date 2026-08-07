@@ -40,6 +40,7 @@ final testToday = DateTime(2026, 8, 6);
 
 final testCatalog = AreaCatalog.fromJson({
   'source': 'テスト用の出典',
+  'sourceUrl': 'https://example.com/test',
   'disclaimer': 'テスト用の但し書き',
   'presets': [
     {
