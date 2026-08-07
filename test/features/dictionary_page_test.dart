@@ -29,7 +29,8 @@ void main() {
   testWidgets('出し先と注意点を表示する', (tester) async {
     await pumpApp(tester, const DictionaryPage());
 
-    expect(find.text('資源物1類'), findsOneWidget);
+    // 出し先はピルに収まる短い名前で出す（'資源物1類'→'資源1'）。
+    expect(find.text('資源1'), findsOneWidget);
     expect(find.text('中をすすいで'), findsOneWidget);
   });
 
@@ -37,8 +38,9 @@ void main() {
     await pumpApp(tester, const DictionaryPage());
 
     // 粗大ごみは5区分に入らないが、利用者が知りたいのはむしろここ。
+    // 12文字ある正式名はピルに収まらないので、短縮名で出す。
     expect(find.text('たんす'), findsOneWidget);
-    expect(find.text('粗大ごみ・適正処理困難物'), findsOneWidget);
+    expect(find.text('粗大'), findsOneWidget);
   });
 
   testWidgets('該当が無ければその旨を伝える', (tester) async {
@@ -61,6 +63,27 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('たんす'), findsOneWidget);
+  });
+
+  testWidgets('五十音の見出しと索引が出る', (tester) async {
+    await pumpApp(tester, const DictionaryPage());
+
+    // 市の早見表が付けているかな行を、そのまま区切りに使う。
+    // 一覧の見出しと右端の索引の両方に出るので、2つずつ見つかる。
+    expect(find.text('か'), findsNWidgets(2));
+    expect(find.text('た'), findsNWidgets(2));
+    expect(find.text('へ'), findsNWidgets(2));
+  });
+
+  testWidgets('絞り込むと五十音の索引を出さない', (tester) async {
+    await pumpApp(tester, const DictionaryPage());
+
+    // 件数が少なくなると行が飛び飛びになって、かえって探しにくいため。
+    await tester.enterText(find.byType(TextField), 'ペット');
+    await tester.pumpAndSettle();
+
+    // 見出しは残るが、右端の索引は消えるので1つだけになる。
+    expect(find.text('か'), findsOneWidget);
   });
 
   testWidgets('出典を表示する', (tester) async {

@@ -50,6 +50,7 @@ class WasteDictionary {
     final matched = items.where((item) => item.matches(trimmed)).toList();
     final normalized = WasteItem(
       name: trimmed,
+      kanaHead: '',
       categoryId: '',
       categoryLabel: '',
       note: '',

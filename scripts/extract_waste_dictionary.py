@@ -138,10 +138,23 @@ def extract_page(page):
             for w in words
             # 品目列の左には、かな行インデックス（あ・い・う…）が置かれている。
             # 少し左まで含めてから、後で1文字のかなを落とす。
-            if item_x - 14 <= w["x0"] < end_x and not is_noise(w["text"])
+            # 「（パソコンの）マウス」のように括弧で始まる品目は、ブロックの
+            # 基準位置より少し左（-3程度）から始まる。一方でかな行の列は
+            # さらに左（-15程度）にあるので、-6 で切れば両方を取り違えない。
+            if item_x - 6 <= w["x0"] < end_x and not is_noise(w["text"])
         ]
         if not block:
             continue
+
+        # 五十音の「行」を示すかな1文字は、品目名の左の細い列に置かれている。
+        # 品目名の列とは分かれているので、別に集めて行の切り替わりを拾う。
+        kana_words = [
+            w
+            for w in words
+            if item_x - 16 <= w["x0"] < item_x - 6
+            and len(w["text"]) == 1
+            and "ぁ" <= w["text"] <= "ん"
+        ]
 
         # 品目名にはバッジの小さな文字を混ぜない。
         item_words = [w for w in block if w["x0"] < cat_x - 3 and is_body_text(w)]
@@ -162,10 +175,17 @@ def extract_page(page):
             )
 
             name = join_row(row)
-            # 行頭のかな行インデックス（1文字）を落とす。
-            name = re.sub(r"^[ぁ-ん](?=[^ぁ-ん]|$)", "", name).strip()
             if not name:
                 continue
+
+            # この品目の行に、かな行の切り替わりが置かれているか。
+            # 「石」「鏡」のような漢字だけの品目でも、市の表がどの行に置いたかが
+            # 分かるので、読みを推測せずに五十音順を再現できる。
+            kana_head = None
+            for kw in kana_words:
+                if abs(kw["top"] - top) <= 4:
+                    kana_head = kw["text"]
+                    break
 
             def nearest(candidates, tol=6.0):
                 best, best_d = [], tol
@@ -196,6 +216,7 @@ def extract_page(page):
             entries.append(
                 {
                     "name": name,
+                    "kanaHead": kana_head,
                     "category": category_id,
                     "categoryLabel": category_label,
                     "note": note,
@@ -243,6 +264,16 @@ def main():
             print(f"page {page.page_number}: {len(page_entries)}件", file=sys.stderr)
             all_entries.extend(page_entries)
 
+    # かな行のインデックスは「行が変わる最初の品目」にしか付いていないので、
+    # 次の行が来るまで直前の値を引き継ぐ。表は五十音順に並んでいるため、
+    # 抽出した順（＝表の並び順）のまま前から埋めていけばよい。
+    current = None
+    for e in all_entries:
+        if e["kanaHead"]:
+            current = e["kanaHead"]
+        else:
+            e["kanaHead"] = current
+
     # 同じ品目が複数ページに出ることはないが、念のため重複を除く
     seen = set()
     items = []
@@ -253,7 +284,26 @@ def main():
         seen.add(key)
         items.append(e)
 
-    items.sort(key=lambda e: e["name"])
+    # 五十音順に並べる。
+    # 単純な文字列比較だとUnicodeのコードポイント順になり、
+    # ASCII→ひらがな→カタカナ→漢字と並んでしまって五十音順にならない。
+    # 市の表が付けているかな行を第1キーにすれば、漢字の読みを推測せずに
+    # 資料どおりの並びを再現できる。
+    kana_order = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん"
+    def sort_key(e):
+        head = e["kanaHead"] or ""
+        rank = kana_order.index(head) if head in kana_order and head else len(kana_order)
+        return (rank, e["name"])
+
+    items.sort(key=sort_key)
+
+    missing = [e["name"] for e in items if not e["kanaHead"]]
+    if missing:
+        print(
+            f"警告: かな行が取れなかった品目が{len(missing)}件あります: "
+            f"{missing[:5]}",
+            file=sys.stderr,
+        )
 
     print(f"合計: {len(items)}件", file=sys.stderr)
     counts = Counter(e["categoryLabel"] for e in items)
