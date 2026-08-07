@@ -34,11 +34,24 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final dictionary = ref.watch(wasteDictionaryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('分別')),
+      appBar: AppBar(
+        title: const Text('分別'),
+        actions: [
+          // 出典は一覧の下に出しっぱなしにせず、ここから開く。
+          // 品目を探している間ずっと見えている必要はないが、
+          // 「この情報はどこから来たのか」を確かめたいときには要る。
+          if (dictionary.hasValue)
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              tooltip: '出典',
+              onPressed: () =>
+                  _showSource(context, dictionary.requireValue.source),
+            ),
+        ],
+      ),
       body: switch (dictionary) {
         AsyncData(:final value) => Column(
           children: [
@@ -81,19 +94,22 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
         ),
         _ => const Center(child: CircularProgressIndicator()),
       },
-      bottomNavigationBar: dictionary.hasValue
-          ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: Text(
-                  '出典：${dictionary.requireValue.source}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            )
-          : null,
+    );
+  }
+
+  void _showSource(BuildContext context, String source) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('出典'),
+        content: Text(source),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('閉じる'),
+          ),
+        ],
+      ),
     );
   }
 }
