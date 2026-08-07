@@ -423,7 +423,8 @@ class _NotificationTiles extends ConsumerWidget {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             style: _pickerButtonStyle,
-                            onPressed: () => Navigator.of(context).pop(selected),
+                            onPressed: () =>
+                                Navigator.of(context).pop(selected),
                             child: const Text('決定'),
                           ),
                         ),
