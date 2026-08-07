@@ -294,6 +294,14 @@ class _KanaIndexState extends State<_KanaIndex> {
   /// なぞっている最中かどうか。触れている間は丸を濃くする。
   bool _dragging = false;
 
+  /// 索引を操作している間は、現在地をスクロール位置から拾い直さない。
+  ///
+  /// 一覧の終わりに近い行は、送ってもその見出しが画面の上端まで来ない。
+  /// 実際、わ行は3件しかないので一番下まで送っても上端には届かず、
+  /// スクロール位置から拾うと手前のら行のままになって、わを選べなかった。
+  /// 索引を触っている間は触れた行を現在地とする（iOSの索引も指に従う）。
+  bool _scrubbing = false;
+
   @override
   void initState() {
     super.initState();
@@ -311,7 +319,7 @@ class _KanaIndexState extends State<_KanaIndex> {
 
   /// 今どの行を見ているかを、スクロール位置から求める。
   void _syncCurrent() {
-    if (!widget.scrollController.hasClients) return;
+    if (_scrubbing || !widget.scrollController.hasClients) return;
     final offset = widget.scrollController.offset;
     String? found;
     for (final entry in widget.offsets.entries) {
@@ -340,6 +348,10 @@ class _KanaIndexState extends State<_KanaIndex> {
     // 時刻のホイールと同じく、送るたびに手応えを返す。
     // どこまで来たかを画面から目を離さずに掴めるようにする。
     HapticFeedback.selectionClick();
+    setState(() {
+      _scrubbing = true;
+      _current = head;
+    });
     _jumpTo(head);
   }
 
@@ -360,7 +372,10 @@ class _KanaIndexState extends State<_KanaIndex> {
   }
 
   void _settleOn(String head, {required int remaining}) {
-    if (remaining <= 0) return;
+    if (remaining <= 0) {
+      _finishScrub();
+      return;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || !widget.scrollController.hasClients) return;
       final context = widget.headerKeys[head]?.currentContext;
@@ -369,7 +384,10 @@ class _KanaIndexState extends State<_KanaIndex> {
       if (box is! RenderBox || viewport is! RenderBox) return;
       // 見出しが索引の枠の上端からどれだけ下（＋）／上（−）にあるか。
       final delta = box.localToGlobal(Offset.zero, ancestor: viewport).dy;
-      if (delta.abs() < 1) return;
+      if (delta.abs() < 1) {
+        _finishScrub();
+        return;
+      }
       final position = widget.scrollController.position;
       widget.scrollController.jumpTo(
         (position.pixels + delta).clamp(0.0, position.maxScrollExtent),
@@ -379,8 +397,18 @@ class _KanaIndexState extends State<_KanaIndex> {
   }
 
   void _endDrag() {
-    if (!_dragging) return;
-    setState(() => _dragging = false);
+    if (_dragging) setState(() => _dragging = false);
+    _finishScrub();
+  }
+
+  /// 索引から手が離れ、送りも落ち着いたら、現在地の追従を戻す。
+  ///
+  /// 一覧が動いていない間はスクロールの通知も来ないので、
+  /// 戻した時点で現在地が勝手に書き換わることはない。
+  /// 次に利用者が一覧そのものを動かしたときから追従が効く。
+  void _finishScrub() {
+    if (!_scrubbing || _dragging) return;
+    _scrubbing = false;
   }
 
   @override

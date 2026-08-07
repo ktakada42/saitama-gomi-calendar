@@ -153,6 +153,41 @@ void main() {
       expect(circled(tester), 'あ');
     });
 
+    testWidgets('最後の行も選べる', (tester) async {
+      // わ行のように件数が少ない最後の行は、一番下まで送っても
+      // 見出しが画面の上端まで来ない。スクロール位置から現在地を
+      // 拾っていると手前の行のままになり、選べなくなってしまう。
+      final tail = WasteDictionary.fromJson({
+        'source': 'テスト用の分別早見表',
+        'sourceUrl': '',
+        'items': [
+          for (var i = 0; i < 30; i++)
+            {
+              'name': 'あ$i品目',
+              'kanaHead': 'あ',
+              'category': 'burnable',
+              'categoryLabel': 'もえるごみ',
+              'note': '',
+            },
+          // 最後の行はたった1件。
+          {
+            'name': '輪ゴム',
+            'kanaHead': 'わ',
+            'category': 'burnable',
+            'categoryLabel': 'もえるごみ',
+            'note': '',
+          },
+        ],
+      });
+      await pumpApp(tester, const DictionaryPage(), dictionary: tail);
+
+      await tester.tap(find.text('わ').last);
+      await tester.pumpAndSettle();
+
+      expect(circled(tester), 'わ');
+      expect(find.text('輪ゴム'), findsOneWidget);
+    });
+
     testWidgets('なぞると触れている行へ送り、行が変わるたびに手応えを返す', (tester) async {
       await pump(tester);
 
