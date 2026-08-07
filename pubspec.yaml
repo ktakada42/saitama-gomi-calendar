@@ -4,7 +4,7 @@ description: "さいたま市のごみ収集日と分別区分を確認するア
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ^3.12.2
