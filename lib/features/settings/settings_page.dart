@@ -23,21 +23,13 @@ class SettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.only(bottom: 32),
         children: [
+          // 「地区」は選び直すもの、「収集曜日」は確認・調整するもの、と
+          // 役割で分ける。地区を選べば曜日は自動で決まるので、地区の項目から
+          // 曜日の編集画面に入ると「地区を選んでも曜日が決まらない」ように見えてしまう。
           ListTile(
             leading: const Icon(Icons.place_outlined),
             title: const Text('お住まいの地区'),
             subtitle: Text('${area.ward}　${area.name}'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => AreaEditorPage(initial: area),
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.search_outlined),
-            title: const Text('地区を選び直す'),
-            subtitle: const Text('郵便番号または一覧から選び直します'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
@@ -75,6 +67,17 @@ class SettingsPage extends ConsumerWidget {
               title: Text('もえるごみの早朝収集地区'),
               trailing: Text('朝5:30まで'),
             ),
+          ListTile(
+            leading: const Icon(Icons.edit_calendar_outlined),
+            title: const Text('収集曜日を調整する'),
+            subtitle: const Text('実際の収集日と違うときに直せます'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => AreaEditorPage(initial: area),
+              ),
+            ),
+          ),
           const Divider(height: 32),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

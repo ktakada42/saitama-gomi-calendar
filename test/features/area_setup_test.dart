@@ -37,6 +37,22 @@ void main() {
       expect(find.byIcon(Icons.calendar_month_outlined), findsOneWidget);
     });
 
+    testWidgets('手入力のときは早朝収集を自分で選べる', (tester) async {
+      await pumpRootApp(tester, area: null);
+
+      await tester.tap(find.text('自分の地区が見つからない'));
+      await tester.pumpAndSettle();
+
+      // 地区データが無い経路なので、早朝収集地区かどうかは利用者が指定する。
+      // 画面下部にあるのでスクロールしてから確かめる。
+      await tester.scrollUntilVisible(
+        find.byType(SwitchListTile),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.byType(SwitchListTile), findsOneWidget);
+    });
+
     testWidgets('手入力で曜日をひとつも選ばないと先に進めない', (tester) async {
       await pumpRootApp(tester, area: null);
 
@@ -118,7 +134,7 @@ void main() {
       expect(find.text('毎週水曜日'), findsOneWidget);
     });
 
-    testWidgets('地区はあとから変更できる', (tester) async {
+    testWidgets('お住まいの地区からは地区を選び直せる', (tester) async {
       await pumpRootApp(tester);
 
       // IndexedStack で全タブが組み立て済みなので、AppBar のタイトルと
@@ -126,6 +142,28 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
       await tester.tap(find.text('お住まいの地区'));
+      await tester.pumpAndSettle();
+
+      // 曜日の編集画面ではなく、地区を選び直す画面に入る。
+      expect(find.text('お住まいの地区を確認'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), '3300001');
+      await tester.tap(find.text('探す'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('見沼区　テスト町一丁目'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('保存する'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+    });
+
+    testWidgets('収集曜日を調整するからは曜日を直せる', (tester) async {
+      await pumpRootApp(tester);
+
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('収集曜日を調整する'));
       await tester.pumpAndSettle();
 
       expect(find.text('収集曜日の確認'), findsOneWidget);
@@ -138,25 +176,17 @@ void main() {
       expect(find.text('岩槻区　テスト地区'), findsOneWidget);
     });
 
-    testWidgets('地区を選び直すから郵便番号での再設定に入れる', (tester) async {
+    testWidgets('地区を選んで来たときは早朝収集の切り替えを出さない', (tester) async {
       await pumpRootApp(tester);
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('地区を選び直す'));
+      await tester.tap(find.text('収集曜日を調整する'));
       await tester.pumpAndSettle();
 
-      expect(find.text('お住まいの地区を確認'), findsOneWidget);
-
-      await tester.enterText(find.byType(TextField), '3300001');
-      await tester.tap(find.text('探す'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('見沼区　テスト町一丁目'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('保存する'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+      // 早朝収集地区かどうかは地区データ側で確定しているので、
+      // 利用者に切り替えさせない。
+      expect(find.byType(SwitchListTile), findsNothing);
     });
 
     testWidgets('画面の明るさは既定でライト、設定から切り替えられる', (tester) async {
