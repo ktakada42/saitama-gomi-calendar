@@ -102,10 +102,25 @@ final testCatalog = AreaCatalog.fromJson({
   },
 });
 
+/// テストで使う画面サイズ。
+///
 /// テストの既定ビューポート（800x600）は横長で、縦画面前提のこのアプリとは
-/// 縦横比が逆になる。実機に近い縦長にしておく。
-void _useHandsetViewport(WidgetTester tester) {
-  tester.view.physicalSize = const Size(400, 900);
+/// 縦横比が逆になるため、実機に近い縦長を使う。
+enum TestViewport {
+  /// ふだんのテスト用。近年のiPhoneに近い縦長。
+  standard(Size(400, 900)),
+
+  /// サポートする下限の画面（iPhone SE 第2/第3世代、375×667pt）。
+  /// 現行機種でいちばん小さいので、ここで溢れなければ他では溢れない。
+  compact(Size(375, 667));
+
+  const TestViewport(this.size);
+
+  final Size size;
+}
+
+void _useViewport(WidgetTester tester, TestViewport viewport) {
+  tester.view.physicalSize = viewport.size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 }
@@ -118,8 +133,11 @@ Future<void> pumpRootApp(
 
   /// 同梱データの読み込みが失敗した場合の表示を確かめるためのスイッチ。
   bool failCatalog = false,
+
+  /// 画面サイズ。下限の端末で溢れないかを見るときは [TestViewport.compact]。
+  TestViewport viewport = TestViewport.standard,
 }) async {
-  _useHandsetViewport(tester);
+  _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
     if (area != null) 'flutter.selected_area': jsonEncode(area.toJson()),
   });
@@ -152,8 +170,11 @@ Future<void> pumpApp(
   Widget child, {
   CollectionArea? area = sampleArea,
   DateTime? today,
+
+  /// 画面サイズ。下限の端末で溢れないかを見るときは [TestViewport.compact]。
+  TestViewport viewport = TestViewport.standard,
 }) async {
-  _useHandsetViewport(tester);
+  _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
     if (area != null) 'flutter.selected_area': jsonEncode(area.toJson()),
   });
