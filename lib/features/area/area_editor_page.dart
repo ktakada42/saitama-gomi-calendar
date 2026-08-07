@@ -133,7 +133,7 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
         children: [
           Text(
             _isManualEntry
-                ? 'お住まいの区と、区分ごとの収集曜日を設定してください。'
+                ? 'お住まいの区と、分別ごとの収集曜日を設定してください。'
                       '曜日は市から配布される収集日カレンダーで確認できます。'
                 : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで調整できます。',
             style: theme.textTheme.bodyMedium,
@@ -160,7 +160,7 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
             _SectionTitle('入力の出発点'),
             const SizedBox(height: 4),
             Text(
-              'もえるごみの曜日だけ入った雛形です。当てはまるものを選んでから、残りの区分を足してください。',
+              'もえるごみの曜日だけ入った雛形です。当てはまるものを選んでから、残りの分別を足してください。',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

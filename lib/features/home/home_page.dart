@@ -53,7 +53,7 @@ class HomePage extends ConsumerWidget {
               for (final day in upcoming)
                 _UpcomingTile(day: day, area: area, today: today),
             const SizedBox(height: 24),
-            _SectionTitle('区分ごとの次の収集'),
+            _SectionTitle('分別ごとの次の収集'),
             const SizedBox(height: 8),
             _NextByCategory(calendar: calendar, today: today),
           ],

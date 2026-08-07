@@ -214,6 +214,9 @@ Future<void> pumpApp(
   CollectionArea? area = sampleArea,
   DateTime? today,
 
+  /// 分別早見表。索引の見え方など、品目の並びが要るテストから差し替える。
+  WasteDictionary? dictionary,
+
   /// 画面サイズ。下限の端末で溢れないかを見るときは [TestViewport.compact]。
   TestViewport viewport = TestViewport.standard,
 }) async {
@@ -232,7 +235,9 @@ Future<void> pumpApp(
         ),
         // ファイル書き出しと共有シートはテスト環境では動かない。
         calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
-        wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
+        wasteDictionaryProvider.overrideWith(
+          (ref) async => dictionary ?? testDictionary,
+        ),
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: MaterialApp(

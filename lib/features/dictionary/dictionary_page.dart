@@ -25,6 +25,11 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   final _scrollController = ScrollController();
   String _query = '';
 
+  /// かな見出しのキー。索引から飛んだあと、実際にどこに描かれたかを
+  /// 見て位置を寄せ直すのに使う。品目ごとに行の高さが変わるので、
+  /// 計算だけでは正確な位置を出せない。
+  final _headerKeys = <String, GlobalKey>{};
+
   @override
   void dispose() {
     _controller.dispose();
@@ -84,6 +89,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                 items: value.search(_query),
                 query: _query,
                 scrollController: _scrollController,
+                headerKeys: _headerKeys,
               ),
             ),
           ],
@@ -119,18 +125,26 @@ class _Results extends StatelessWidget {
     required this.items,
     required this.query,
     required this.scrollController,
+    required this.headerKeys,
   });
 
   final List<WasteItem> items;
   final String query;
   final ScrollController scrollController;
+  final Map<String, GlobalKey> headerKeys;
 
-  /// 一覧の各行の高さ。索引から飛ぶ位置を計算するのに使う。
-  ///
-  /// 注意点の有無で行の高さが変わるので、実測ではなく固定にしている。
-  /// 索引は「だいたいその辺り」に飛べれば用が足りるので、多少ずれてよい。
-  static const _rowHeight = 72.0;
   static const _headerHeight = 36.0;
+
+  /// 品目1件分の高さの見積り。
+  ///
+  /// ListTileは注意点の有無と長さで1行・2行・3行に変わり、それぞれ
+  /// 56・72・88になる。索引から飛ぶ位置の当たりを付けるのに使う。
+  /// 画面外の行は組み立てられておらず実測できないので、まずこの見積りで
+  /// 飛んでから、描かれた見出しの位置を見て寄せ直す（_KanaIndex._jumpTo）。
+  static double _itemHeight(WasteItem item) {
+    if (item.note.isEmpty) return 56;
+    return item.note.length > 24 ? 88 : 72;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +189,7 @@ class _Results extends StatelessWidget {
         previous = item.kanaHead;
       }
       rows.add(_Row.item(item));
-      offset += _rowHeight;
+      offset += _itemHeight(item);
     }
 
     final list = ListView.builder(
@@ -184,9 +198,12 @@ class _Results extends StatelessWidget {
       itemCount: rows.length,
       itemBuilder: (context, index) {
         final row = rows[index];
-        return row.header != null
-            ? _KanaHeader(row.header!)
-            : _ItemTile(row.item!);
+        final header = row.header;
+        if (header == null) return _ItemTile(row.item!);
+        return _KanaHeader(
+          header,
+          key: headerKeys.putIfAbsent(header, GlobalKey.new),
+        );
       },
     );
 
@@ -196,7 +213,7 @@ class _Results extends StatelessWidget {
 
     return Stack(
       children: [
-        Padding(padding: const EdgeInsets.only(right: 22), child: list),
+        Padding(padding: const EdgeInsets.only(right: 30), child: list),
         Positioned(
           top: 0,
           bottom: 0,
@@ -204,6 +221,7 @@ class _Results extends StatelessWidget {
           child: _KanaIndex(
             offsets: offsetOfKana,
             scrollController: scrollController,
+            headerKeys: headerKeys,
           ),
         ),
       ],
@@ -221,7 +239,7 @@ class _Row {
 }
 
 class _KanaHeader extends StatelessWidget {
-  const _KanaHeader(this.kana);
+  const _KanaHeader(this.kana, {super.key});
 
   final String kana;
 
@@ -245,84 +263,216 @@ class _KanaHeader extends StatelessWidget {
   }
 }
 
-/// 右端に出す五十音の索引。触った位置の行へ飛ぶ。
-class _KanaIndex extends StatefulWidget {
-  const _KanaIndex({required this.offsets, required this.scrollController});
+/// 五十音の「行」と、その行に属するかな。
+///
+/// 索引はふだんこの行頭（あ・か・さ…）だけを出しておく。43文字を常に
+/// 並べると1文字あたりが小さくなりすぎて、狙って押せないため。
+const _kanaRows = [
+  'あいうえお',
+  'かきくけこ',
+  'さしすせそ',
+  'たちつてと',
+  'なにぬねの',
+  'はひふへほ',
+  'まみむめも',
+  'やゆよ',
+  'らりるれろ',
+  'わをん',
+];
 
+/// 右端に出す五十音の索引。
+///
+/// 行を押すと、その行のかなが開く。開いたかなを押すとそこへ飛ぶ。
+/// 2段階にしているのは、43文字を一度に並べると1文字が小さくなりすぎて
+/// 押し間違えるため。今いる行はいつも開いていて、現在地には丸を付ける。
+class _KanaIndex extends StatefulWidget {
+  const _KanaIndex({
+    required this.offsets,
+    required this.scrollController,
+    required this.headerKeys,
+  });
+
+  /// かなごとの、一覧の中でのおおよその位置。並び順は一覧と同じ。
   final Map<String, double> offsets;
   final ScrollController scrollController;
+  final Map<String, GlobalKey> headerKeys;
 
   @override
   State<_KanaIndex> createState() => _KanaIndexState();
 }
 
 class _KanaIndexState extends State<_KanaIndex> {
-  String? _touching;
+  /// 利用者が押して開いた行の行頭。nullなら今いる行が開く。
+  String? _openedRow;
 
-  void _jumpTo(String kana) {
-    final offset = widget.offsets[kana];
-    if (offset == null || !widget.scrollController.hasClients) return;
-    final max = widget.scrollController.position.maxScrollExtent;
-    widget.scrollController.jumpTo(offset.clamp(0.0, max));
+  /// 一覧の先頭に見えているかな。
+  String? _current;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_syncCurrent);
+    // 初回の描画時点ではまだスクロール位置を持っていないので、
+    // 描画が終わってから現在地を取りにいく。
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncCurrent());
   }
 
-  /// 指の位置から、その真下にあるかなを求める。
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_syncCurrent);
+    super.dispose();
+  }
+
+  /// 今どのかなの範囲を見ているかを、スクロール位置から求める。
+  void _syncCurrent() {
+    if (!widget.scrollController.hasClients) return;
+    final offset = widget.scrollController.offset;
+    String? found;
+    for (final entry in widget.offsets.entries) {
+      // 見出しが画面の上端を通り過ぎたら、そこから先はその行。
+      if (entry.value <= offset + 1) {
+        found = entry.key;
+      } else {
+        break;
+      }
+    }
+    found ??= widget.offsets.keys.firstOrNull;
+    if (found == _current) return;
+    setState(() => _current = found);
+  }
+
+  /// [kana] を含む行の行頭。
+  String? _rowHeadOf(String? kana) {
+    if (kana == null) return null;
+    for (final row in _kanaRows) {
+      if (row.contains(kana)) return row[0];
+    }
+    return null;
+  }
+
+  /// [kana] の見出しが一覧の先頭に来るまで送る。
   ///
-  /// 1文字ずつタップさせるには索引の文字が小さすぎるので、
-  /// なぞって動かせるようにしている。
-  void _handle(Offset localPosition, double height) {
-    final keys = widget.offsets.keys.toList();
-    if (keys.isEmpty) return;
-    final index = (localPosition.dy / height * keys.length).floor().clamp(
-      0,
-      keys.length - 1,
+  /// 行の高さは品目によって変わるので、見積りだけでは行き過ぎたり
+  /// 届かなかったりする。まず見積りで飛び、そこで実際に描かれた見出しの
+  /// 位置を見て差の分だけ寄せ直す。近くまで来ていれば見出しは組み立てられて
+  /// いるので、1〜2回で収まる。
+  void _jumpTo(String kana) {
+    final estimate = widget.offsets[kana];
+    if (estimate == null || !widget.scrollController.hasClients) return;
+    final position = widget.scrollController.position;
+    widget.scrollController.jumpTo(
+      estimate.clamp(0.0, position.maxScrollExtent),
     );
-    final kana = keys[index];
-    if (kana == _touching) return;
-    setState(() => _touching = kana);
-    _jumpTo(kana);
+    // 飛んだ先の行がそのまま開いた状態になるよう、手で開いた行は忘れる。
+    setState(() => _openedRow = null);
+    _settleOn(kana, remaining: 3);
+  }
+
+  void _settleOn(String kana, {required int remaining}) {
+    if (remaining <= 0) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !widget.scrollController.hasClients) return;
+      final context = widget.headerKeys[kana]?.currentContext;
+      final box = context?.findRenderObject();
+      final viewport = this.context.findRenderObject();
+      if (box is! RenderBox || viewport is! RenderBox) return;
+      // 見出しが索引の枠の上端からどれだけ下（＋）／上（−）にあるか。
+      final delta = box.localToGlobal(Offset.zero, ancestor: viewport).dy;
+      if (delta.abs() < 1) return;
+      final position = widget.scrollController.position;
+      widget.scrollController.jumpTo(
+        (position.pixels + delta).clamp(0.0, position.maxScrollExtent),
+      );
+      _settleOn(kana, remaining: remaining - 1);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final keys = widget.offsets.keys.toList();
+    // 手で開いた行があればそれを、なければ今いる行を開く。
+    final opened = _openedRow ?? _rowHeadOf(_current);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxHeight;
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onVerticalDragStart: (d) => _handle(d.localPosition, height),
-          onVerticalDragUpdate: (d) => _handle(d.localPosition, height),
-          onVerticalDragEnd: (_) => setState(() => _touching = null),
-          onVerticalDragCancel: () => setState(() => _touching = null),
-          onTapDown: (d) => _handle(d.localPosition, height),
-          onTapUp: (_) => setState(() => _touching = null),
-          child: SizedBox(
+    // 開いている行だけ、その行のかなをすべて並べる。
+    final entries = <String>[];
+    for (final row in _kanaRows) {
+      final present = row.split('').where(widget.offsets.containsKey).toList();
+      if (present.isEmpty) continue;
+      if (row[0] == opened) {
+        entries.addAll(present);
+      } else {
+        entries.add(present.first);
+      }
+    }
+
+    return SizedBox(
+      width: 30,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (final kana in entries)
+            _KanaIndexEntry(
+              kana: kana,
+              isCurrent: kana == _current,
+              onTap: () {
+                // 閉じている行の行頭は「開く」。開いている行のかなは「飛ぶ」。
+                final head = _rowHeadOf(kana);
+                if (kana == head && head != opened) {
+                  setState(() => _openedRow = head);
+                } else {
+                  _jumpTo(kana);
+                }
+              },
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _KanaIndexEntry extends StatelessWidget {
+  const _KanaIndexEntry({
+    required this.kana,
+    required this.isCurrent,
+    required this.onTap,
+  });
+
+  final String kana;
+  final bool isCurrent;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        width: 30,
+        height: 26,
+        child: Center(
+          child: Container(
             width: 22,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                for (final kana in keys)
-                  Text(
-                    kana,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      height: 1.0,
-                      fontWeight: kana == _touching
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                      color: kana == _touching
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-              ],
+            height: 22,
+            alignment: Alignment.center,
+            decoration: isCurrent
+                ? BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    shape: BoxShape.circle,
+                  )
+                : null,
+            child: Text(
+              kana,
+              style: theme.textTheme.labelMedium?.copyWith(
+                height: 1.0,
+                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                color: isCurrent
+                    ? theme.colorScheme.onPrimary
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

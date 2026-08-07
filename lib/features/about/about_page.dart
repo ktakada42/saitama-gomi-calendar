@@ -44,7 +44,7 @@ class AboutPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'さいたま市の家庭ごみの収集日と分別区分を確認するアプリです。'
+                  'さいたま市の家庭ごみの収集日と分別を確認するアプリです。'
                   'さいたま市が提供する公式のアプリではありません。',
                   style: theme.textTheme.bodyMedium,
                 ),
@@ -55,7 +55,7 @@ class AboutPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Text(
-              '収集日も分別区分も、さいたま市が公開している資料をもとにした要約です。'
+              '収集日も分別も、さいたま市が公開している資料をもとにした要約です。'
               '町名地番や収集ルールの変更が反映されるまでにずれが生じることがあります。'
               '判断に迷うものや最新の情報は市の公式ページで確認してください。',
               style: theme.textTheme.bodySmall?.copyWith(
