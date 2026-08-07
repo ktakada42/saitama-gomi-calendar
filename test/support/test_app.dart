@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
+import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/data/calendar_share.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
@@ -38,6 +39,33 @@ const sampleArea = CollectionArea(
 
 /// 2026年8月6日（木）。もえるごみの日で、翌日は収集なし。
 final testToday = DateTime(2026, 8, 6);
+
+/// 分別早見表のテスト用データ。
+/// 5区分に入るものと、入らないもの（粗大ごみ）の両方を持たせてある。
+final testDictionary = WasteDictionary.fromJson({
+  'source': 'テスト用の分別早見表',
+  'sourceUrl': 'https://example.com/dictionary',
+  'items': [
+    {
+      'name': 'ペットボトル',
+      'category': 'recyclable1',
+      'categoryLabel': '資源物1類',
+      'note': '中をすすいで',
+    },
+    {
+      'name': 'カーペット',
+      'category': 'burnable',
+      'categoryLabel': 'もえるごみ',
+      'note': '',
+    },
+    {
+      'name': 'たんす',
+      'category': 'oversized',
+      'categoryLabel': '粗大ごみ・適正処理困難物',
+      'note': '直接持込みまたは戸別収集',
+    },
+  ],
+});
 
 final testCatalog = AreaCatalog.fromJson({
   'source': 'テスト用の出典',
@@ -154,6 +182,7 @@ Future<void> pumpRootApp(
         ),
         // ファイル書き出しと共有シートはテスト環境では動かない。
         calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
+        wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
       ],
       child: const SaitamaGomiApp(),
     ),
@@ -189,6 +218,7 @@ Future<void> pumpApp(
         ),
         // ファイル書き出しと共有シートはテスト環境では動かない。
         calendarShareProvider.overrideWithValue(const NoopCalendarShare()),
+        wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
       ],
       child: MaterialApp(
         locale: const Locale('ja'),

@@ -46,6 +46,11 @@ CollectionReminderPlanner(calendar)
   └ OSの通知APIには触らない純粋な計算だけ。通知の中身とタイミングの判断を
     単体テストで担保できるようにするため（next-phase.md B.4節）
 
+WasteItem
+  └ 分別早見表の1品目。品目名・出し先・注意点
+  └ 5区分に収まらない出し先（粗大ごみ・小型家電・電池・収集できないもの）も持つ
+  └ searchKey / matches(query) で記号を無視した検索ができる
+
 CalendarExport(area)
   └ 収集日をiCalendar（.ics）形式の文字列にする
   └ 日付ごとに個別イベントを並べず、繰り返しルール（RRULE）で表すのでイベント数が少ない
@@ -71,6 +76,10 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
                        URLだけに限るため、名前とURLを分けて持つ
   areasForPostalCode(code)  postalAreasとareasを突き合わせてCollectionAreaを返す
                              （AreaPickerPageが使う唯一の郵便番号関連API）
+
+WasteDictionary.load()       assets/data/dictionary.json を読み込む
+  items:  品目ごとの出し先（443件）
+  search(query)  記号を無視して絞り込む。前方一致を先に出す
 
 CalendarShare                収集日を.icsに書き出して共有シートに渡す（abstract）
   実装は_FileCalendarShare（path_provider + share_plus）。
@@ -101,6 +110,7 @@ NotificationRepository       OSの通知センターへの予約（abstract）
 ```
 settingsRepositoryProvider  FutureProvider<SettingsRepository>
 areaCatalogProvider         FutureProvider<AreaCatalog>
+wasteDictionaryProvider     FutureProvider<WasteDictionary>
 
 selectedAreaProvider        AsyncNotifierProvider<SelectedArea, CollectionArea?>
   build()  起動時に SettingsRepository から読み込む。未設定なら null

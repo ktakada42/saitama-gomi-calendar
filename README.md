@@ -87,10 +87,10 @@ const CollectionRule.monthly(DateTime.thursday, {2, 4}); // 第2・第4木曜日
 ```
 lib/domain/     純粋なDart（Flutter非依存）：区分・収集ルール・カレンダー計算・日付表記
 lib/data/       同梱データの読み込みと設定の永続化
-lib/features/   画面単位：home / calendar / settings / area / shell
+lib/features/   画面単位：home / calendar / dictionary / settings / area / shell
 lib/ui/         区分の配色とアイコン、画面をまたぐ部品
-assets/data/    地区データ
-scripts/        assets/data/areas.json を市の公開データから再生成するスクリプト
+assets/data/    地区データ・分別早見表
+scripts/        assets/data/*.json を市の公開データから再生成するスクリプト
 design/         アプリアイコンのマスターSVGと生成スクリプト
 test/           domain層の単体テストと画面のウィジェットテスト
 ```

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../calendar/calendar_page.dart';
+import '../dictionary/dictionary_page.dart';
 import '../home/home_page.dart';
 import '../settings/settings_page.dart';
 
-/// 地区設定が済んだあとの本体。ホーム・カレンダー・設定の3タブ。
+/// 地区設定が済んだあとの本体。ホーム・カレンダー・分別・設定の4タブ。
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
 
@@ -15,7 +16,12 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
 
-  static const _pages = [HomePage(), CalendarPage(), SettingsPage()];
+  static const _pages = [
+    HomePage(),
+    CalendarPage(),
+    DictionaryPage(),
+    SettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,11 @@ class _HomeShellState extends State<HomeShell> {
             icon: Icon(Icons.calendar_month_outlined),
             selectedIcon: Icon(Icons.calendar_month),
             label: 'カレンダー',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search),
+            label: '分別',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),

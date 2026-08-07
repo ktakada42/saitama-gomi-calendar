@@ -1,0 +1,2665 @@
+{
+  "version": 1,
+  "source": "さいたま市「家庭ごみの出し方マニュアル」ごみの分別早見表（令和8年度版）",
+  "sourceUrl": "https://www.city.saitama.lg.jp/001/006/010/003/p005300.html",
+  "items": [
+    {
+      "name": "ACアダプタ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "DVD",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "LED電球",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "いす",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "いちごのパック",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "おまる",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "汚物は、トイレに"
+    },
+    {
+      "name": "おもちゃ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "かさ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "かばん・バッグ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "ファスナー等の金属は無理にはずさなくてよい"
+    },
+    {
+      "name": "かわら",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4枚1品、最大8枚まで"
+    },
+    {
+      "name": "くぎ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "袋が破れないように、紙などに包んで"
+    },
+    {
+      "name": "こたつ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2こたつ板を含み1品"
+    },
+    {
+      "name": "ござ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "しょう油の容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中をすすいで"
+    },
+    {
+      "name": "じゅうたん",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "すのこ",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ぞうきん",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "たたみ（3分割できない場合）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10枚まで戸別収集の場合は1回につき4枚まで"
+    },
+    {
+      "name": "たたみ（3分割できる場合）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "1枚を3分割にする。1回につき1畳分まで"
+    },
+    {
+      "name": "たばこの紙箱",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": ""
+    },
+    {
+      "name": "たわし",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "たんす",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ちらし",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "新聞紙・広告とまとめてしばる（雨の日は次回に）"
+    },
+    {
+      "name": "てんぷら油",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "紙等にしみ込ませるか、固めてから"
+    },
+    {
+      "name": "なべ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ぬいぐるみ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ねじ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "袋が破れないようにまとめて"
+    },
+    {
+      "name": "のこぎり",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "刃は、紙などに包む"
+    },
+    {
+      "name": "はかり",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "はがき",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "はさみ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "刃は、紙などに包む"
+    },
+    {
+      "name": "はしご",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ひげそり",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "電池内蔵のものは回収ボックスへ"
+    },
+    {
+      "name": "びん（化粧品・医薬品）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "びん（食品・栄養ドリンクなど）",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中をすすいで（フタ・栓ははずしてプラスチック製のものは容"
+    },
+    {
+      "name": "ふすま",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+    },
+    {
+      "name": "ふとん",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "90㎝未満にしばる1回に1枚まで"
+    },
+    {
+      "name": "ふとんたたき",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ふとん（２枚以上の場合）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "まくら",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "まくらカバー",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "まな板",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★4"
+    },
+    {
+      "name": "めがね",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "めがねケース",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "やかん",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ろうそく",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "アイロン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスヘ"
+    },
+    {
+      "name": "アルバム（写真用）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "アルミ箔",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "イヤホン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "インクカートリッジ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店または区役所・支所・公民館の専用回収ボックスへ"
+    },
+    {
+      "name": "インスタントめんの袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "ウインドブレーカー",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ウォーターサーバーの容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1★4PETマークがある場合は、ペットボトルとして出してくださいPET・プラマークがないものはもえるごみ"
+    },
+    {
+      "name": "エアコン",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "オイル",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "市販の廃油パック等に染み込ませる"
+    },
+    {
+      "name": "オイルのかん",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "中身を使い切ってから"
+    },
+    {
+      "name": "オイルヒーター",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照"
+    },
+    {
+      "name": "オルガン",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "オーディオコンポ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★3"
+    },
+    {
+      "name": "オーディオラック",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "オートバイ（原付含む）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ▶P11参照"
+    },
+    {
+      "name": "オーブントースター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "カイロ（使い捨て）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "カセットコンロ（卓上式）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "カートリッジ式ボンベ及び電池をはずす"
+    },
+    {
+      "name": "カセットテープ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+    },
+    {
+      "name": "カッター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "刃は、紙などに包んで"
+    },
+    {
+      "name": "カップ麺の容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "カミソリ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "刃は、紙などに包んで"
+    },
+    {
+      "name": "カメラ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "カレンダー",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）※金属部分は、もえないごみ"
+    },
+    {
+      "name": "カーテン",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "カーペット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "カーボン紙",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ガスボンベ（LP・プロパン）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "ガスレンジ（テーブル）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "電池をはずす"
+    },
+    {
+      "name": "ガソリン",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "ガラス",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+    },
+    {
+      "name": "ギター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "クッション",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "クーラーボックス",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ケチャップの容器",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "ゲーム機",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": ""
+    },
+    {
+      "name": "コップ（ガラス）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "コピー機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "コンクリートブロック",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで"
+    },
+    {
+      "name": "コート",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "コーヒーメーカー",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "ゴム手袋",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ゴルフクラブ",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ゴルフバッグ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ゴルフボール",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "サイドボード",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "サイリウム（ケミカルライト）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ"
+    },
+    {
+      "name": "サンダル",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "サーフボード",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "シャツ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "シャンプー・リンスの容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "シュレッダーごみ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "リサイクルができないため。袋の空気を抜く"
+    },
+    {
+      "name": "シーツ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）（羽毛・羊毛・綿・ジェル等はもえるごみ）"
+    },
+    {
+      "name": "ジャッキ（車用油圧型・ダルマ型）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": ""
+    },
+    {
+      "name": "ジャンパー",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "ジャージ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "ジューサー",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ジーパン・ジージャン",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "スウェット",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "スキーウェア",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "スキー・スノーボード用ブーツ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "スキー板・スノーボード",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "スケートボード",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ステレオ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2★3"
+    },
+    {
+      "name": "ストッキング",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ストロー",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ストーブ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "灯油を抜き、電池をはずす★2※本体部分の灯油も抜く"
+    },
+    {
+      "name": "スパイク靴",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "スピーカー",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2★3"
+    },
+    {
+      "name": "スプリング入りマットレス",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "スプレーかん",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+    },
+    {
+      "name": "スプーン（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "スマートフォン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "電池内蔵のものは回収ボックスへ"
+    },
+    {
+      "name": "スリッパ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "スーツ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "スーツケース",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "セーター",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "ゼリーの容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "ソファーベッド",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ソファー（スプリングなし）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+    },
+    {
+      "name": "ソファー（スプリング入り）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ソースの容器（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "タイヤチェーン（材質に関係なく）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "タイヤ（乗用車・バイク用）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "タオル",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "タッパー",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ダウンジャケット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ダンベル",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "チャイルドシート",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "チューブ（調味料の容器）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "ティッシュペーパーの箱",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ビニールは除いて、その他の紙へ（雨の日は次回に）"
+    },
+    {
+      "name": "テニスラケット",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "テレビ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "テレビ台",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "テーブル",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "トイレットペーパーの芯",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "トレイ（食品用）",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "トースター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ドライヤー",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "ドレッシングの容器（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "ナイフ（金属製）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "紙などに包んで「ナイフ」と書いて出す"
+    },
+    {
+      "name": "ネクタイ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ノート類",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "雑誌類として（雨の日は次回に）"
+    },
+    {
+      "name": "ハロゲンヒーター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ハンカチ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "ハンガー",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ハンディファン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "バイク（原付含む）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ▶P11参照"
+    },
+    {
+      "name": "バケツ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "バッテリー（乗用車・バイク用）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "バッテリー（電動アシスト自転車用）",
+      "category": "battery",
+      "categoryLabel": "電池回収ボックス",
+      "note": "電池回収ボックスへ"
+    },
+    {
+      "name": "バット（金属・木製）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "パソコンディスプレイ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "★3▶P11参照"
+    },
+    {
+      "name": "パソコン本体（ノート型も）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "★3▶P11参照"
+    },
+    {
+      "name": "パネルヒーター（オイルなし）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2オイルありの場合は×。許可業者（(有)太盛）へ▶P11参照"
+    },
+    {
+      "name": "ビデオカメラ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "電池内蔵のものは回収ボックスへ"
+    },
+    {
+      "name": "ビデオテープ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ビデオデッキ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★3"
+    },
+    {
+      "name": "ビニールひも",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ビニールプール",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290cm未満にしばる"
+    },
+    {
+      "name": "ビニール袋",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ビーズクッション",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "単体で袋に入れ、空気を抜いてください「ビーズクッション」と書いた貼り紙を付けてください"
+    },
+    {
+      "name": "ピアノ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ電子ピアノは直接持込みまたは戸別収集"
+    },
+    {
+      "name": "ピンチハンガー（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ファクシミリ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★3"
+    },
+    {
+      "name": "ファンヒーター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2タンク、本体とも灯油を抜く"
+    },
+    {
+      "name": "フィルムケース",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "フォーク（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "フライパン",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "フロッピーディスク",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ブラインド",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★2"
+    },
+    {
+      "name": "プランター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★4"
+    },
+    {
+      "name": "プリンの容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "プリンター",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "カートリッジは取り外す"
+    },
+    {
+      "name": "プロパンガスボンベ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "ヘッドホン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "ヘルメット",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ベッド（介護用含む）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "枠を解体して直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ベニヤ板",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★2厚さ10cm未満で長さ90cm未満の場合のみ"
+    },
+    {
+      "name": "ベビーカー（乳母車）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ベビーバス",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ベルト",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ペットのふん",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "ふん処理袋に入れて、臭いが出ないようにしっかり口をしばってから、"
+    },
+    {
+      "name": "ペットのトイレ用の砂",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ペットフードのかん",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "ペットボトル",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中をすすいで（フタとラベルははずして容器包装プラスチックへ）"
+    },
+    {
+      "name": "ペンキ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "紙等にしみ込ませるか、固めて少しずつ"
+    },
+    {
+      "name": "ペンライト",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "ホットカーペット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "ホットプレート",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ホース",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "90㎝未満にしばる"
+    },
+    {
+      "name": "ボウリングの玉",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで"
+    },
+    {
+      "name": "ボタン式電池",
+      "category": "battery",
+      "categoryLabel": "電池回収ボックス",
+      "note": "電池回収ボックスへ"
+    },
+    {
+      "name": "ボンベ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ汚れが取れないため"
+    },
+    {
+      "name": "ボールペン",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ボール（サッカー・野球など）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ポテトチップスの袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "ポリタンク容器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "灯油、石油等は必ず抜き、キャップ等をはずす"
+    },
+    {
+      "name": "マグネットシート",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "マジックペン",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "マッサージチェア",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "マットレス（スプリングあり）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "マットレス（スプリングなし）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "マフラー（衣類）",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "マヨネーズの容器",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "ミキサー",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ミシン",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "ミニカー（おもちゃ）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "メモ用紙",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "モバイルバッテリー",
+      "category": "battery",
+      "categoryLabel": "電池回収ボックス",
+      "note": "電池回収ボックスへ"
+    },
+    {
+      "name": "モーター類",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照"
+    },
+    {
+      "name": "ヨーグルトの容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "ライター",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "中身を使い切ってから、単独の透明袋に入れて▶P7参照"
+    },
+    {
+      "name": "ラジオ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "ラジカセ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★3電池をはずす"
+    },
+    {
+      "name": "ラップ類",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "資2箱は口金部分をはずしてその他の紙へ"
+    },
+    {
+      "name": "ランドセル",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "リモコン",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "ルームランナー",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "レコード盤",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "レジャーシート",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "90㎝未満にしばる"
+    },
+    {
+      "name": "レジ袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "レトルトパック",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "レンガ",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで"
+    },
+    {
+      "name": "レンジフード用カバー",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "主に不織布で90㎝未満であれば"
+    },
+    {
+      "name": "ローラーブレード(スケート）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "ワイシャツ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "ワープロ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "ワープロと明記してください"
+    },
+    {
+      "name": "一斗かん",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "中身を使い切ってから"
+    },
+    {
+      "name": "一輪車",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "三輪車",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "下敷き",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "下着",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "乾燥剤",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "乾電池",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "★3絶縁して単独の透明袋に入れて▶P7参照"
+    },
+    {
+      "name": "人形",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "人形ケース",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "仏壇",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2必ず解体すること"
+    },
+    {
+      "name": "体温計（その他）",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "体温計（水銀使用のもの）",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "単独の透明袋に入れて"
+    },
+    {
+      "name": "体重計（デジタル式）",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "保冷剤",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "充電式電池",
+      "category": "battery",
+      "categoryLabel": "電池回収ボックス",
+      "note": "電池回収ボックスへ"
+    },
+    {
+      "name": "写真",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "写真集（雑誌）",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "雑誌類でまとめてしばる（雨の日は次回に）"
+    },
+    {
+      "name": "冷凍庫",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "冷蔵庫",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "冷風扇",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込"
+    },
+    {
+      "name": "冷風機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済みであることがわかる証明書とともに直接持込"
+    },
+    {
+      "name": "加湿器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "加熱式電子たばこ",
+      "category": "battery",
+      "categoryLabel": "電池回収ボックス",
+      "note": "電池回収ボックスへ"
+    },
+    {
+      "name": "包丁",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "紙などに包んで「包丁」と書いて出す"
+    },
+    {
+      "name": "包帯",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "包装用フィルム",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "包装紙",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "化粧品の容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "卓球のラケット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "卵パック",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "原動機付自転車",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ▶P11参照"
+    },
+    {
+      "name": "名刺",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "味噌の容器(プラスチック製)",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "土",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": ""
+    },
+    {
+      "name": "土なべ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "定規",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★４"
+    },
+    {
+      "name": "封筒",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）※窓付きは、フィルムをはがす"
+    },
+    {
+      "name": "工具",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "日曜大工程度"
+    },
+    {
+      "name": "布切れ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "帽子（布製）",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "広告",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "新聞紙とまとめてしばる（雨の日は次回に）"
+    },
+    {
+      "name": "座いす",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "座卓",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "座布団",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "1回につき5枚まで"
+    },
+    {
+      "name": "延長コード",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "弁当の容器（プラスチック製）",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "急須",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "感熱紙",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "懐中電灯",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "扇風機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "手ぬぐい",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "手帳",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "金具付きは金属部分を外して"
+    },
+    {
+      "name": "手袋",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "掃除機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2コードレス式・ロボット式はバッテリーをはずす"
+    },
+    {
+      "name": "携帯電話・ＰＨＳ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "販売店でも回収しています"
+    },
+    {
+      "name": "教科書",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "雑誌類として（雨の日は次回に）"
+    },
+    {
+      "name": "新聞紙（折込チラシ含）",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "広告・チラシとまとめてしばる（雨の日は次回に）"
+    },
+    {
+      "name": "時計・腕時計",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "木の枝・木くず",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "太さが10㎝未満で長さが90㎝未満の場合のみ直径30㎝未満の束にして、1回に3束まで直接持込みは太さ長さが同条件"
+    },
+    {
+      "name": "本",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ハードカバー、カタログ、週刊誌、雑誌、まんが本等を一緒にまとめてしばる▶P7参照（雨の日は次回に）"
+    },
+    {
+      "name": "本棚",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "机",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "果物の外袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "植木鉢（植木ポット・プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★4"
+    },
+    {
+      "name": "植木鉢（素焼き）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "歩行器（子供用）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "歯ブラシ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "電動歯ブラシは電池を抜いて、回収ボックスへ"
+    },
+    {
+      "name": "歯磨きチューブ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "段ボール",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "箱のままではなくたたんでひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "殺虫剤（スプレーかん)",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "中身を使い切ってから、単独の透明袋に入れて"
+    },
+    {
+      "name": "毛布",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "毛糸製品（衣類）",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "水槽",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "水筒",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "油（食用油）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "紙等にしみ込ませるか、固めてから※液体のものは、排出禁止"
+    },
+    {
+      "name": "注射針",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "医療機関等へ返却"
+    },
+    {
+      "name": "洗剤の容器（詰め替えパック）",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中身を出し切って注ぎ口部分を水ですすぐすすいで汚れが落ちなければもえるごみへ"
+    },
+    {
+      "name": "洗濯ばさみ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "洗濯機",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "洗面器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "洗顔料のチューブ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "消火器",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ▶P10参照"
+    },
+    {
+      "name": "液晶テレビ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "温度計",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "温水洗浄便座（ウォシュレット）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "湯たんぽ（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "湿布",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "漬物石（人工石）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "天然石は専門業者へ"
+    },
+    {
+      "name": "灯油",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "灯油かん（一斗かん・ポリタンク容器）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "必ず中身を空にして"
+    },
+    {
+      "name": "灯油タンク（屋外用）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照"
+    },
+    {
+      "name": "炊飯器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "炭酸ボンベ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": ""
+    },
+    {
+      "name": "照明器具",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "牛乳パック",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "洗って、開いて、乾かして、牛乳パックのみでしばる"
+    },
+    {
+      "name": "物干し台（コンクリート台つき）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "物干し竿",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "物置",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "★6解体して直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "生理用品",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "画鋲",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "袋が破れないように、紙などに包んで"
+    },
+    {
+      "name": "発泡スチロール製トレイ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "発泡スチロール（30cm未満のもの）",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★4箱や家電品の緩衝材・梱包材など30cm以上はもえるごみ"
+    },
+    {
+      "name": "皿（陶器・スチール・ガラス）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "目薬の容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "着火剤（ジェルタイプ）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "直接持ち込みのみ"
+    },
+    {
+      "name": "着物",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "石",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "造園業者または石材店等へ"
+    },
+    {
+      "name": "石油ポンプ（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "空気入れ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "空気清浄機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2フロンガス使用のものは、専門業者に依頼するかフロンガスを回収済みであることがわかる証明書とともに直接持込"
+    },
+    {
+      "name": "竹",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "太さが10cm未満で長さが50cm未満の場合のみ直径30cm未満の束にして、1回に3束まで直接持込みは太さ長さが同条件"
+    },
+    {
+      "name": "竹串",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "紙などでくるむか洗剤などの容器に入れて"
+    },
+    {
+      "name": "米びつ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "米袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "粘土",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "納豆の容器",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため"
+    },
+    {
+      "name": "紙おむつ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚物は、トイレに"
+    },
+    {
+      "name": "紙袋",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "その他の紙として（雨の日は次回に）"
+    },
+    {
+      "name": "絵の具",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "網戸",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "★2戸別収集の場合は2枚1品、最大8枚まで"
+    },
+    {
+      "name": "脚立",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "脱臭剤容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "自家製果実酒（梅酒等）を漬けるびん",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "自転車",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+    },
+    {
+      "name": "自転車のタイヤ・チューブ（ゴム製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "自転車（電動機つき）",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "花火",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "水に十分浸してから"
+    },
+    {
+      "name": "花瓶",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+    },
+    {
+      "name": "芳香剤のケース",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "茶碗",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "草ごみ(枯れ葉など）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "乾燥させてから、1回につき、3袋まで"
+    },
+    {
+      "name": "菓子の袋",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "蒸し器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "薬品（家庭薬品でないもの）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "薬品（家庭薬品）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "※液体のものは、排出禁止※びんは中をからにして"
+    },
+    {
+      "name": "薬（風邪薬・消毒薬など）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "虫かご（プラスチック製）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "虫めがね",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "蛍光管・蛍光ランプ",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "単独の透明袋に入れて90㎝以上も出せます"
+    },
+    {
+      "name": "血圧計",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "衣装ケース",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "衣装ケース（プラスチック製）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "衣類",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "洗って、乾かして（雨の日は次回に）"
+    },
+    {
+      "name": "衣類乾燥機",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目▶P10参照"
+    },
+    {
+      "name": "補聴器",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "豆腐の容器",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "貝殻",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "財布",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "足拭きマット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "車いす（電動機つき）",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照※電動機のないものは、もえないごみ★2"
+    },
+    {
+      "name": "車の部品",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照※タイヤ、ホイール、バッテリーは戸別収集可"
+    },
+    {
+      "name": "輪ゴム",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "農機具類",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照"
+    },
+    {
+      "name": "農薬",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ"
+    },
+    {
+      "name": "酒のパック",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "中がアルミ箔で加工されているため"
+    },
+    {
+      "name": "酒類のびん",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "自家製果実酒のびんは除く"
+    },
+    {
+      "name": "野菜の外装フィルム",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "金庫",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ▶P11参照※耐火性でない手提げ金庫は"
+    },
+    {
+      "name": "針金",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "針（縫い針・釣り針）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "ごみ袋から飛び出さないように、紙などでくるむか洗剤などの容器に入れて"
+    },
+    {
+      "name": "釣り竿",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★2"
+    },
+    {
+      "name": "釣り竿のリール",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "鉄アレイ",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "鏡",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す★2"
+    },
+    {
+      "name": "長靴",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "防虫剤のケース",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": ""
+    },
+    {
+      "name": "除湿剤",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "水が溜まるタイプのものは容器の水を抜いて出す"
+    },
+    {
+      "name": "除湿機",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "フロンガス使用のものは、専門業者に依頼するか、フロンガスを回収済であることがわかる証明書とともに直接持込み"
+    },
+    {
+      "name": "陶器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+    },
+    {
+      "name": "障子",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照90㎝未満なら、もえないごみ"
+    },
+    {
+      "name": "雑誌",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "雑誌類でまとめてしばるカタログ、週刊誌等も一緒に（雨の日は次回に）"
+    },
+    {
+      "name": "雨衣（カッパ）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "電卓・電子手帳",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "電子オルガン",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "★5直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "電子ピアノ",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "★5直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "電子レンジ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "電気ひげそり",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": ""
+    },
+    {
+      "name": "電気カーペット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "電気コード",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ束の径が20c"
+    },
+    {
+      "name": "電気スタンド",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "★2回収ボックスへ"
+    },
+    {
+      "name": "電気ポット",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "電気毛布",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "電池",
+      "category": "hazardous",
+      "categoryLabel": "有害危険ごみ",
+      "note": "絶縁して単独で透明袋に入れて充電式、ボタン型は電池回収ボックスへ"
+    },
+    {
+      "name": "電球",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "LED電球も含む"
+    },
+    {
+      "name": "電話機",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ"
+    },
+    {
+      "name": "革製品・革ジャン",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "靴",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "靴下",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    },
+    {
+      "name": "風呂のフタ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "★2"
+    },
+    {
+      "name": "風呂のマット",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "★290㎝未満にしばる"
+    },
+    {
+      "name": "食品トレイ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "食器棚",
+      "category": "oversized",
+      "categoryLabel": "粗大ごみ・適正処理困難物",
+      "note": "直接持込みまたは戸別収集▶P9参照"
+    },
+    {
+      "name": "食器洗浄器",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "食器類（せともの・ガラス）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "割れたものは紙などに包み「割れ物」と書いて出す"
+    },
+    {
+      "name": "食用油",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "紙等にしみ込ませるか、固めて※液体のものは、排出禁止"
+    },
+    {
+      "name": "食用油の容器(プラスチック製)",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "中身をカラにして"
+    },
+    {
+      "name": "食用油の容器（びん・かん）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "中身をカラにして"
+    },
+    {
+      "name": "飲料の紙パック",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "プラスチック部分を必ず取って、牛乳等の紙パックとして（雨の日は次回に）"
+    },
+    {
+      "name": "飲料の紙パック（中が銀色アルミのもの）",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "魔法瓶（ポット）",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "麻雀牌",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "（パソコンの）スキャナー",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": ""
+    },
+    {
+      "name": "（パソコンの）ディスクドライブ",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "（パソコンの）マウス",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへもえないごみとしても出せます"
+    },
+    {
+      "name": "（野菜・果物の）ネット",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "★1"
+    },
+    {
+      "name": "ＣＤ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "ＭＤ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": ""
+    },
+    {
+      "name": "Ｔシャツ",
+      "category": "recyclable2",
+      "categoryLabel": "資源物2類",
+      "note": "ひもでしばる（雨の日は次回に）"
+    }
+  ]
+}
