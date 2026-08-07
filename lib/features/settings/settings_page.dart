@@ -86,7 +86,7 @@ class SettingsPage extends ConsumerWidget {
               ),
             ),
           ),
-          const SectionHeader('区分と出し方'),
+          const SectionHeader('分別と出し方'),
           for (final category in GarbageCategory.values) ...[
             if (category != GarbageCategory.values.first)
               const Divider(height: 1),

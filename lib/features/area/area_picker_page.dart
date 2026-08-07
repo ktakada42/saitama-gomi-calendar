@@ -145,7 +145,7 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
                 _SectionTitle('一覧から選ぶ'),
                 const SizedBox(height: 4),
                 Text(
-                  '郵便番号を入力しない場合は、区を選んで一覧から選べます。',
+                  '郵便番号を入力したくない場合は、区を選んで一覧から選べます。',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

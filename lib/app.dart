@@ -69,18 +69,62 @@ class SaitamaGomiApp extends ConsumerWidget {
   static const _darkPrimaryContainer = Color(0xFF3A362B);
   static const _darkSecondaryContainer = Color(0xFF2C2921);
 
+  /// 地の色から積み上がる中間色の階調。
+  ///
+  /// M3は地の上に重なる面（メニューの背景、見出しの帯、カードなど）を
+  /// この階調から取る。`surface`だけ上書きしても階調は`fromSeed`が作った
+  /// ままなので、緑がかった面が残る。実際、ボトムメニューの背景は
+  /// `surfaceContainer`（#EAEFE9）を使っていて薄緑のままだった。
+  ///
+  /// 症状の出た色を1つずつ潰すのではなく、階調ごとクリームに置き換える。
+  /// 明るさの段差は`fromSeed`が作るものに合わせてあるので、
+  /// 重なりの深さの表現は変わらない。
+  static const _lightSurfaces = {
+    'containerLowest': Color(0xFFFFFFFF),
+    'containerLow': Color(0xFFF7F4EC),
+    'container': Color(0xFFF2EEE4),
+    'containerHigh': Color(0xFFECE8DC),
+    'containerHighest': Color(0xFFE6E1D3),
+    'bright': Color(0xFFFDFCF8),
+    'dim': Color(0xFFDFDACC),
+  };
+  static const _darkSurfaces = {
+    'containerLowest': Color(0xFF0F0E09),
+    'containerLow': Color(0xFF1F1C14),
+    'container': Color(0xFF232019),
+    'containerHigh': Color(0xFF2E2A21),
+    'containerHighest': Color(0xFF38342A),
+    'bright': Color(0xFF3D392E),
+    'dim': Color(0xFF121009),
+  };
+
   /// テストからも同じ地の色を参照できるようにしておく。
   /// コントラスト比の検証は、実際に使う地の色の上で行わないと意味がない。
   static Color surfaceOf(Brightness brightness) =>
       brightness == Brightness.dark ? _darkSurface : _lightSurface;
 
+  /// テストから同じテーマを組み立てられるようにしておく。
+  /// 面の色の検査は、実際に使うテーマの上で行わないと意味がない。
+  @visibleForTesting
+  static ThemeData themeOf(Brightness brightness) => _theme(brightness);
+
   static ThemeData _theme(Brightness brightness) {
+    final surfaces = brightness == Brightness.dark
+        ? _darkSurfaces
+        : _lightSurfaces;
     final colorScheme =
         ColorScheme.fromSeed(
           seedColor: const Color(0xFF2F7A4F),
           brightness: brightness,
         ).copyWith(
           surface: surfaceOf(brightness),
+          surfaceContainerLowest: surfaces['containerLowest'],
+          surfaceContainerLow: surfaces['containerLow'],
+          surfaceContainer: surfaces['container'],
+          surfaceContainerHigh: surfaces['containerHigh'],
+          surfaceContainerHighest: surfaces['containerHighest'],
+          surfaceBright: surfaces['bright'],
+          surfaceDim: surfaces['dim'],
           primaryContainer: brightness == Brightness.dark
               ? _darkPrimaryContainer
               : _lightPrimaryContainer,

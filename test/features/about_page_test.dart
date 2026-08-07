@@ -31,10 +31,11 @@ void main() {
       expect(find.text('テスト用の但し書き'), findsNothing);
     });
 
-    testWidgets('プライバシーポリシーと市の公式ページへ出られる', (tester) async {
+    testWidgets('出典とプライバシーポリシーは外部ブラウザへ出る', (tester) async {
       await pumpApp(tester, const AboutPage());
 
-      for (final title in ['プライバシーポリシー', 'さいたま市の公式ページ']) {
+      // 出典は表ごとに別なので、それぞれから資料へ出られるようにする。
+      for (final title in ['収集日・地区', '分別早見表', 'プライバシーポリシー']) {
         // アプリの外へ出ることを右端のアイコンで示す。
         expect(
           find.descendant(

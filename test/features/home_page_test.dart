@@ -50,7 +50,7 @@ void main() {
     // 8月12日時点で、もえないごみ（第2火）の次回は9月8日。
     await pumpApp(tester, const HomePage(), today: DateTime(2026, 8, 12));
 
-    expect(find.text('区分ごとの次の収集'), findsOneWidget);
+    expect(find.text('分別ごとの次の収集'), findsOneWidget);
     expect(find.text('9月8日(火)'), findsOneWidget);
   });
 
