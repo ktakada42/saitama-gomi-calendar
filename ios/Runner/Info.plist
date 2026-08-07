@@ -28,6 +28,11 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<!-- 暗号化の申告。HTTPS以外の暗号化は使っていないため、輸出規制の対象外。
+	     ここに書いておかないとアップロードのたびにApp Store Connectで
+	     手作業の申告を求められ、それまでTestFlightの配信が止まる。 -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
