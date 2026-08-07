@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
@@ -69,20 +70,21 @@ void main() {
   testWidgets('五十音の見出しと索引が出る', (tester) async {
     await pumpApp(tester, const DictionaryPage());
 
-    // 市の早見表が付けているかな行を、そのまま区切りに使う。
-    // 一覧の見出しと右端の索引の両方に出るので、2つずつ見つかる。
-    expect(find.text('か'), findsNWidgets(2));
-    expect(find.text('た'), findsNWidgets(2));
-    expect(find.text('へ'), findsNWidgets(2));
+    // 市の早見表が付けているかなを行にまとめて区切りに使う。
+    // 見出しは「か行」、索引は「か」と書き分ける。
+    for (final head in ['か', 'た', 'は']) {
+      expect(find.text('$head行'), findsOneWidget);
+      expect(find.text(head), findsOneWidget);
+    }
   });
 
   group('五十音の索引', () {
-    // 行ごとに複数のかなを持たせて、開閉の様子を見られるようにする。
+    // 行をまたぐように品目を持たせて、索引の動きを見られるようにする。
     final dictionary = WasteDictionary.fromJson({
       'source': 'テスト用の分別早見表',
       'sourceUrl': '',
       'items': [
-        for (final kana in ['あ', 'い', 'う', 'か', 'き', 'た', 'ち'])
+        for (final kana in ['あ', 'い', 'か', 'き', 'た', 'ち', 'な', 'に'])
           for (var i = 0; i < 6; i++)
             {
               'name': '$kana$i品目',
@@ -97,9 +99,9 @@ void main() {
     Future<void> pump(WidgetTester tester) =>
         pumpApp(tester, const DictionaryPage(), dictionary: dictionary);
 
-    /// 右端の索引に並んでいるかな。一覧の見出しと紛れないよう、
+    /// 右端の索引に並んでいる文字。一覧の見出しと紛れないよう、
     /// 画面の右端にあるものだけを拾う。
-    List<String> indexKana(WidgetTester tester) {
+    List<String> indexHeads(WidgetTester tester) {
       final width = tester.view.physicalSize.width;
       return tester
           .widgetList<Text>(find.byType(Text))
@@ -109,7 +111,7 @@ void main() {
           .toList();
     }
 
-    /// 索引の中で丸が付いているかな。現在地はひとつだけのはず。
+    /// 索引の中で丸が付いている行。現在地はひとつだけのはず。
     String? circled(WidgetTester tester) {
       final circles = find.byWidgetPredicate(
         (w) =>
@@ -125,12 +127,24 @@ void main() {
           .data;
     }
 
-    testWidgets('ふだんは行頭だけを出し、今いる行だけ開く', (tester) async {
+    testWidgets('索引は行だけを並べる', (tester) async {
       await pump(tester);
 
-      // 43文字を一度に並べると1文字が小さくなりすぎて押し間違えるため、
-      // ふだんは行頭だけを出す。先頭にいるのであ行だけが開く。
-      expect(indexKana(tester), ['あ', 'い', 'う', 'か', 'た']);
+      // かな1文字ごとに並べると43個になって1つが小さくなりすぎるので、
+      // iOSの連絡先と同じく行でまとめる。
+      expect(indexHeads(tester), ['あ', 'か', 'た', 'な']);
+    });
+
+    testWidgets('一覧の見出しは行で切る', (tester) async {
+      await pump(tester);
+
+      // 索引の「あ」と見分けられるよう、見出しには行を付ける。
+      expect(find.text('あ行'), findsOneWidget);
+      // 「い」で改めて区切らない。あ行の中に続けて並ぶ。
+      expect(find.text('い行'), findsNothing);
+      expect(find.text('い'), findsNothing);
+      expect(find.text('あ0品目'), findsOneWidget);
+      expect(find.text('い0品目'), findsOneWidget);
     });
 
     testWidgets('現在地に丸が付く', (tester) async {
@@ -139,35 +153,48 @@ void main() {
       expect(circled(tester), 'あ');
     });
 
-    testWidgets('行を押すと開くだけで、飛びはしない', (tester) async {
+    testWidgets('なぞると触れている行へ送り、行が変わるたびに手応えを返す', (tester) async {
       await pump(tester);
 
-      // 索引側の「か」を押す。一覧の見出しではなく索引を押したいので、
-      // 画面の右端にある方を選ぶ。
-      await tester.tap(find.text('か').last);
+      // 時刻のホイールと同じく、送るたびにクリック感を返す。
+      // どこまで来たかを画面から目を離さずに掴めるようにする。
+      final clicks = <String>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'HapticFeedback.vibrate') {
+            clicks.add(call.arguments as String);
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+
+      // 索引の「あ」から「た」まで指を滑らせる。
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.text('あ').last),
+      );
+      await gesture.moveTo(tester.getCenter(find.text('か').last));
+      await tester.pump();
+      await gesture.moveTo(tester.getCenter(find.text('た').last));
+      await tester.pumpAndSettle();
+      await gesture.up();
       await tester.pumpAndSettle();
 
-      // か行が開き、あ行は閉じる。
-      expect(indexKana(tester), ['あ', 'か', 'き', 'た']);
-      // まだ飛んでいないので、先頭のあ行が見えたまま。
-      expect(find.text('あ0品目'), findsOneWidget);
-      expect(circled(tester), 'あ');
-    });
-
-    testWidgets('開いた行のかなを押すとそこへ飛ぶ', (tester) async {
-      await pump(tester);
-
-      await tester.tap(find.text('か').last);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('き').last);
-      await tester.pumpAndSettle();
-
-      // 「き」まで飛ぶので、先頭のあ行は画面から外れる。
-      expect(find.text('き0品目'), findsOneWidget);
+      expect(circled(tester), 'た');
+      expect(find.text('た0品目'), findsOneWidget);
       expect(find.text('あ0品目'), findsNothing);
-      // 飛んだ先が現在地になり、その行が開いたままになる。
-      expect(circled(tester), 'き');
-      expect(indexKana(tester), ['あ', 'か', 'き', 'た']);
+      // あ→か、か→た と行をまたいだ回数だけ返る。
+      // 同じ行をなぞっている間は鳴らさない。
+      expect(clicks, [
+        'HapticFeedbackType.selectionClick',
+        'HapticFeedbackType.selectionClick',
+      ]);
     });
   });
 
@@ -178,8 +205,9 @@ void main() {
     await tester.enterText(find.byType(TextField), 'ペット');
     await tester.pumpAndSettle();
 
-    // 見出しは残るが、右端の索引は消えるので1つだけになる。
-    expect(find.text('か'), findsOneWidget);
+    // 見出しは残るが、右端の索引は消える。
+    expect(find.text('か行'), findsOneWidget);
+    expect(find.text('か'), findsNothing);
   });
 
   testWidgets('出典はヘッダから開いたときだけ出す', (tester) async {
