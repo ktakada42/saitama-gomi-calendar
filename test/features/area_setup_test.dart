@@ -400,25 +400,15 @@ void main() {
       expect(find.widgetWithText(AppBar, 'このアプリについて'), findsOneWidget);
     });
 
-    testWidgets('設定からカレンダーに追加できる', (tester) async {
+    testWidgets('カレンダーへの書き出しは出さない', (tester) async {
       await pumpRootApp(tester);
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
 
-      expect(find.text('カレンダーに追加'), findsOneWidget);
-      // 行全体が押せるので、右端に共有アイコンは置かない。
-      // アイコンがあると「そこだけが押せる」ように見えてしまう。
-      expect(
-        find.descendant(
-          of: find.widgetWithText(ListTile, 'カレンダーに追加'),
-          matching: find.byIcon(Icons.ios_share),
-        ),
-        findsNothing,
-      );
-      // タップしても例外にならない（共有シート自体はテストでは開かない）。
-      await tester.tap(find.text('カレンダーに追加'));
-      await tester.pumpAndSettle();
+      // iOSのカレンダーは共有シートの宛先にならないため、.icsを渡しても
+      // 取り込めなかった。直すには書き込み権限が要るので、MVPでは持たない。
+      expect(find.text('カレンダーに追加'), findsNothing);
     });
   });
 }
