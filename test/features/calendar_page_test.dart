@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/features/calendar/calendar_page.dart';
 
@@ -100,6 +101,53 @@ void main() {
     await tester.fling(find.text('15'), const Offset(200, 0), 800);
     await tester.pumpAndSettle();
     expect(find.text('2026年8月'), findsOneWidget);
+  });
+
+  testWidgets('なぞっている間は今の月と隣の月が並んで見える', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    final controller = tester
+        .widget<PageView>(find.byType(PageView))
+        .controller!;
+    expect(controller.page, 1200.0);
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('15')),
+    );
+    for (var i = 0; i < 10; i++) {
+      await gesture.moveBy(const Offset(-17, 0));
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+
+    // 指の動きに追従して、月と月の途中で止まっている。
+    // ここで今の月が抜けて隣の月が入ってくるのが見える。
+    expect(controller.page, greaterThan(1200.0));
+    expect(controller.page, lessThan(1201.0));
+
+    // 途中で離せば元の月に戻る。
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(controller.page, 1200.0);
+    expect(find.text('2026年8月'), findsOneWidget);
+  });
+
+  testWidgets('ボタンで送るときも同じように動かす', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    final controller = tester
+        .widget<PageView>(find.byType(PageView))
+        .controller!;
+
+    await tester.tap(find.byTooltip('次の月'));
+    await tester.pump();
+    // 押した直後はまだ動いている途中。
+    await tester.pump(const Duration(milliseconds: 120));
+    expect(controller.page, greaterThan(1200.0));
+    expect(controller.page, lessThan(1201.0));
+
+    await tester.pumpAndSettle();
+    expect(controller.page, 1201.0);
+    expect(find.text('2026年9月'), findsOneWidget);
   });
 
   testWidgets('わずかに指がずれただけでは月を送らない', (tester) async {
