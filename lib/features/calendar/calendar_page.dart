@@ -22,6 +22,41 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
   /// 表示中の月。日は1に固定しておく。
   DateTime? _month;
 
+  /// 月をまたぐ送りを、指の動きに追従させるための紙送り。
+  PageController? _pageController;
+
+  /// 送れる範囲。今月を0として、前は1か月、後ろは3か月まで。
+  ///
+  /// 先を無制限にしないのは、表示している収集日が「今の決まり」を
+  /// そのまま先へ延ばしたものでしかないため。市の決まりは変わる
+  /// （令和8年10月にプラスチックの分別が変わる）ので、何年も先の月を
+  /// 出せてしまうと、当たっているかのように見せてしまう。
+  /// 月1回の区分の次回を確かめるには3か月あれば足りる。
+  ///
+  /// 前を1か月だけ残すのは、払いすぎたときに戻れるようにするため。
+  /// 過ぎた収集日にできることは無いので、それ以上さかのぼる意味はない。
+  static const _monthsBack = 1;
+  static const _monthsAhead = 3;
+  static const _basePage = _monthsBack;
+  static const _pageCount = _monthsBack + 1 + _monthsAhead;
+
+  /// [_basePage] の指す月。ここを起点にページ番号と月を行き来する。
+  DateTime? _baseMonth;
+
+  @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
+  }
+
+  DateTime _monthOfPage(int page) =>
+      DateTime(_baseMonth!.year, _baseMonth!.month + page - _basePage);
+
+  int _pageOfMonth(DateTime month) =>
+      _basePage +
+      (month.year - _baseMonth!.year) * 12 +
+      (month.month - _baseMonth!.month);
+
   @override
   Widget build(BuildContext context) {
     final calendar = ref.watch(calendarProvider);
@@ -29,7 +64,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     if (calendar == null) return const SizedBox.shrink();
 
     final month = _month ??= DateTime(today.year, today.month);
-    final days = calendar.month(month.year, month.month);
+    _baseMonth ??= DateTime(today.year, today.month);
+    _pageController ??= PageController(initialPage: _pageOfMonth(month));
 
     final isThisMonth = month.year == today.year && month.month == today.month;
 
@@ -41,8 +77,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           // 出たり消えたりするたびに年月が中央からずれてしまう。
           if (!isThisMonth)
             TextButton(
-              onPressed: () =>
-                  setState(() => _month = DateTime(today.year, today.month)),
+              onPressed: () => _goTo(DateTime(today.year, today.month)),
               child: const Text('今月に戻る'),
             ),
         ],
@@ -52,33 +87,42 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         children: [
           _MonthHeader(
             month: month,
-            onPrevious: () => _shiftMonth(-1),
-            onNext: () => _shiftMonth(1),
+            // 送れる端では押せなくする。押しても動かないボタンを
+            // 出したままにすると、効かないのか壊れたのか分からない。
+            onPrevious: _pageOfMonth(month) > 0 ? () => _shiftMonth(-1) : null,
+            onNext: _pageOfMonth(month) < _pageCount - 1
+                ? () => _shiftMonth(1)
+                : null,
           ),
           const SizedBox(height: 8),
           const _WeekdayHeader(),
           const SizedBox(height: 4),
-          // 左右になぞって月を送れるようにする。上のボタンでも送れるが、
-          // カレンダーは指で払って月をめくれるものだという期待が強い。
-          // 縦の動きは一覧のスクロールに渡るので、横だけを見る。
-          GestureDetector(
-            onHorizontalDragEnd: (details) {
-              final velocity = details.primaryVelocity ?? 0;
-              // ゆっくり指を置いただけの動きでは送らない。
-              if (velocity.abs() < 100) return;
-              // 左へ払えば次の月、右へ払えば前の月。紙をめくる向きに合わせる。
-              _shiftMonth(velocity < 0 ? 1 : -1);
-            },
-            child: _MonthGrid(
-              month: month,
-              days: days,
-              today: today,
-              onTapDay: (day) => showDayDetailSheet(
-                context,
-                day: day,
-                area: calendar.area,
-                today: today,
-              ),
+          // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
+          // 今の月が横へ抜け、隣の月が入ってくる。
+          //
+          // 高さは6週ぶんで固定する。月によって5週と6週があり、そのままだと
+          // 送るたびに表の高さが変わって下の凡例が上下に動く。
+          SizedBox(
+            height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _pageCount,
+              onPageChanged: (page) =>
+                  setState(() => _month = _monthOfPage(page)),
+              itemBuilder: (context, page) {
+                final pageMonth = _monthOfPage(page);
+                return _MonthGrid(
+                  month: pageMonth,
+                  days: calendar.month(pageMonth.year, pageMonth.month),
+                  today: today,
+                  onTapDay: (day) => showDayDetailSheet(
+                    context,
+                    day: day,
+                    area: calendar.area,
+                    today: today,
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 20),
@@ -90,7 +134,16 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 
   void _shiftMonth(int delta) {
     final current = _month!;
-    setState(() => _month = DateTime(current.year, current.month + delta));
+    _goTo(DateTime(current.year, current.month + delta));
+  }
+
+  /// ボタンから月を変えるときも、なぞったときと同じように送る。
+  void _goTo(DateTime month) {
+    _pageController!.animateToPage(
+      _pageOfMonth(month),
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+    );
   }
 }
 
@@ -102,8 +155,10 @@ class _MonthHeader extends StatelessWidget {
   });
 
   final DateTime month;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
+
+  /// 送れる端では null。ボタンは出したまま押せなくする。
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +221,12 @@ class _WeekdayHeader extends StatelessWidget {
 }
 
 class _MonthGrid extends StatelessWidget {
+  /// 1週ぶんの高さ。
+  static const rowHeight = 74.0;
+
+  /// 月が取りうる最大の週数。1日が土曜で31日ある月がこれになる。
+  static const maxRows = 6;
+
   const _MonthGrid({
     required this.month,
     required this.days,
@@ -197,6 +258,8 @@ class _MonthGrid extends StatelessWidget {
     }
 
     return Column(
+      // 6週に満たない月は下に空きを残す。表の高さを揃えるため。
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         for (var row = 0; row < cells.length ~/ 7; row++)
           Row(
@@ -204,7 +267,7 @@ class _MonthGrid extends StatelessWidget {
               for (var col = 0; col < 7; col++)
                 Expanded(
                   child: SizedBox(
-                    height: 74,
+                    height: rowHeight,
                     child: cells[row * 7 + col] ?? const SizedBox.shrink(),
                   ),
                 ),
