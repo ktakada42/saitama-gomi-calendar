@@ -23,12 +23,22 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
   DateTime? _month;
 
   /// 月をまたぐ送りを、指の動きに追従させるための紙送り。
-  ///
-  /// 月は無限に続くので、ページに端は作らない。真ん中を今月として、
-  /// そこからの差でどの月かを決める。前後に約100年ぶんあれば、
-  /// 端に突き当たることはない。
   PageController? _pageController;
-  static const _basePage = 1200;
+
+  /// 送れる範囲。今月を0として、前は1か月、後ろは3か月まで。
+  ///
+  /// 先を無制限にしないのは、表示している収集日が「今の決まり」を
+  /// そのまま先へ延ばしたものでしかないため。市の決まりは変わる
+  /// （令和8年10月にプラスチックの分別が変わる）ので、何年も先の月を
+  /// 出せてしまうと、当たっているかのように見せてしまう。
+  /// 月1回の区分の次回を確かめるには3か月あれば足りる。
+  ///
+  /// 前を1か月だけ残すのは、払いすぎたときに戻れるようにするため。
+  /// 過ぎた収集日にできることは無いので、それ以上さかのぼる意味はない。
+  static const _monthsBack = 1;
+  static const _monthsAhead = 3;
+  static const _basePage = _monthsBack;
+  static const _pageCount = _monthsBack + 1 + _monthsAhead;
 
   /// [_basePage] の指す月。ここを起点にページ番号と月を行き来する。
   DateTime? _baseMonth;
@@ -77,8 +87,12 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         children: [
           _MonthHeader(
             month: month,
-            onPrevious: () => _shiftMonth(-1),
-            onNext: () => _shiftMonth(1),
+            // 送れる端では押せなくする。押しても動かないボタンを
+            // 出したままにすると、効かないのか壊れたのか分からない。
+            onPrevious: _pageOfMonth(month) > 0 ? () => _shiftMonth(-1) : null,
+            onNext: _pageOfMonth(month) < _pageCount - 1
+                ? () => _shiftMonth(1)
+                : null,
           ),
           const SizedBox(height: 8),
           const _WeekdayHeader(),
@@ -92,6 +106,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
             height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
             child: PageView.builder(
               controller: _pageController,
+              itemCount: _pageCount,
               onPageChanged: (page) =>
                   setState(() => _month = _monthOfPage(page)),
               itemBuilder: (context, page) {
@@ -140,8 +155,10 @@ class _MonthHeader extends StatelessWidget {
   });
 
   final DateTime month;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
+
+  /// 送れる端では null。ボタンは出したまま押せなくする。
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
 
   @override
   Widget build(BuildContext context) {

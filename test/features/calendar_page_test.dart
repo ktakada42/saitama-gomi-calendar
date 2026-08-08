@@ -109,7 +109,7 @@ void main() {
     final controller = tester
         .widget<PageView>(find.byType(PageView))
         .controller!;
-    expect(controller.page, 1200.0);
+    expect(controller.page, 1.0);
 
     final gesture = await tester.startGesture(
       tester.getCenter(find.text('15')),
@@ -121,13 +121,13 @@ void main() {
 
     // 指の動きに追従して、月と月の途中で止まっている。
     // ここで今の月が抜けて隣の月が入ってくるのが見える。
-    expect(controller.page, greaterThan(1200.0));
-    expect(controller.page, lessThan(1201.0));
+    expect(controller.page, greaterThan(1.0));
+    expect(controller.page, lessThan(2.0));
 
     // 途中で離せば元の月に戻る。
     await gesture.up();
     await tester.pumpAndSettle();
-    expect(controller.page, 1200.0);
+    expect(controller.page, 1.0);
     expect(find.text('2026年8月'), findsOneWidget);
   });
 
@@ -142,11 +142,11 @@ void main() {
     await tester.pump();
     // 押した直後はまだ動いている途中。
     await tester.pump(const Duration(milliseconds: 120));
-    expect(controller.page, greaterThan(1200.0));
-    expect(controller.page, lessThan(1201.0));
+    expect(controller.page, greaterThan(1.0));
+    expect(controller.page, lessThan(2.0));
 
     await tester.pumpAndSettle();
-    expect(controller.page, 1201.0);
+    expect(controller.page, 2.0);
     expect(find.text('2026年9月'), findsOneWidget);
   });
 
@@ -162,5 +162,50 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2026年8月'), findsOneWidget);
+  });
+
+  testWidgets('送れるのは前1か月・後3か月まで', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    // 表示している収集日は「今の決まり」を先へ延ばしたものでしかない。
+    // 市の決まりは変わるので、何年も先まで出せてしまうと当たっている
+    // かのように見せてしまう。
+    for (final expected in ['2026年9月', '2026年10月', '2026年11月']) {
+      await tester.tap(find.byTooltip('次の月'));
+      await tester.pumpAndSettle();
+      expect(find.text(expected), findsOneWidget);
+    }
+    // 3か月先で止まる。押せないボタンにして、効かないのか壊れたのかを
+    // 迷わせない。
+    expect(
+      tester
+          .widget<IconButton>(
+            find.ancestor(
+              of: find.byTooltip('次の月'),
+              matching: find.byType(IconButton),
+            ),
+          )
+          .onPressed,
+      isNull,
+    );
+
+    // 前は1か月だけ。払いすぎたときに戻れれば足りる。
+    await tester.tap(find.text('今月に戻る'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('前の月'));
+    await tester.pumpAndSettle();
+    expect(find.text('2026年7月'), findsOneWidget);
+
+    expect(
+      tester
+          .widget<IconButton>(
+            find.ancestor(
+              of: find.byTooltip('前の月'),
+              matching: find.byType(IconButton),
+            ),
+          )
+          .onPressed,
+      isNull,
+    );
   });
 }
