@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/waste_item.dart';
+import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
 
@@ -58,10 +59,7 @@ class _WasteItemSheet extends StatelessWidget {
               ),
               if (item.note.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                Text(
-                  keepParenthesesTogether(item.note),
-                  style: theme.textTheme.bodyMedium,
-                ),
+                Text(formatNote(item.note), style: theme.textTheme.bodyMedium),
               ],
               for (final mark in marks) ...[
                 const SizedBox(height: 20),

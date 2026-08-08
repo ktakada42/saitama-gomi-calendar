@@ -87,4 +87,32 @@ void main() {
       expect(find.text(label), findsOneWidget, reason: label);
     }
   });
+
+  testWidgets('カレンダーを左右になぞって月を送れる', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    // 左へ払うと次の月。紙をめくる向きに合わせる。
+    await tester.fling(find.text('15'), const Offset(-200, 0), 800);
+    await tester.pumpAndSettle();
+    expect(find.text('2026年9月'), findsOneWidget);
+
+    // 右へ払うと前の月。
+    await tester.fling(find.text('15'), const Offset(200, 0), 800);
+    await tester.pumpAndSettle();
+    expect(find.text('2026年8月'), findsOneWidget);
+  });
+
+  testWidgets('わずかに指がずれただけでは月を送らない', (tester) async {
+    await pumpApp(tester, const CalendarPage());
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('15')),
+    );
+    await gesture.moveBy(const Offset(-12, 0));
+    await tester.pump(const Duration(milliseconds: 400));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    expect(find.text('2026年8月'), findsOneWidget);
+  });
 }

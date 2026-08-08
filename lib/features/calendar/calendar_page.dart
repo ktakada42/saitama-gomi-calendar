@@ -58,15 +58,27 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           const SizedBox(height: 8),
           const _WeekdayHeader(),
           const SizedBox(height: 4),
-          _MonthGrid(
-            month: month,
-            days: days,
-            today: today,
-            onTapDay: (day) => showDayDetailSheet(
-              context,
-              day: day,
-              area: calendar.area,
+          // 左右になぞって月を送れるようにする。上のボタンでも送れるが、
+          // カレンダーは指で払って月をめくれるものだという期待が強い。
+          // 縦の動きは一覧のスクロールに渡るので、横だけを見る。
+          GestureDetector(
+            onHorizontalDragEnd: (details) {
+              final velocity = details.primaryVelocity ?? 0;
+              // ゆっくり指を置いただけの動きでは送らない。
+              if (velocity.abs() < 100) return;
+              // 左へ払えば次の月、右へ払えば前の月。紙をめくる向きに合わせる。
+              _shiftMonth(velocity < 0 ? 1 : -1);
+            },
+            child: _MonthGrid(
+              month: month,
+              days: days,
               today: today,
+              onTapDay: (day) => showDayDetailSheet(
+                context,
+                day: day,
+                area: calendar.area,
+                today: today,
+              ),
             ),
           ),
           const SizedBox(height: 20),

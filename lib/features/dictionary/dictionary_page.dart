@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/kana.dart';
 import '../../domain/waste_item.dart';
 import '../../providers.dart';
+import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
 import '../../ui/widgets/load_failure_view.dart';
@@ -149,7 +150,11 @@ class _Results extends StatelessWidget {
   static int subtitleLines(WasteItem item) {
     if (item.hasDetail) return item.note.isEmpty ? 1 : 2;
     if (item.note.isEmpty) return 0;
-    return item.note.length > 24 ? 2 : 1;
+    // 「※」で分けた文はそれぞれ1行を使う。長い文はもう1行に折り返る。
+    final lines = splitNoteLines(
+      item.note,
+    ).split('\n').fold(0, (sum, line) => sum + (line.length > 24 ? 2 : 1));
+    return lines.clamp(1, 2);
   }
 
   /// 品目1件分の高さの見積り。
@@ -560,7 +565,7 @@ class _ItemTile extends StatelessWidget {
       return note.isEmpty
           ? null
           : Text(
-              keepParenthesesTogether(note),
+              formatNote(note),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -574,7 +579,7 @@ class _ItemTile extends StatelessWidget {
       children: [
         if (note.isNotEmpty)
           Text(
-            keepParenthesesTogether(note),
+            formatNote(note),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodySmall?.copyWith(
