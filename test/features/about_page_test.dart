@@ -18,10 +18,10 @@ void main() {
       await pumpApp(tester, const AboutPage());
 
       // pubspec.yamlの値を焼き込むのではなく、入っているパッケージから読む。
-      expect(find.text('1.2.3'), findsOneWidget);
-      // ビルド番号はTestFlightの配信管理のための内部的な値で、
-      // 利用者から見た版の識別には要らないので出さない。
-      expect(find.textContaining('45'), findsNothing);
+      // ビルド番号はTestFlight・本番の配信では利用者から見た版の識別に
+      // 要らないので出さない（デバッグビルドでは別途出す。kDebugModeは
+      // テスト実行でもtrueなので、ここでは出る側を確かめる）。
+      expect(find.text('1.2.3 (45)'), findsOneWidget);
     });
 
     testWidgets('収集日と分別早見表の出典をそれぞれ出す', (tester) async {
@@ -58,7 +58,7 @@ void main() {
 
       expect(find.byType(LicensePage), findsOneWidget);
       expect(find.text(appNameWithDisclaimer), findsWidgets);
-      expect(find.text('1.2.3'), findsOneWidget);
+      expect(find.text('1.2.3 (45)'), findsOneWidget);
     });
   });
 }
