@@ -82,6 +82,87 @@ void main() {
     });
   });
 
+  group('年末年始・令和8年度マニュアルの記載どおりの日付になる', () {
+    // 市のマニュアル1ページ目に、令和8年度の年末年始の収集について
+    // 曜日パターンごとの最終収集日・収集再開日が例示されている。
+    //
+    //   もえるごみ 月・木曜日  最終日12/31（木） 開始日1/4（月）
+    //   もえるごみ 火・金曜日  最終日12/29（火） 開始日1/5（火）
+    //   もえるごみ 水・土曜日  最終日12/30（水） 開始日1/6（水）
+    //   もえないごみ・有害危険ごみ・資源物1・2類
+    //                         最終日12/31（木）まで 開始日1/4（月）以降の各地区の収集曜日
+    //
+    // これは特別なルールではなく、「1/1〜3だけ休止し、それ以外は通常の
+    // 曜日ルールを続ける」という一つのルール（isSuspended）を、
+    // 令和8年度の実際の曜日に当てはめた結果と一致する。この一致を
+    // 日付で固定しておき、isSuspendedを不用意に変えたときに気づけるようにする。
+    const monThu = CollectionCalendar(
+      CollectionArea(
+        id: 'mon-thu',
+        ward: '浦和区',
+        name: '月木地区',
+        rules: {
+          GarbageCategory.burnable: [
+            CollectionRule.weekly(DateTime.monday),
+            CollectionRule.weekly(DateTime.thursday),
+          ],
+        },
+      ),
+    );
+    const tueFri = CollectionCalendar(
+      CollectionArea(
+        id: 'tue-fri',
+        ward: '浦和区',
+        name: '火金地区',
+        rules: {
+          GarbageCategory.burnable: [
+            CollectionRule.weekly(DateTime.tuesday),
+            CollectionRule.weekly(DateTime.friday),
+          ],
+        },
+      ),
+    );
+    const wedSat = CollectionCalendar(
+      CollectionArea(
+        id: 'wed-sat',
+        ward: '浦和区',
+        name: '水土地区',
+        rules: {
+          GarbageCategory.burnable: [
+            CollectionRule.weekly(DateTime.wednesday),
+            CollectionRule.weekly(DateTime.saturday),
+          ],
+        },
+      ),
+    );
+
+    test('月・木曜日地区：最終12/31（木）、次は1/4（月）', () {
+      expect(monThu.categoriesOn(DateTime(2026, 12, 31)), isNotEmpty);
+      for (final d in [
+        DateTime(2027, 1, 1),
+        DateTime(2027, 1, 2),
+        DateTime(2027, 1, 3),
+      ]) {
+        expect(monThu.categoriesOn(d), isEmpty, reason: '$d');
+      }
+      expect(monThu.categoriesOn(DateTime(2027, 1, 4)), isNotEmpty);
+    });
+
+    test('火・金曜日地区：最終12/29（火）、次は1/5（火）', () {
+      expect(tueFri.categoriesOn(DateTime(2026, 12, 29)), isNotEmpty);
+      // 1/1（金）は通常なら収集日だが、休止期間なので出ない。
+      expect(tueFri.categoriesOn(DateTime(2027, 1, 1)), isEmpty);
+      expect(tueFri.categoriesOn(DateTime(2027, 1, 5)), isNotEmpty);
+    });
+
+    test('水・土曜日地区：最終12/30（水）、次は1/6（水）', () {
+      expect(wedSat.categoriesOn(DateTime(2026, 12, 30)), isNotEmpty);
+      // 1/2（土）は通常なら収集日だが、休止期間なので出ない。
+      expect(wedSat.categoriesOn(DateTime(2027, 1, 2)), isEmpty);
+      expect(wedSat.categoriesOn(DateTime(2027, 1, 6)), isNotEmpty);
+    });
+  });
+
   group('month', () {
     test('1日から末日まで全部返す', () {
       final august = calendar.month(2026, 8);
