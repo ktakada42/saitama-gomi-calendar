@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -86,10 +87,16 @@ class AboutPage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('バージョン'),
+            // ビルド番号はTestFlightの配信管理のための内部的な値で、
+            // 利用者から見た版の識別には要らない。デバッグビルドでは、
+            // どのビルドを動かしているかを確かめたい場面（実機QAで
+            // 指摘への対応がどのビルドまで反映されたか等）があるので出す。
             trailing: Text(
               packageInfo == null
                   ? '—'
-                  : '${packageInfo.version} (${packageInfo.buildNumber})',
+                  : kDebugMode
+                  ? '${packageInfo.version} (${packageInfo.buildNumber})'
+                  : packageInfo.version,
               style: theme.textTheme.bodyMedium,
             ),
           ),
@@ -110,7 +117,9 @@ class AboutPage extends ConsumerWidget {
               applicationName: appNameWithDisclaimer,
               applicationVersion: packageInfo == null
                   ? null
-                  : '${packageInfo.version} (${packageInfo.buildNumber})',
+                  : kDebugMode
+                  ? '${packageInfo.version} (${packageInfo.buildNumber})'
+                  : packageInfo.version,
             ),
           ),
         ],

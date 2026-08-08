@@ -18,6 +18,9 @@ void main() {
       await pumpApp(tester, const AboutPage());
 
       // pubspec.yamlの値を焼き込むのではなく、入っているパッケージから読む。
+      // ビルド番号はTestFlight・本番の配信では利用者から見た版の識別に
+      // 要らないので出さない（デバッグビルドでは別途出す。kDebugModeは
+      // テスト実行でもtrueなので、ここでは出る側を確かめる）。
       expect(find.text('1.2.3 (45)'), findsOneWidget);
     });
 
