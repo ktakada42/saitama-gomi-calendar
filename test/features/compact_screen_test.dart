@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saitama_gomi/domain/collection_area.dart';
+import 'package:saitama_gomi/domain/collection_rule.dart';
+import 'package:saitama_gomi/domain/garbage_category.dart';
 import 'package:saitama_gomi/features/calendar/calendar_page.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/features/home/home_page.dart';
@@ -116,5 +119,35 @@ void main() {
     await tester.tapAt(Offset(sheet.center.dx, sheet.top / 2));
     await tester.pumpAndSettle();
     expect(find.byType(BottomSheet), findsNothing);
+  });
+
+  // 実在の地区（浦和区 大原1〜5丁目）と同じ組み合わせ。火曜だけちょうど
+  // 3区分になり、+N表示なしで3段の帯だけでマスが埋まる。
+  const threeExactArea = CollectionArea(
+    id: 'three-exact',
+    ward: '浦和区',
+    name: 'テスト地区',
+    rules: {
+      GarbageCategory.burnable: [
+        CollectionRule.weekly(DateTime.monday),
+        CollectionRule.weekly(DateTime.thursday),
+      ],
+      GarbageCategory.nonBurnable: [CollectionRule.weekly(DateTime.tuesday)],
+      GarbageCategory.hazardous: [CollectionRule.weekly(DateTime.tuesday)],
+      GarbageCategory.recyclable2: [CollectionRule.weekly(DateTime.tuesday)],
+      GarbageCategory.recyclable1: [CollectionRule.weekly(DateTime.friday)],
+    },
+  );
+
+  testWidgets('大きい画面でも、マスがちょうど3区分で埋まる日が溢れない', (tester) async {
+    // iPhone 17 Pro Maxの論理解像度（1320x2868 @3x → 440x956pt）。
+    // +Nの出ない「ちょうど3段」のときだけ、帯どうしの隙間が末尾にも
+    // 余分に1px残ってマスから溢れていた。iPhone SE 2（375x667）では
+    // 出ず、この解像度で初めて実測できた。
+    tester.view.physicalSize = const Size(1320, 2868);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
+    await pumpApp(tester, const CalendarPage(), area: threeExactArea);
+    expect(tester.takeException(), isNull);
   });
 }

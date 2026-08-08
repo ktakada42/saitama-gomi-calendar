@@ -326,6 +326,10 @@ class _DayCell extends StatelessWidget {
             // 名称も出しておかないと色だけが手がかりになってしまうため。
             Expanded(
               child: Column(
+                // 帯どうしの間だけに隙間を空ける。末尾にも同じ隙間を足すと、
+                // ちょうど3段（+N無し）のときに使わない1pxが残ってマスから
+                // 溢れる（6.9インチ機で実際に発生）。
+                spacing: 1,
                 children: [
                   // マスに入るのは3段まで。4区分以上ある日は3段目を
                   // 「+2」の表示に使う。帯を3本出したうえで「+2」を足すと
@@ -335,10 +339,7 @@ class _DayCell extends StatelessWidget {
                         ? _maxStrips - 1
                         : _maxStrips,
                   ))
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 1),
-                      child: _CategoryStrip(category: category),
-                    ),
+                    _CategoryStrip(category: category),
                   if (day.categories.length > _maxStrips)
                     Text(
                       '+${day.categories.length - _maxStrips + 1}',
