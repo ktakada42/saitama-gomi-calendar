@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/settings_repository.dart' show NotificationSettings;
 import '../../ui/paren_wrap.dart';
-import '../../domain/collection_area.dart';
 import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
@@ -55,8 +54,6 @@ class SettingsPage extends ConsumerWidget {
           const _NotificationTiles(),
           const Divider(height: 1),
           const _ThemeModeTile(),
-          const Divider(height: 1),
-          _CalendarExportTile(area: area),
           const SectionHeader('設定中の収集曜日'),
           for (final category in GarbageCategory.values)
             ListTile(
@@ -161,39 +158,6 @@ class SettingsPage extends ConsumerWidget {
     if (weeks == null) return '毎週$weekdays曜日';
     final sorted = weeks.toList()..sort();
     return '第${sorted.join('・第')}$weekdays曜日';
-  }
-}
-
-/// 収集日を標準のカレンダーアプリに取り込む。
-///
-/// 端末のカレンダーに直接書き込まず、.icsファイルを共有シートに渡す。
-/// カレンダーへのアクセス権限を求めずに済み、追加先も利用者が選べる。
-class _CalendarExportTile extends ConsumerWidget {
-  const _CalendarExportTile({required this.area});
-
-  final CollectionArea area;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      leading: const Icon(Icons.calendar_month_outlined),
-      title: const Text('カレンダーに追加'),
-      subtitle: const Text('収集日をカレンダーアプリに取り込みます'),
-      // 行全体を押せるので、右端に共有アイコンは置かない。
-      // アイコンがあると「そこだけが押せる」ように見えてしまう。
-      onTap: () => _share(context, ref),
-    );
-  }
-
-  Future<void> _share(BuildContext context, WidgetRef ref) async {
-    try {
-      await ref.read(calendarShareProvider).share(area);
-    } on Exception {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('カレンダーの書き出しに失敗しました。')));
-    }
   }
 }
 
