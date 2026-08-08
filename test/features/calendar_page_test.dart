@@ -81,11 +81,18 @@ void main() {
     expect(find.text('収集はありません。'), findsOneWidget);
   });
 
-  testWidgets('凡例に5区分すべて並ぶ', (tester) async {
+  testWidgets('凡例は出さない。区分名はマスの帯に直接書いてある', (tester) async {
     await pumpApp(tester, const CalendarPage());
 
+    // 色だけで区分を示しているなら、色と名前の対応を示す凡例が要る。
+    // このアプリはマスの帯そのものに短縮名を書いているので、
+    // 別立ての凡例は同じ対応を重複して示すだけになる。
     for (final label in ['もえるごみ', 'もえないごみ', '有害危険ごみ', '資源物1類', '資源物2類']) {
-      expect(find.text(label), findsOneWidget, reason: label);
+      expect(find.text(label), findsNothing, reason: label);
+    }
+    // sampleAreaは8月に5区分すべての収集日を持つので、短縮名がマスに出る。
+    for (final label in ['もえる', 'もえない', '有害危険', '資源1', '資源2']) {
+      expect(find.text(label), findsWidgets, reason: label);
     }
   });
 

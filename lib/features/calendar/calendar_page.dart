@@ -6,7 +6,6 @@ import '../../domain/date_label.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
-import '../../ui/widgets/category_badge.dart';
 import '../../ui/widgets/day_detail_sheet.dart';
 
 /// 当月のごみ出し日を一覧するカレンダー。
@@ -100,8 +99,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
           // 今の月が横へ抜け、隣の月が入ってくる。
           //
-          // 高さは6週ぶんで固定する。月によって5週と6週があり、そのままだと
-          // 送るたびに表の高さが変わって下の凡例が上下に動く。
+          // 高さは6週ぶんで固定する。月によって5週と6週があり、
+          // そのままだと送るたびに表の高さが変わってしまう。
           SizedBox(
             height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
             child: PageView.builder(
@@ -125,8 +124,6 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               },
             ),
           ),
-          const SizedBox(height: 20),
-          const _Legend(),
         ],
       ),
     );
@@ -394,21 +391,6 @@ class _CategoryStrip extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Legend extends StatelessWidget {
-  const _Legend();
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        for (final category in GarbageCategory.values) CategoryBadge(category),
-      ],
     );
   }
 }
