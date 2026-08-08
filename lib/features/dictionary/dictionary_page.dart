@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/kana.dart';
+import '../../domain/sorting_change.dart';
 import '../../domain/waste_item.dart';
 import '../../providers.dart';
 import '../../ui/note_format.dart';
@@ -45,6 +47,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   @override
   Widget build(BuildContext context) {
     final dictionary = ref.watch(wasteDictionaryProvider);
+    final change = SortingChange.current(ref.watch(todayProvider));
 
     return Scaffold(
       appBar: AppBar(
@@ -65,6 +68,10 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
       body: switch (dictionary) {
         AsyncData(:final value) => Column(
           children: [
+            // 決まりが変わった日を過ぎているのに、同梱の分別が古いまま。
+            // 一覧を見る前に気づけるよう、検索欄より上に出す。
+            if (change != null)
+              _SortingChangeNotice(change: change, manualUrl: value.sourceUrl),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: TextField(
@@ -251,6 +258,78 @@ class _Results extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// 分別の決まりが変わったことの知らせ。
+///
+/// 同梱の分別が古くなっているので、まず「当てにしないでほしい」と伝え、
+/// 市の案内へ行けるようにする。閉じられるようにはしない。
+/// 消してしまうと、古い分類を正しいものとして読み続けることになる。
+class _SortingChangeNotice extends StatelessWidget {
+  const _SortingChangeNotice({required this.change, required this.manualUrl});
+
+  final SortingChange change;
+  final String manualUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // 区分色と紛れないよう、注意そのものの色（エラー色）は使わない。
+    final color = theme.colorScheme.tertiary;
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.campaign_outlined, size: 18, color: color),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  change.title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            keepParenthesesTogether(change.description),
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: const Size(0, 36),
+                foregroundColor: color,
+              ),
+              onPressed: () => launchUrl(
+                Uri.parse(manualUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+              icon: const Icon(Icons.open_in_new, size: 16),
+              label: const Text('市の最新の案内を見る'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

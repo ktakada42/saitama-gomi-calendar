@@ -341,4 +341,40 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('テスト用の分別早見表'), findsNothing);
   });
+
+  group('分別が変わったことの知らせ', () {
+    testWidgets('切り替え日を過ぎたら出す', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        today: DateTime(2026, 10, 1),
+      );
+
+      // 同梱の分別が古くなっているので、一覧を見る前に気づけるようにする。
+      expect(find.text('プラスチックの分別が変わりました'), findsOneWidget);
+      expect(find.text('市の最新の案内を見る'), findsOneWidget);
+    });
+
+    testWidgets('切り替え日の前は出さない', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        today: DateTime(2026, 9, 30),
+      );
+
+      // まだ表示している分別が正しいので、不安にさせない。
+      expect(find.text('プラスチックの分別が変わりました'), findsNothing);
+    });
+
+    testWidgets('知らせは閉じられない', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        today: DateTime(2026, 10, 1),
+      );
+
+      // 消せてしまうと、古い分類を正しいものとして読み続けることになる。
+      expect(find.byIcon(Icons.close), findsNothing);
+    });
+  });
 }
