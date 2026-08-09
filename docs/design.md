@@ -57,14 +57,29 @@ CollectionReminderPlanner(calendar)
     単体テストで担保できるようにするため（next-phase.md B.4節）
 
 WasteItem
-  └ 分別早見表の1品目。品目名・出し先・注意点
+  └ 分別早見表の1品目。品目名・かな行・出し先・注意点・印（markIds）
   └ 5区分に収まらない出し先（粗大ごみ・小型家電・電池・収集できないもの）も持つ
   └ searchKey / matches(query) で記号を無視した検索ができる
 
-CalendarExport(area)
-  └ 収集日をiCalendar（.ics）形式の文字列にする
-  └ 日付ごとに個別イベントを並べず、繰り返しルール（RRULE）で表すのでイベント数が少ない
-  └ 文字列を作るだけの純粋なDart。ファイル書き出しと共有はdata層（CalendarShare）
+NoteMark
+  └ 早見表の「★2」「▶P9参照」を、冊子を持たない人にも通じる言葉にする
+  └ 印は抽出時に注意点の本文から切り出してある（scripts/extract_waste_dictionary.py）
+  └ 知らない印は黙って捨てる。市が印を増やしても古いアプリが壊れないように
+
+KanaRow
+  └ 五十音の「行」。分別の一覧の見出しと索引に使う
+  └ 濁音・半濁音は清音と同じ行として扱う（五十音順でも同じところに来るため）
+
+DepositDeadline
+  └ ごみを出せる時刻の期限。通常8:30、早朝収集地区のもえるごみは5:30
+  └ isPassedAt(now) で「その日はもう出せないか」を判定する
+  └ ちょうど期限の時刻はまだ出せる扱い
+
+SortingChange
+  └ 市の分別の決まりが変わる日と、その内容
+  └ 分別データは同梱なので、決まりが変わってもアプリを更新しない利用者には
+    古い分類が出続ける。切り替え日を過ぎたら知らせを出すために使う
+  └ データを日付で切り替えることはしない（requirements.md 4.5節）
 ```
 
 `CollectionCalendar`が「日付から区分を引く」ロジックの単一の入口になっており、画面側は
@@ -88,12 +103,8 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 
 WasteDictionary.load()       assets/data/dictionary.json を読み込む
-  items:  品目ごとの出し先（443件）
+  items:  品目ごとの出し先（443件）。かな行と印（marks）も持つ
   search(query)  記号を無視して絞り込む。前方一致を先に出す
-
-CalendarShare                収集日を.icsに書き出して共有シートに渡す（abstract）
-  実装は_FileCalendarShare（path_provider + share_plus）。
-  テストからは NoopCalendarShare に差し替える
 
 SettingsRepository           shared_preferences 経由で利用者の設定を保存
   readArea() / writeArea() / clear()
@@ -126,9 +137,18 @@ selectedAreaProvider        AsyncNotifierProvider<SelectedArea, CollectionArea?>
   build()  起動時に SettingsRepository から読み込む。未設定なら null
   save(area) / clear()  書き込みと同時にstateも更新（永続化層を読み直さない）
 
-todayProvider                Provider<DateTime>
+nowProvider                  Provider<DateTime>
   DateTime.now()をここに集約。画面から直接呼ばないことで、
-  テストで overrideWithValue して任意の日付を固定できる
+  テストで overrideWithValue して任意の時刻を固定できる
+
+todayProvider                Provider<DateTime>
+  nowProviderから日付だけを取り出す。二つが食い違わないよう、
+  時刻を持つ側を唯一の出どころにしてある
+  （「その日のごみをまだ出せるか」の判定に時刻が要る。requirements.md 4.2節）
+
+packageInfoProvider          FutureProvider<PackageInfo>
+  「このアプリについて」に出すバージョン。pubspec.yamlの値を焼き込まず、
+  実際に入っているパッケージから読む
 
 calendarProvider             Provider<CollectionCalendar?>
   selectedAreaProviderを購読し、areaがあればCollectionCalendarを作る。ないならnull
@@ -154,20 +174,31 @@ SaitamaGomiApp (MaterialApp, ja固定)
     ├ area == null            → AreaPickerPage(isOnboarding: true)
     ├ area != null            → HomeShell
     │   └ IndexedStack（タブ切り替えでカレンダーの表示月を失わないため）
-    │       ├ HomePage      明日を最大化、今日、この先6件、区分ごとの次回
-    │       ├ CalendarPage  月表示、前後月に送れる
-    │       └ SettingsPage  地区変更・設定中の曜日・区分ごとの出し方
+    │       ├ HomePage       今日／明日を最大化、もう一方、この先6件、分別ごとの次回
+    │       ├ CalendarPage   月表示。前1か月・後3か月まで送れる
+    │       ├ DictionaryPage 443品目を五十音で。右端に行の索引
+    │       └ SettingsPage   地区・通知・画面の明るさ・設定中の曜日・分別と出し方
     └ AsyncError             → エラー表示（設定読み込み失敗）
 
+SettingsPage
+  ├ 「お住まいの地区」        → push: AreaPickerPage(isOnboarding: false)
+  ├ 「収集曜日を修正する」    → push: AreaEditorPage(initial: 現在のarea)
+  └ 「バージョンと出典」      → push: AboutPage
+
+DictionaryPage
+  └ 品目をタップ（印を持つものだけ） → showWasteItemSheet
+
 AreaPickerPage(isOnboarding: true)   … 初回設定の入口（_Rootから直接）
-AreaPickerPage(isOnboarding: false)  … SettingsPage「地区を選び直す」から遷移
+AreaPickerPage(isOnboarding: false)  … SettingsPage「お住まいの地区」から遷移
   └ 郵便番号 or 一覧で CollectionArea を選ぶ
      → push: AreaEditorPage(initial: 選んだarea, isOnboarding: 同じ値)
   └ 「自分の地区が見つからない」
      → push: AreaEditorPage(initial: null, isOnboarding: 同じ値)
 
-AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「お住まいの地区」から
-                                                        遷移する、曜日を直接編集する画面
+AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「収集曜日を修正する」
+                                                        から遷移する、曜日を編集する画面
+  └ 一覧から来たときは区・地区名を変えられない。市の地区で区だけ差し替えると
+     「岩槻区高砂三丁目」のような実在しない地区ができるため（requirements.md 4.4節）
 ```
 
 `AreaPickerPage`（`lib/features/area/area_picker_page.dart`）が「地区をどう特定するか」、
@@ -176,10 +207,11 @@ AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「お住ま
 [requirements.md](requirements.md) 4.1節の主経路・代替経路の両方で共有される
 （渡す`initial`が「地区データそのまま」か「null（空欄）」かの違いだけ）。
 
-`AreaEditorPage._save()`は保存後に必ず`Navigator.pop()`する。初回設定でも
-`AreaPickerPage`からのpushを経由するようになったため、pop先は常に存在する
-（pop後、その下に隠れていた`_Root`が`selectedAreaProvider`の更新を検知して
-`HomeShell`に切り替わる）。
+`AreaEditorPage._save()`は保存後に`Navigator.popUntil((r) => r.isFirst)`で
+いちばん最初の画面まで戻す。1つだけ戻すと、郵便番号で複数の候補が出た場合に
+候補一覧へ着地してしまい、何の画面か・保存できたのかが分からなくなるため。
+初回設定のときは、戻った先の`_Root`が`selectedAreaProvider`の更新を検知して
+`HomeShell`に切り替わる。
 
 `AreaPickerPage`が地区を選んだ結果は、`AreaEditorPage(initial: area)`の`initState`が
 `initial.rulesFor(category)`から`_drafts`を組み立てる既存の仕組み（元々は設定変更時の
@@ -203,7 +235,19 @@ AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「お住ま
 - `CategoryBadge`が区分の色・アイコン・短縮名をまとめた共通部品。ホームの一覧・カレンダーの
   凡例など、区分を小さく表示する箇所はすべてこれを使う
 - カレンダーのセルだけは`CategoryBadge`を使わず`_CategoryStrip`という専用の帯表示にしている
-  （セルの高さが74pxしかなく、バッジのpadding込みだと3件目が入らないため）
+  （セルの高さが74pxしかなく、バッジのpadding込みだと3件目が入らないため）。
+  帯を並べる余白は`Column`の`spacing`で項目の間だけに入れる。各帯にpaddingで
+  持たせると、ちょうど3段の日だけ末尾に使わない1pxが残って溢れる
+- `CategoryPill`は分別の一覧で使う。5区分に入らない出し先（粗大ごみ・小型家電・
+  電池・収集できないもの）にも同じ形を使う。利用者から見ればどれも「どこに出すか」で
+  区別はないため
+- `SectionHeader`（区切り線＋見出し）と`ExternalLinkTile`（外部ブラウザへ出る項目）は
+  設定と「このアプリについて」で共用する
+- `paren_wrap.dart`の`keepParenthesesTogether`は、括弧の中で行が折り返されないようにする。
+  括弧の中の文字どうしを`WORD JOINER`（U+2060）でつなぐと、行送りが括弧の手前まで戻り、
+  括弧全体が次の行へ回る
+- `note_format.dart`の`formatNote`は、注意点の「※」の手前で改行する。早見表は1つの欄に
+  複数の但し書きを詰め込んでいて、そのままだと前の文と地続きになって読みにくい
 
 ## 7. テスト方針
 
@@ -211,12 +255,21 @@ AreaEditorPage(initial: area, isOnboarding: false)  … SettingsPage「お住ま
 test/domain/    domain層の純粋な単体テスト（Widgetを一切使わない）
 test/data/      AreaCatalogのJSONパースのテスト
 test/features/  ウィジェットテスト。test/support/test_app.dart で
-                ProviderScope + overrideWithValue(todayProvider, ...) した
-                MaterialAppを組み立て、日付を固定して検証する
+                ProviderScope + overrideWithValue した MaterialAppを組み立て、
+                日付と時刻を固定して検証する
+test/ui/        配色のコントラスト（WCAG AA）と、文字列の折り返しの検証
 ```
 
-日付に依存する画面（ホーム・カレンダー）のテストは`todayProvider`を固定日付で
-オーバーライドすることで、実行日に左右されない再現可能なテストにしている。
+日付に依存する画面（ホーム・カレンダー）のテストは`nowProvider`／`todayProvider`を
+固定値でオーバーライドすることで、実行日時に左右されない再現可能なテストにしている。
+`pumpApp`の`now`を省略すると「その日の正午」になる（＝出す期限を過ぎた状態）。
+期限前の表示を試すときだけ朝の時刻を渡す。
+
+配色は`test/ui/category_style_test.dart`でWCAG AAのコントラスト比を検証している。
+地の色は`SaitamaGomiApp.surfaceOf(brightness)`から取る。`ColorScheme.fromSeed`の
+既定値ではなく実際に使う色の上で測らないと意味がないため。
+`test/ui/surface_tint_test.dart`は、地の上に重なる面（`surfaceContainer`系）が
+緑に寄っていないかを総なめで見る。役割ごとに1色ずつ潰していくと漏れるため。
 
 ## 8. CI / ローカルフック
 
@@ -226,8 +279,24 @@ test/features/  ウィジェットテスト。test/support/test_app.dart で
   `git config core.hooksPath .githooks`で有効化
 - 実機/シミュレータ向けの`flutter build ios`はCIに含めていない（macOSランナーは
   Actionsの無料枠消費が大きいため、必要になった段階で別ジョブに切り出す）
+- `scripts/build_testflight.sh <issuer-id>`：TestFlightへの配信を1コマンドで行う。
+  `flutter build ipa`を使わないのは、あれが自動署名を前提にしていてXcodeに
+  サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
+  書き出しは手動署名で行う
 
-## 9. 意図的にやっていないこと
+## 9. 配布
+
+- **iPhone専用**（`TARGETED_DEVICE_FAMILY = 1`）。画面はすべて縦1カラムの前提で
+  作っており、iPadの広い画面では余白ばかりが広がって使いやすくならない。
+  App Storeへの提出でiPad用スクリーンショットを求められなくなる利点もある
+- `ITSAppUsesNonExemptEncryption = false` を`Info.plist`に書いてある。
+  書いておかないとアップロードのたびに手作業の申告を求められ、それまで
+  TestFlightの配信が止まる。HTTPS以外の暗号化は使っていないので輸出規制の対象外
+- App Store用のスクリーンショットは`store_assets/screenshots/`。素のものと、
+  キャッチコピーの帯を足した提出用の両方を置いてある。
+  装飾版は`scripts/make_store_screenshots.py`で生成する
+
+## 10. 意図的にやっていないこと
 
 - 状態管理をRiverpodの`Notifier`以上に複雑なもの（Bloc等）にしていない。画面数・状態の
   複雑さに対してRiverpodのAsyncNotifier + Providerで十分なため
