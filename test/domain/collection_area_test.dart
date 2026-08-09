@@ -63,4 +63,17 @@ void main() {
     expect(saitamaWards, hasLength(10));
     expect(saitamaWards, contains('岩槻区'));
   });
+
+  test('画面に出す名前は、区と地区名を半角スペースひとつでつなぐ', () {
+    const area = CollectionArea(
+      id: 'x',
+      ward: '浦和区',
+      name: '大原1〜5丁目',
+      rules: {},
+    );
+
+    // 全角だと、区名と地区名が別々の見出しに見えるほど離れる。
+    expect(area.label, '浦和区 大原1〜5丁目');
+    expect(area.label, isNot(contains('\u3000')));
+  });
 }

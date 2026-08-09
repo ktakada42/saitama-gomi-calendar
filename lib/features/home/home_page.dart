@@ -43,7 +43,7 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(keepParenthesesTogether('${area.ward}　${area.name}')),
+        title: Text(keepParenthesesTogether(area.label)),
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
       ),
       body: ListView(

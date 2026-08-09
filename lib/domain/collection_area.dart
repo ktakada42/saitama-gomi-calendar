@@ -52,6 +52,12 @@ class CollectionArea {
 
   static const customAreaId = 'custom';
 
+  /// 画面に出す地区の名前。「浦和区 大原1〜5丁目」。
+  ///
+  /// 区切りは半角スペースひとつ。全角だと、区名と地区名が別々の見出しに
+  /// 見えるほど離れてしまう。
+  String get label => '$ward $name';
+
   bool get isCustom => id == customAreaId;
 
   /// この区分をその日に出すときの期限。早朝収集地区のもえるごみだけ5:30。

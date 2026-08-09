@@ -34,7 +34,7 @@ void main() {
       await tester.tap(find.text('この設定ではじめる'));
       await tester.pumpAndSettle();
 
-      expect(find.text('見沼区　わたしの地区'), findsOneWidget);
+      expect(find.text('見沼区 わたしの地区'), findsOneWidget);
       expect(find.byIcon(Icons.calendar_month_outlined), findsOneWidget);
     });
 
@@ -107,16 +107,16 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('大宮区　テスト町二丁目東側'));
+      await tester.tap(find.text('大宮区 テスト町二丁目東側'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('保存する'));
       await tester.pumpAndSettle();
 
       // 候補が並んだ画面に着地すると、何の画面か・保存できたのかが分からない。
-      expect(find.text('大宮区　テスト町二丁目西側'), findsNothing);
+      expect(find.text('大宮区 テスト町二丁目西側'), findsNothing);
       expect(find.text('お住まいの地区を確認'), findsNothing);
       // 設定画面まで戻り、選んだ地区が入っている。
-      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目東側'), findsOneWidget);
     });
 
     testWidgets('郵便番号で1件に絞れたら選ぶだけで進める', (tester) async {
@@ -128,8 +128,8 @@ void main() {
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
 
-      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
-      await tester.tap(find.text('見沼区　テスト町一丁目'));
+      expect(find.text('見沼区 テスト町一丁目'), findsOneWidget);
+      await tester.tap(find.text('見沼区 テスト町一丁目'));
       await tester.pumpAndSettle();
 
       // 選んだ地区の曜日があらかじめ反映されている。
@@ -139,7 +139,7 @@ void main() {
       await tester.tap(find.text('この設定ではじめる'));
       await tester.pumpAndSettle();
 
-      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+      expect(find.text('見沼区 テスト町一丁目'), findsOneWidget);
     });
 
     testWidgets('郵便番号で候補が複数あれば一覧から選ぶ', (tester) async {
@@ -151,15 +151,15 @@ void main() {
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
 
-      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
-      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目東側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目西側'), findsOneWidget);
 
-      await tester.tap(find.text('大宮区　テスト町二丁目西側'));
+      await tester.tap(find.text('大宮区 テスト町二丁目西側'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('この設定ではじめる'));
       await tester.pumpAndSettle();
 
-      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目西側'), findsOneWidget);
     });
 
     testWidgets('該当しない郵便番号ならその旨を伝える', (tester) async {
@@ -180,8 +180,8 @@ void main() {
       await tester.tap(find.text('大宮区'));
       await tester.pumpAndSettle();
 
-      expect(find.text('大宮区　テスト町二丁目東側'), findsOneWidget);
-      expect(find.text('大宮区　テスト町二丁目西側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目東側'), findsOneWidget);
+      expect(find.text('大宮区 テスト町二丁目西側'), findsOneWidget);
     });
   });
 
@@ -189,7 +189,7 @@ void main() {
     testWidgets('設定中の曜日を区分ごとに読める', (tester) async {
       await pumpApp(tester, const SettingsPage());
 
-      expect(find.text('浦和区　テスト地区'), findsOneWidget);
+      expect(find.text('浦和区 テスト地区'), findsOneWidget);
       expect(find.text('毎週月・木曜日'), findsOneWidget);
       expect(find.text('第2火曜日'), findsOneWidget);
       expect(find.text('第4火曜日'), findsOneWidget);
@@ -214,12 +214,12 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('探す'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('見沼区　テスト町一丁目'));
+      await tester.tap(find.text('見沼区 テスト町一丁目'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('保存する'));
       await tester.pumpAndSettle();
 
-      expect(find.text('見沼区　テスト町一丁目'), findsOneWidget);
+      expect(find.text('見沼区 テスト町一丁目'), findsOneWidget);
     });
 
     testWidgets('収集曜日を修正するからは区や地区名を変えられない', (tester) async {
