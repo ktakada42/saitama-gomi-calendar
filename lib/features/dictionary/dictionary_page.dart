@@ -60,8 +60,11 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
             IconButton(
               icon: const Icon(Icons.info_outline),
               tooltip: '出典',
-              onPressed: () =>
-                  _showSource(context, dictionary.requireValue.source),
+              onPressed: () => _showSource(
+                context,
+                source: dictionary.requireValue.source,
+                sourceUrl: dictionary.requireValue.sourceUrl,
+              ),
             ),
         ],
       ),
@@ -116,13 +119,28 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
     );
   }
 
-  void _showSource(BuildContext context, String source) {
+  void _showSource(
+    BuildContext context, {
+    required String source,
+    required String sourceUrl,
+  }) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('出典'),
         content: Text(source),
         actions: [
+          if (sourceUrl.isNotEmpty)
+            // 要約なので、判断に迷うときのために元の資料へ出られるようにする。
+            // このアプリについて（waste_item_sheet.dart）と同じ考え方。
+            TextButton.icon(
+              onPressed: () => launchUrl(
+                Uri.parse(sourceUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+              icon: const Icon(Icons.open_in_new, size: 18),
+              label: const Text('資料を見る'),
+            ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('閉じる'),
