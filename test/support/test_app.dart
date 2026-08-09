@@ -10,6 +10,7 @@ import 'package:saitama_gomi/data/area_catalog.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
+import 'package:saitama_gomi/domain/collection_calendar.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
 import 'package:saitama_gomi/domain/garbage_category.dart';
 import 'package:saitama_gomi/providers.dart';
@@ -50,6 +51,11 @@ const manyCategoryArea = CollectionArea(
     GarbageCategory.recyclable2: [CollectionRule.weekly(DateTime.tuesday)],
   },
 );
+
+/// テストで使う既定の時刻。正午にしてあるので、出す期限（朝5:30／8:30）は
+/// 過ぎている。つまり既定では「明日」が大きく出る。期限前の表示を試すときは
+/// pumpApp の now に朝の時刻を渡す。
+final testNow = testToday.add(const Duration(hours: 12));
 
 /// 2026年8月6日（木）。もえるごみの日で、翌日は収集なし。
 final testToday = DateTime(2026, 8, 6);
@@ -185,6 +191,9 @@ Future<void> pumpRootApp(
   CollectionArea? area = sampleArea,
   DateTime? today,
 
+  /// 時刻まで含めた「今」。省略すると [today] の正午（＝出す期限を過ぎた状態）。
+  DateTime? now,
+
   /// 同梱データの読み込みが失敗した場合の表示を確かめるためのスイッチ。
   bool failCatalog = false,
 
@@ -198,7 +207,14 @@ Future<void> pumpRootApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        todayProvider.overrideWithValue(today ?? testToday),
+        nowProvider.overrideWithValue(
+          now ?? (today ?? testToday).add(const Duration(hours: 12)),
+        ),
+        todayProvider.overrideWithValue(
+          CollectionCalendar.dateOnly(
+            now ?? (today ?? testToday).add(const Duration(hours: 12)),
+          ),
+        ),
         areaCatalogProvider.overrideWith(
           (ref) async => failCatalog ? throw Exception('読み込み失敗') : testCatalog,
         ),
@@ -225,6 +241,9 @@ Future<void> pumpApp(
   CollectionArea? area = sampleArea,
   DateTime? today,
 
+  /// 時刻まで含めた「今」。省略すると [today] の正午（＝出す期限を過ぎた状態）。
+  DateTime? now,
+
   /// 分別早見表。索引の見え方など、品目の並びが要るテストから差し替える。
   WasteDictionary? dictionary,
 
@@ -238,7 +257,14 @@ Future<void> pumpApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        todayProvider.overrideWithValue(today ?? testToday),
+        nowProvider.overrideWithValue(
+          now ?? (today ?? testToday).add(const Duration(hours: 12)),
+        ),
+        todayProvider.overrideWithValue(
+          CollectionCalendar.dateOnly(
+            now ?? (today ?? testToday).add(const Duration(hours: 12)),
+          ),
+        ),
         areaCatalogProvider.overrideWith((ref) async => testCatalog),
         // OSの通知プラグインはテスト環境では初期化できないので差し替える。
         notificationRepositoryProvider.overrideWith(

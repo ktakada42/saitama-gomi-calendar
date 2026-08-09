@@ -84,8 +84,14 @@ final themeModeProvider = AsyncNotifierProvider<ThemeModeController, ThemeMode>(
 /// `DateTime.now()` を画面から直接呼ばずここに集約しておくと、
 /// テストで `overrideWithValue` して任意の日付の表示を確認できる。
 final todayProvider = Provider<DateTime>(
-  (ref) => CollectionCalendar.dateOnly(DateTime.now()),
+  (ref) => CollectionCalendar.dateOnly(ref.watch(nowProvider)),
 );
+
+/// 時刻まで含めた現在時刻。
+///
+/// 「その日のごみをまだ出せるか」は時刻で決まるので、日付だけでは足りない。
+/// [todayProvider] と同じく、テストから差し替えられるようにここに集約する。
+final nowProvider = Provider<DateTime>((ref) => DateTime.now());
 
 /// 設定済み地区のカレンダー。地区が未設定なら null。
 final calendarProvider = Provider<CollectionCalendar?>((ref) {
