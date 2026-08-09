@@ -295,7 +295,7 @@ class _AreaTile extends StatelessWidget {
       color: highlight ? theme.colorScheme.primaryContainer : null,
       child: ListTile(
         onTap: onTap,
-        title: Text(keepParenthesesTogether('${area.ward}　${area.name}')),
+        title: Text(keepParenthesesTogether(area.label)),
         subtitle: area.earlyMorning ? const Text('もえるごみ早朝収集地区') : null,
         trailing: const Icon(Icons.chevron_right),
       ),

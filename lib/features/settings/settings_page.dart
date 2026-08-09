@@ -42,9 +42,7 @@ class SettingsPage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.place_outlined),
             title: const Text('お住まいの地区'),
-            subtitle: Text(
-              keepParenthesesTogether('${area.ward}　${area.name}'),
-            ),
+            subtitle: Text(keepParenthesesTogether(area.label)),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),

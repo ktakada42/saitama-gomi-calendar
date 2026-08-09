@@ -43,7 +43,7 @@ void main() {
   testWidgets('区と地区名をタイトルに出す', (tester) async {
     await pumpApp(tester, const HomePage());
 
-    expect(find.text('浦和区　テスト地区'), findsOneWidget);
+    expect(find.text('浦和区 テスト地区'), findsOneWidget);
   });
 
   testWidgets('月1回の区分の次回もトップから分かる', (tester) async {
