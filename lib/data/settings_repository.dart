@@ -68,7 +68,14 @@ class SettingsRepository {
     try {
       return CollectionArea.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     } on FormatException {
-      // 壊れた保存データで起動できなくなるより、未設定として初回設定に戻す。
+      // JSONとして構文が壊れている（例：末尾が欠けた文字列）。
+      return null;
+    } on TypeError {
+      // JSONの構文自体は正しいが、期待する形と違う
+      // （フィールドが無い・型が違う・トップレベルが配列など）。
+      // アプリのバージョン間でCollectionAreaの構造が変わった場合に
+      // 起こりうる。どちらの壊れ方でも、壊れた保存データで
+      // 起動できなくなるより、未設定として初回設定に戻すことを優先する。
       return null;
     }
   }
