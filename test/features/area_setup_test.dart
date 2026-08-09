@@ -133,7 +133,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // 選んだ地区の曜日があらかじめ反映されている。
-      expect(find.text('収集曜日の確認'), findsOneWidget);
+      expect(find.widgetWithText(AppBar, '収集曜日'), findsOneWidget);
       // 地区が確定しているので、入力を助ける雛形は出さない。
       expect(find.text('入力の出発点'), findsNothing);
       await tester.tap(find.text('この設定ではじめる'));
@@ -246,7 +246,7 @@ void main() {
       await tester.tap(find.text('収集曜日を修正する'));
       await tester.pumpAndSettle();
 
-      expect(find.text('収集曜日の確認'), findsOneWidget);
+      expect(find.widgetWithText(AppBar, '収集曜日'), findsOneWidget);
 
       // もえるごみは月・木。金曜も足して保存する。
       await tester.tap(find.text('金').first);
@@ -255,7 +255,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // 保存すると設定画面まで戻る。地区を選ぶ画面には着地しない。
-      expect(find.text('収集曜日の確認'), findsNothing);
+      expect(find.widgetWithText(AppBar, '収集曜日'), findsNothing);
       // 曜日だけが変わり、地区はそのまま。
       expect(find.text('毎週月・木・金曜日'), findsOneWidget);
       expect(find.textContaining('テスト地区'), findsWidgets);
@@ -298,7 +298,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // 既定はOFF。時刻の項目もまだ出さない。
-      final toggle = find.widgetWithText(SwitchListTile, '前日にお知らせ');
+      final toggle = find.widgetWithText(SwitchListTile, '通知');
       expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
       expect(find.text('お知らせの時刻'), findsNothing);
 
@@ -316,7 +316,7 @@ void main() {
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(SwitchListTile, '前日にお知らせ'));
+      await tester.tap(find.widgetWithText(SwitchListTile, '通知'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('お知らせの時刻'));
       await tester.pumpAndSettle();
@@ -335,7 +335,7 @@ void main() {
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(SwitchListTile, '前日にお知らせ'));
+      await tester.tap(find.widgetWithText(SwitchListTile, '通知'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('お知らせの時刻'));
       await tester.pumpAndSettle();
