@@ -342,6 +342,26 @@ void main() {
     expect(find.textContaining('テスト用の分別早見表'), findsNothing);
   });
 
+  testWidgets('出典から資料へ出られる', (tester) async {
+    await pumpApp(tester, const DictionaryPage());
+
+    await tester.tap(find.byTooltip('出典'));
+    await tester.pumpAndSettle();
+
+    // 要約なので、判断に迷うときのために元の資料へ出られるようにする。
+    expect(find.text('資料を見る'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.widgetWithText(TextButton, '資料を見る'),
+        matching: find.byIcon(Icons.open_in_new),
+      ),
+      findsOneWidget,
+    );
+    // タップしても例外にならない（実際に開くかは端末側の責任）。
+    await tester.tap(find.text('資料を見る'));
+    await tester.pumpAndSettle();
+  });
+
   group('分別が変わったことの知らせ', () {
     testWidgets('切り替え日を過ぎたら出す', (tester) async {
       await pumpApp(
