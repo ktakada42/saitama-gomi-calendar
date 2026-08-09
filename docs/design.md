@@ -289,7 +289,48 @@ test/ui/        配色のコントラスト（WCAG AA）と、文字列の折り
   サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
   書き出しは手動署名で行う
 
-## 9. 配布
+## 9. ホーム画面ウィジェット
+
+iOSのウィジェットは**アプリとは別プロセス**で動くので、Flutter側の保存領域からは
+読めない。App Groupで共有した領域を通して内容を渡す。
+
+```
+lib/domain/widget_payload.dart   ウィジェットに渡す内容を組み立てる（純粋なDart）
+lib/data/widget_bridge.dart      共有領域への書き出しを頼む口（MethodChannel）
+ios/Runner/AppDelegate.swift     受け取ったJSONをApp Groupに置き、再描画を促す
+ios/GomiWidget/                  ウィジェット本体（SwiftUI）
+```
+
+**収集日の計算はDartに一本化する。** ロジックをSwiftにも書くと、片方だけ直したときに
+アプリとウィジェットで表示が食い違う。アプリを開いたときに先60日ぶんを計算して
+書き出し、ウィジェットはそれを読んで並べるだけにする（通知機能と同じ考え方）。
+
+例外は**分別の名前・色・アイコン**で、これはSwift側にも持つ（`GomiData.swift`）。
+共有領域に載せるとデータが増えるうえ、配色を変えるたび書き直しが要る。
+区分そのものは市の制度なのでそう変わらない。
+
+「収集日の朝は期限を過ぎるまで今日を出す」規則はウィジェット側にも要る
+（アプリが起動していなくても時間は進むため）。`GomiPayload.featured(at:)` が
+`CollectionCalendar.featuredDay` と対応している。
+
+タイムラインは**表示が切り替わる時刻にだけ**更新する。切り替わるのは
+「日付が変わったとき」と「出す期限を過ぎたとき」の2つだけなので、
+その節目をタイムラインに並べる。
+
+### Xcodeプロジェクトへの組み込み
+
+ターゲットの追加は`scripts/add_widget_target.rb`（`xcodeproj` gem）で行う。
+何度流しても同じ結果になるので、`ios/Runner.xcodeproj`を作り直したときも再実行できる。
+
+はまりどころが2つある。
+
+- **埋め込みフェーズは`Thin Binary`より前に置く**。後ろに置くと依存が循環して
+  ビルドが失敗する（`Cycle inside Runner`）
+- **ウィジェットにもFlutterのxcconfigを参照させる**。`FLUTTER_BUILD_NUMBER`が
+  解決されず`CFBundleVersion`が空になると、拡張のインストールに失敗する
+  （`Failed to create app extension placeholder`）
+
+## 10. 配布
 
 - **iPhone専用**（`TARGETED_DEVICE_FAMILY = 1`）。画面はすべて縦1カラムの前提で
   作っており、iPadの広い画面では余白ばかりが広がって使いやすくならない。
@@ -301,7 +342,7 @@ test/ui/        配色のコントラスト（WCAG AA）と、文字列の折り
   キャッチコピーの帯を足した提出用の両方を置いてある。
   装飾版は`scripts/make_store_screenshots.py`で生成する
 
-## 10. 意図的にやっていないこと
+## 11. 意図的にやっていないこと
 
 - 状態管理をRiverpodの`Notifier`以上に複雑なもの（Bloc等）にしていない。画面数・状態の
   複雑さに対してRiverpodのAsyncNotifier + Providerで十分なため

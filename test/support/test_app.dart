@@ -9,6 +9,7 @@ import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
+import 'package:saitama_gomi/data/widget_bridge.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
 import 'package:saitama_gomi/domain/collection_calendar.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
@@ -222,6 +223,8 @@ Future<void> pumpRootApp(
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),
         ),
+        // ウィジェットへの書き出しはプラットフォームチャネル越しなので動かない。
+        widgetBridgeProvider.overrideWithValue(const NoopWidgetBridge()),
         wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
@@ -270,6 +273,8 @@ Future<void> pumpApp(
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),
         ),
+        // ウィジェットへの書き出しはプラットフォームチャネル越しなので動かない。
+        widgetBridgeProvider.overrideWithValue(const NoopWidgetBridge()),
         wasteDictionaryProvider.overrideWith(
           (ref) async => dictionary ?? testDictionary,
         ),

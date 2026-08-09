@@ -5,10 +5,12 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'data/area_catalog.dart';
 import 'data/notification_repository.dart';
 import 'data/settings_repository.dart';
+import 'data/widget_bridge.dart';
 import 'data/waste_dictionary.dart';
 import 'domain/collection_area.dart';
 import 'domain/collection_calendar.dart';
 import 'domain/collection_reminder.dart';
+import 'domain/widget_payload.dart';
 
 final settingsRepositoryProvider = FutureProvider<SettingsRepository>(
   (ref) => SettingsRepository.open(),
@@ -174,3 +176,32 @@ final notificationProvider =
     AsyncNotifierProvider<NotificationController, NotificationSettings>(
       NotificationController.new,
     );
+
+/// ホーム画面ウィジェットへの書き出し口。テストからは差し替える。
+final widgetBridgeProvider = Provider<WidgetBridge>(
+  (ref) => WidgetBridge.create(),
+);
+
+/// 地区が変わるたびに、ホーム画面ウィジェットの内容を書き直す。
+///
+/// ウィジェットはアプリが起動していなくても表示され続けるので、
+/// 「アプリを開いたとき」に先の分までまとめて渡しておく。
+/// 日付が変わったときの切り替えはウィジェット側が自分で行う
+/// （WidgetPayloadに複数日ぶん入っている）。
+class WidgetSync {
+  const WidgetSync(this._bridge);
+
+  final WidgetBridge _bridge;
+
+  Future<void> sync(CollectionCalendar? calendar, DateTime now) async {
+    if (calendar == null || calendar.area.isEmpty) {
+      await _bridge.clear();
+      return;
+    }
+    await _bridge.update(WidgetPayload.build(calendar, now));
+  }
+}
+
+final widgetSyncProvider = Provider<WidgetSync>(
+  (ref) => WidgetSync(ref.watch(widgetBridgeProvider)),
+);

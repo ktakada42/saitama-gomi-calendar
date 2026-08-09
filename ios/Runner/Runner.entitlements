@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- ウィジェットは別プロセスなので、通常の保存領域は読めない。
+	     App Groupで共有した領域を通して収集日を渡す。 -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.io.github.ktakada42.saitamagomicalendar</string>
+	</array>
+</dict>
+</plist>
