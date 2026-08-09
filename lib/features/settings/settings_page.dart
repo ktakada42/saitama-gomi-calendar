@@ -76,7 +76,6 @@ class SettingsPage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.edit_calendar_outlined),
             title: const Text('収集曜日を修正する'),
-            subtitle: const Text('実際の収集日と違うときに直せます'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -176,8 +175,8 @@ class _NotificationTiles extends ConsumerWidget {
       children: [
         SwitchListTile(
           secondary: const Icon(Icons.notifications_outlined),
-          title: const Text('前日にお知らせ'),
-          subtitle: const Text('翌日のごみの分別を前日にお知らせします。'),
+          title: const Text('通知'),
+          subtitle: const Text('ごみ収集日の前日にお知らせします'),
           value: settings.enabled,
           onChanged: (value) => _toggle(context, ref, value),
         ),

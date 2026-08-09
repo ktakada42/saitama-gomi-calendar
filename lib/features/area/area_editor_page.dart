@@ -128,7 +128,7 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
     final catalog = ref.watch(areaCatalogProvider).value;
 
     return Scaffold(
-      appBar: AppBar(title: Text(_isManualEntry ? '収集曜日を自分で設定' : '収集曜日の確認')),
+      appBar: AppBar(title: Text(_isManualEntry ? '収集曜日を自分で設定' : '収集曜日')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
@@ -136,7 +136,7 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
             _isManualEntry
                 ? 'お住まいの区と、分別ごとの収集曜日を設定してください。'
                       '曜日は市から配布される収集日カレンダーで確認できます。'
-                : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで調整できます。',
+                : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで修正できます。',
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 20),
@@ -163,12 +163,12 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
             _SectionTitle('お住まいの地区'),
             const SizedBox(height: 8),
             Text(
-              keepParenthesesTogether('$_ward　${widget.initial!.name}'),
+              keepParenthesesTogether(widget.initial!.label),
               style: theme.textTheme.bodyLarge,
             ),
             const SizedBox(height: 4),
             Text(
-              '地区そのものを選び直すときは、設定の「お住まいの地区」から。',
+              '地区を変更したいときは、設定の「お住まいの地区」から。',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
