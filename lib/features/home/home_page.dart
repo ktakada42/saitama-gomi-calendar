@@ -20,12 +20,22 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final calendar = ref.watch(calendarProvider);
     final today = ref.watch(todayProvider);
+    final now = ref.watch(nowProvider);
     if (calendar == null) return const SizedBox.shrink();
 
     final area = calendar.area;
-    final tomorrow = calendar.dayOf(today.add(const Duration(days: 1)));
-    final todayDay = calendar.dayOf(today);
-    // 明日と今日は個別に出すので、一覧はあさって以降から。
+    // 収集日の朝は、出す期限を過ぎるまで「今日」を大きく出す。
+    // まだ出しに行けるのに「明日」を大きく出すと、その日の収集を逃す。
+    final featured = calendar.featuredDay(now);
+    final isFeaturingToday = CollectionCalendar.isSameDate(
+      featured.date,
+      today,
+    );
+    // 大きく出していない方を、下の小さい行に回す。
+    final secondary = calendar.dayOf(
+      isFeaturingToday ? today.add(const Duration(days: 1)) : today,
+    );
+    // 今日と明日は個別に出すので、一覧はあさって以降から。
     final upcoming = calendar.upcoming(
       today.add(const Duration(days: 2)),
       limit: 6,
@@ -39,9 +49,19 @@ class HomePage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
-          _TomorrowCard(day: tomorrow, area: area, today: today),
+          _FeaturedCard(
+            day: featured,
+            area: area,
+            today: today,
+            label: isFeaturingToday ? '今日' : '明日',
+          ),
           const SizedBox(height: 12),
-          _TodayRow(day: todayDay, area: area, today: today),
+          _SecondaryRow(
+            day: secondary,
+            area: area,
+            today: today,
+            label: isFeaturingToday ? '明日' : '今日',
+          ),
           const SizedBox(height: 24),
           if (area.isEmpty)
             const _EmptyAreaNotice()
@@ -64,17 +84,21 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-/// 明日の収集。このアプリでいちばん大きく出す情報。
-class _TomorrowCard extends StatelessWidget {
-  const _TomorrowCard({
+/// いちばん大きく出す収集日。ふだんは明日、収集日の朝は今日。
+class _FeaturedCard extends StatelessWidget {
+  const _FeaturedCard({
     required this.day,
     required this.area,
     required this.today,
+    required this.label,
   });
 
   final CollectionDay day;
   final CollectionArea area;
   final DateTime today;
+
+  /// 「今日」か「明日」。
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +129,7 @@ class _TomorrowCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '明日',
+                    label,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: accent,
@@ -178,12 +202,19 @@ class _TomorrowCard extends StatelessWidget {
   }
 }
 
-class _TodayRow extends StatelessWidget {
-  const _TodayRow({required this.day, required this.area, required this.today});
+/// 大きく出していない方の日。今日か明日のどちらか。
+class _SecondaryRow extends StatelessWidget {
+  const _SecondaryRow({
+    required this.day,
+    required this.area,
+    required this.today,
+    required this.label,
+  });
 
   final CollectionDay day;
   final CollectionArea area;
   final DateTime today;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +228,7 @@ class _TodayRow extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              '今日',
+              label,
               style: theme.textTheme.labelLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

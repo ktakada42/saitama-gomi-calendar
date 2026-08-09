@@ -55,8 +55,17 @@ class CollectionArea {
   bool get isCustom => id == customAreaId;
 
   /// この区分をその日に出すときの期限。早朝収集地区のもえるごみだけ5:30。
+  ///
+  /// 「その日にまだ出せるか」の判定に使うので、表示用の文字列とは別に
+  /// 時刻そのものを返す。
+  DepositDeadline depositDeadlineAt(GarbageCategory category) =>
+      earlyMorning && category == GarbageCategory.burnable
+      ? const DepositDeadline(5, 30)
+      : const DepositDeadline(8, 30);
+
+  /// 表示用の期限。「5:30」「8:30」。
   String depositDeadline(GarbageCategory category) =>
-      earlyMorning && category == GarbageCategory.burnable ? '5:30' : '8:30';
+      depositDeadlineAt(category).label;
 
   List<CollectionRule> rulesFor(GarbageCategory category) =>
       rules[category] ?? const [];
@@ -123,4 +132,30 @@ class CollectionArea {
     name: '自分で設定した地区',
     rules: const {},
   );
+}
+
+/// ごみを出せる時刻の期限。
+///
+/// 市の収集は朝8時30分まで（早朝収集地区のもえるごみは5時30分まで）。
+/// それを過ぎると、その日はもう出せない。
+class DepositDeadline {
+  const DepositDeadline(this.hour, this.minute);
+
+  final int hour;
+  final int minute;
+
+  String get label => '$hour:${minute.toString().padLeft(2, '0')}';
+
+  /// [now] がこの期限を過ぎているか。ちょうど期限の時刻はまだ出せる扱い。
+  bool isPassedAt(DateTime now) {
+    final limit = DateTime(now.year, now.month, now.day, hour, minute);
+    return now.isAfter(limit);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is DepositDeadline && other.hour == hour && other.minute == minute;
+
+  @override
+  int get hashCode => Object.hash(hour, minute);
 }

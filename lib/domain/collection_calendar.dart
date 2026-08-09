@@ -42,6 +42,33 @@ class CollectionCalendar {
     ];
   }
 
+  /// [now] の時点で、その日のごみをまだ出しに行けるか。
+  ///
+  /// 収集は朝8時30分まで（早朝収集地区のもえるごみは5時30分まで）。
+  /// 収集日の朝、期限前ならまだ間に合う。
+  ///
+  /// 複数の区分が重なる日は、いちばん遅い期限で見る。ひとつでも
+  /// まだ出せるものがあれば、その日は「行ける日」だから。
+  /// （市のデータではもえるごみと他の区分が同じ日になる地区は無いので、
+  /// 実際には5:30と8:30が混ざることはない）
+  bool canStillPutOut(CollectionDay day, DateTime now) {
+    if (day.isEmpty || !isSameDate(day.date, now)) return false;
+    return day.categories
+        .map(area.depositDeadlineAt)
+        .any((deadline) => !deadline.isPassedAt(now));
+  }
+
+  /// ホームでいちばん大きく出す日。
+  ///
+  /// 収集日の朝は、期限を過ぎるまで「今日」を出す。まだ出しに行けるのに
+  /// 「明日」を大きく出すと、その日の収集を逃してしまうため。
+  /// 期限を過ぎたら「明日」に切り替える。
+  CollectionDay featuredDay(DateTime now) {
+    final today = dayOf(now);
+    if (canStillPutOut(today, now)) return today;
+    return dayOf(dateOnly(now).add(const Duration(days: 1)));
+  }
+
   CollectionDay dayOf(DateTime date) {
     final day = dateOnly(date);
     return CollectionDay(day, categoriesOn(day));

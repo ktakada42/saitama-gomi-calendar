@@ -88,4 +88,78 @@ void main() {
     expect(find.text('あさって\n8月11日(火)'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  group('出す期限をまたぐと大きく出す日が入れ替わる', () {
+    // sampleAreaのもえるごみは月・木。2026年8月6日は木曜。
+
+    testWidgets('収集日の朝、期限前は今日を大きく出す', (tester) async {
+      await pumpApp(
+        tester,
+        const HomePage(),
+        today: DateTime(2026, 8, 6),
+        now: DateTime(2026, 8, 6, 7, 0),
+      );
+
+      // まだ出しに行けるので、今日を大きく出す。
+      expect(find.text('今日'), findsOneWidget);
+      expect(find.text('8月6日(木)'), findsOneWidget);
+      // 大きい方に区分名（見出し）が出る。
+      expect(find.text('もえるごみ'), findsWidgets);
+      expect(find.text('朝8:30までに出す'), findsOneWidget);
+      // 明日は小さい行に回る。
+      expect(find.text('明日'), findsOneWidget);
+    });
+
+    testWidgets('期限を過ぎたら明日を大きく出す', (tester) async {
+      await pumpApp(
+        tester,
+        const HomePage(),
+        today: DateTime(2026, 8, 6),
+        now: DateTime(2026, 8, 6, 9, 0),
+      );
+
+      // 今日はもう出せないので、明日に切り替える。
+      expect(find.text('明日'), findsOneWidget);
+      expect(find.text('8月7日(金)'), findsOneWidget);
+      expect(find.text('今日'), findsOneWidget);
+    });
+
+    testWidgets('早朝収集地区は5:30で切り替わる', (tester) async {
+      final early = sampleArea.copyWith(earlyMorning: true);
+
+      // 7時。ふつうの地区ならまだ今日だが、早朝地区は過ぎている。
+      await pumpApp(
+        tester,
+        const HomePage(),
+        area: early,
+        today: DateTime(2026, 8, 6),
+        now: DateTime(2026, 8, 6, 7, 0),
+      );
+      expect(find.text('8月7日(金)'), findsOneWidget);
+
+      // 5時ならまだ間に合う。
+      await pumpApp(
+        tester,
+        const HomePage(),
+        area: early,
+        today: DateTime(2026, 8, 6),
+        now: DateTime(2026, 8, 6, 5, 0),
+      );
+      expect(find.text('8月6日(木)'), findsOneWidget);
+      expect(find.text('朝5:30までに出す'), findsOneWidget);
+    });
+
+    testWidgets('収集のない日の朝は、これまでどおり明日を出す', (tester) async {
+      // 8月7日（金）は収集がない。
+      await pumpApp(
+        tester,
+        const HomePage(),
+        today: DateTime(2026, 8, 7),
+        now: DateTime(2026, 8, 7, 7, 0),
+      );
+
+      expect(find.text('明日'), findsOneWidget);
+      expect(find.text('8月8日(土)'), findsOneWidget);
+    });
+  });
 }
