@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../providers.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/section_header.dart';
+import '../dictionary/oversized_guide_page.dart';
 
 /// アプリの素性を並べる画面。
 ///
@@ -50,6 +51,20 @@ class AboutPage extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
+            ),
+          ),
+          // 早見表から辿るのが主な道だが、品目が載っていないものを捨てたい
+          // ときに行き場がなくなる。ここからも開けるようにしておく。
+          const SectionHeader('ごみの出し方'),
+          ListTile(
+            leading: const Icon(Icons.chair_outlined),
+            title: const Text('粗大ごみの出し方'),
+            subtitle: const Text('90cm以上のもの。料金と申込み先'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const OversizedGuidePage(),
+              ),
             ),
           ),
           const SectionHeader('データの出典'),

@@ -5,6 +5,7 @@ import '../../domain/waste_item.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
+import 'oversized_guide_page.dart';
 
 /// 品目1件の詳しい出し方。
 ///
@@ -74,6 +75,24 @@ class _WasteItemSheet extends StatelessWidget {
                 Text(
                   keepParenthesesTogether(mark.description),
                   style: theme.textTheme.bodyMedium,
+                ),
+              ],
+              // 早見表は「直接持込みまたは戸別収集」までしか書いていない。
+              // いくらかかるのか、どこへ申し込むのかはここから辿れるようにする。
+              if (item.categoryId == 'oversized') ...[
+                const SizedBox(height: 20),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            OversizedGuidePage(highlightedItem: item.name),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.payments_outlined, size: 18),
+                  label: const Text('料金と申込み方法を見る'),
                 ),
               ],
               const SizedBox(height: 24),

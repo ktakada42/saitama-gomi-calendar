@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
+import 'package:saitama_gomi/domain/oversized_guide.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
 import 'package:saitama_gomi/data/widget_bridge.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
@@ -63,6 +65,15 @@ final testToday = DateTime(2026, 8, 6);
 
 /// 分別早見表のテスト用データ。
 /// 5区分に入るものと、入らないもの（粗大ごみ）の両方を持たせてある。
+/// 粗大ごみの案内は、同梱している本物を読む。
+///
+/// 画面に出るのは実際に払う金額なので、作り物に置き換えると
+/// 「値が正しく出ているか」を確かめたことにならない。
+final testOversizedGuide = OversizedGuide.fromJson(
+  jsonDecode(File('assets/data/oversized.json').readAsStringSync())
+      as Map<String, dynamic>,
+);
+
 final testDictionary = WasteDictionary.fromJson({
   'source': 'テスト用の分別早見表',
   'sourceUrl': 'https://example.com/dictionary',
@@ -226,6 +237,7 @@ Future<void> pumpRootApp(
         // ウィジェットへの書き出しはプラットフォームチャネル越しなので動かない。
         widgetBridgeProvider.overrideWithValue(const NoopWidgetBridge()),
         wasteDictionaryProvider.overrideWith((ref) async => testDictionary),
+        oversizedGuideProvider.overrideWith((ref) async => testOversizedGuide),
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: const SaitamaGomiApp(),
@@ -269,6 +281,7 @@ Future<void> pumpApp(
           ),
         ),
         areaCatalogProvider.overrideWith((ref) async => testCatalog),
+        oversizedGuideProvider.overrideWith((ref) async => testOversizedGuide),
         // OSの通知プラグインはテスト環境では初期化できないので差し替える。
         notificationRepositoryProvider.overrideWith(
           (ref) async => const NoopNotificationRepository(),
