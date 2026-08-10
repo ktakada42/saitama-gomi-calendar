@@ -135,7 +135,7 @@ describe('合言葉', () => {
   it('違っていれば断る', async () => {
     const response = await ask(
       { deviceId: newDevice(), question: '傘', candidates: CANDIDATES },
-      { 'x-app-token': 'ちがう' },
+      { 'x-app-token': 'wrong-token' },
     );
     expect(response.status).toBe(401);
     expect(model).not.toHaveBeenCalled();

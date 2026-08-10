@@ -7,9 +7,12 @@ export default defineConfig({
   plugins: [
     cloudflareTest({
       wrangler: { configPath: './wrangler.jsonc' },
+      // Workers AI には手元での代役が無いので、既定では本物に繋ぎにいく。
+      // それだとテストにCloudflareの資格情報が要るうえ、CIから外に出て
+      // 課金もされる。ここは切って、テスト側で AI を差し替える。
+      remoteBindings: false,
       miniflare: {
         bindings: {
-          ANTHROPIC_API_KEY: 'test-api-key',
           APP_TOKEN: 'test-app-token',
           IP_SALT: 'test-salt',
           ADMIN_TOKEN: 'test-admin-token',
