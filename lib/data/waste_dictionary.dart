@@ -24,20 +24,51 @@ class WasteDictionary {
   /// 出典のURL。
   final String sourceUrl;
 
+  /// 早見表と、図解ページからの補いを合わせて読む。
+  ///
+  /// 早見表（`dictionary.json`）は抽出スクリプトの出力そのままにしておく。
+  /// 補い（`dictionary_extra.json`）を混ぜて書き戻すと、市が資料を更新して
+  /// 抽出をやり直したときに、手で足したぶんが消える。
   static Future<WasteDictionary> load() async {
     final raw = await rootBundle.loadString('assets/data/dictionary.json');
-    return WasteDictionary.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final extra = await rootBundle.loadString(
+      'assets/data/dictionary_extra.json',
+    );
+    return WasteDictionary.fromJson(
+      jsonDecode(raw) as Map<String, dynamic>,
+      extra: jsonDecode(extra) as Map<String, dynamic>,
+    );
   }
 
-  factory WasteDictionary.fromJson(Map<String, dynamic> json) =>
-      WasteDictionary(
-        items: [
-          for (final item in (json['items'] as List<dynamic>? ?? const []))
-            WasteItem.fromJson(item as Map<String, dynamic>),
-        ],
-        source: json['source'] as String? ?? '',
-        sourceUrl: json['sourceUrl'] as String? ?? '',
-      );
+  factory WasteDictionary.fromJson(
+    Map<String, dynamic> json, {
+    Map<String, dynamic>? extra,
+  }) {
+    final items = [
+      for (final item in (json['items'] as List<dynamic>? ?? const []))
+        WasteItem.fromJson(item as Map<String, dynamic>),
+      for (final item in (extra?['items'] as List<dynamic>? ?? const []))
+        WasteItem.fromJson(item as Map<String, dynamic>),
+    ];
+    // 五十音の索引が飛ばないよう、行の見出しで並べ直す。
+    // 補いを後ろに繋いだままだと、「わ」の次に「い」が来る。
+    items.sort((a, b) => _kanaOrder(a.kanaHead) - _kanaOrder(b.kanaHead));
+    return WasteDictionary(
+      items: items,
+      source: json['source'] as String? ?? '',
+      sourceUrl: json['sourceUrl'] as String? ?? '',
+    );
+  }
+
+  /// 五十音の並び順。冊子の並びに合わせる。
+  static int _kanaOrder(String head) {
+    const order =
+        'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほ'
+        'まみむめもやゆよらりるれろわをん';
+    final index = order.indexOf(head);
+    // 知らない見出しは末尾に置く。落とすと品目ごと消える。
+    return index < 0 ? order.length : index;
+  }
 
   /// [query]に当てはまる品目。空文字なら全件。
   ///

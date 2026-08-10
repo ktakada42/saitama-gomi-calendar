@@ -17,12 +17,18 @@ void main() {
       jsonDecode(File('assets/data/not_accepted.json').readAsStringSync())
           as Map<String, dynamic>,
     );
-    final raw = File('assets/data/dictionary.json').readAsStringSync();
+    // 早見表と、図解ページからの補いの両方。アプリが見るのはこの合計。
     dictionary = {
-      for (final item
-          in (jsonDecode(raw) as Map<String, dynamic>)['items'] as List)
-        (item as Map<String, dynamic>)['name'] as String:
-            item['category'] as String,
+      for (final path in [
+        'assets/data/dictionary.json',
+        'assets/data/dictionary_extra.json',
+      ])
+        for (final item
+            in (jsonDecode(File(path).readAsStringSync())
+                    as Map<String, dynamic>)['items']
+                as List)
+          (item as Map<String, dynamic>)['name'] as String:
+              item['category'] as String,
     };
   });
 
@@ -144,15 +150,15 @@ void main() {
       }
     });
 
-    test('収集できない35件のうち、行き先が決まっていないものを把握している', () {
+    test('収集できないもの全件に、行き先が決まっている', () {
       final unmapped = [
         for (final entry in dictionary.entries)
           if (entry.value == 'notAccepted' &&
               guide.destinationFor(entry.key) == null)
             entry.key,
       ];
-      // 冊子P10・P11に窓口の記載が無いものだけが残る。
-      // 増えていたら、対応づけの漏れを疑う。
+      // 品目を足したのに対応づけを忘れると、ここで気づける。
+      // 実際、図解ページから24件足したときに一度落ちた。
       expect(unmapped, isEmpty, reason: unmapped.join('、'));
     });
   });
