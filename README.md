@@ -133,6 +133,11 @@ TestFlightへの配信は1コマンドで行える。
 scripts/build_testflight.sh <issuer-id>
 ```
 
+issuer IDはこのリポジトリの持ち主に固有の値なので、公開リポジトリには書かず
+引数で渡す（`ASC_ISSUER_ID` でも可）。APIキーのIDは
+`~/.appstoreconnect/private_keys/AuthKey_*.p8` のファイル名から拾うので、
+ふだんは省略してよい。
+
 `flutter build ipa` を直接使わないのは、あれが自動署名を前提にしていてXcodeに
 サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
 書き出しは手動署名で行っている。
@@ -148,3 +153,11 @@ App Store用のスクリーンショットは `store_assets/screenshots/`。装�
 
 [docs/next-phase.md](docs/next-phase.md) は地区表の取り込みとローカル通知を扱った
 一つ前のフェーズの記録で、どちらも実装済み。
+
+## ライセンス
+
+MIT License（[LICENSE](LICENSE)）。
+
+ただし `assets/data/` の収集日・分別データはさいたま市の公開資料に由来し、
+元の資料の権利は市に帰属する。同梱フォントはSIL OFL。
+詳細は[LICENSE](LICENSE)の後半を参照。

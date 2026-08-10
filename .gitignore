@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# App Store Connect のAPIキー。~/.appstoreconnect/ に置く運用だが、
+# 取り違えてリポジトリに入れてしまうと配信権限がそのまま漏れる。
+*.p8
+AuthKey_*

@@ -1,0 +1,50 @@
+MIT License
+
+Copyright (c) 2026 Keisuke Takada
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+このリポジトリには、MITライセンスの対象にならないものが含まれます。
+
+■ さいたま市の公開資料に由来するデータ
+
+  assets/data/areas.json      地区別の収集曜日
+  assets/data/dictionary.json ごみの分別早見表
+
+  さいたま市が公開している「家庭ごみの出し方マニュアル」から機械的に
+  抽出・要約したものです。元の資料の権利はさいたま市に帰属します。
+  再利用の可否は市の定めに従ってください。
+  https://www.city.saitama.lg.jp/001/006/010/003/p005300.html
+
+■ 同梱フォント
+
+  assets/fonts/NotoSansJP-Variable.ttf
+
+  SIL Open Font License 1.1。全文は assets/fonts/NotoSansJP-OFL.txt。
+
+■ アプリ名・アイコン
+
+  「さいたま市ゴミ収集カレンダー（非公式）」の名称と、design/ 配下の
+  アイコンは、このアプリを識別するためのものです。MITライセンスは
+  ソースコードに対するもので、これらを使って別のアプリを配布することを
+  認めるものではありません。
+
+  なお本アプリは、さいたま市が提供する公式のアプリではありません。
