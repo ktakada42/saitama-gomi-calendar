@@ -1,0 +1,546 @@
+{
+  "version": 1,
+  "source": "さいたま市「家庭ごみの出し方マニュアル」令和8年度版 P6・P8・P10〜P12（図解ページ）",
+  "note": "早見表（P14〜17）に載っていないが、同じマニュアルの図解ページに出し先が明記されている品目。市自身が「早見表に記載のない品目は、市ホームページやごみ分別アプリで検索できます」と書いているとおり、早見表は市の資料の一部でしかない。飲料の缶のような基本的な品目も早見表には無い。",
+  "items": [
+    {
+      "name": "飲料のかん",
+      "kanaHead": "い",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "ミルクのかん",
+      "kanaHead": "み",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "缶詰のかん",
+      "kanaHead": "か",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "お茶のかん",
+      "kanaHead": "お",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "お菓子のかん",
+      "kanaHead": "お",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "油のかん",
+      "kanaHead": "あ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "かんとしては出せません",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "ジャムのびん",
+      "kanaHead": "し",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "調味料のびん",
+      "kanaHead": "ち",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "コーヒーのびん",
+      "kanaHead": "こ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "栄養ドリンクのびん",
+      "kanaHead": "え",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "フタをはずし、中をすすいで透明袋へ",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "油のびん",
+      "kanaHead": "あ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "びんとしては出せません",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "びんのフタ（金属製）",
+      "kanaHead": "ひ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "かんのフタ（金属製）",
+      "kanaHead": "か",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "かんと一緒に出す",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "ペットボトルのフタ",
+      "kanaHead": "へ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "容器包装プラスチックとして出す",
+      "marks": [
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "びん・かんのフタ（プラスチック製・プラマークあり）",
+      "kanaHead": "ひ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "容器包装プラスチックとして出す",
+      "marks": [
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "びん・かんのフタ（プラスチック製・プラマークなし）",
+      "kanaHead": "ひ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "",
+      "marks": [
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "おそうざいの容器",
+      "kanaHead": "お",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "軽くすすいで汚れが落ちる程度のもの",
+      "marks": [
+        "star1",
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "飲料の容器（プラスチック製）",
+      "kanaHead": "い",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "軽くすすいで汚れが落ちる程度のもの",
+      "marks": [
+        "star1",
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "梱包材",
+      "kanaHead": "こ",
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "プラマークのついているもの",
+      "marks": [
+        "star4"
+      ],
+      "page": "P6"
+    },
+    {
+      "name": "油食品等の容器",
+      "kanaHead": "あ",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "汚れが取れないため",
+      "marks": [],
+      "page": "P6"
+    },
+    {
+      "name": "耐火性ガラス",
+      "kanaHead": "た",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "紙などでくるんで「割れ物」と表示",
+      "marks": [],
+      "page": "P8"
+    },
+    {
+      "name": "殺虫剤（くん煙・くん蒸など）",
+      "kanaHead": "さ",
+      "category": "nonBurnable",
+      "categoryLabel": "もえないごみ",
+      "note": "スプレー式でないもの。スプレー式は有害危険ごみ",
+      "marks": [],
+      "page": "P8"
+    },
+    {
+      "name": "CD",
+      "kanaHead": "し",
+      "category": "burnable",
+      "categoryLabel": "もえるごみ",
+      "note": "DVDも同じ",
+      "marks": [],
+      "page": "P8"
+    },
+    {
+      "name": "ワインセラー",
+      "kanaHead": "わ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家電リサイクル対象品目",
+      "marks": [
+        "page10"
+      ],
+      "page": "P10"
+    },
+    {
+      "name": "太陽ソーラー",
+      "kanaHead": "た",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "うす",
+      "kanaHead": "う",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ドラムかん",
+      "kanaHead": "と",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "浴槽",
+      "kanaHead": "よ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ワイヤーロープ",
+      "kanaHead": "わ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "エンジン機器",
+      "kanaHead": "え",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "流し台",
+      "kanaHead": "な",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ。ステンレス製品",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "レンジフード",
+      "kanaHead": "れ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ。ステンレス製品",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ホーロー製品",
+      "kanaHead": "ほ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "許可業者（㈲太盛）へ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "揮発油",
+      "kanaHead": "き",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。有害性のあるごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "劇薬",
+      "kanaHead": "け",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。有害性のあるごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "インスリン注射用の針",
+      "kanaHead": "い",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "処方を行った医療機関等へ返却",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "点滴針（個人使用）",
+      "kanaHead": "て",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "処方を行った医療機関等へ返却",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ブロック塀",
+      "kanaHead": "ふ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "廃材",
+      "kanaHead": "は",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "洗面台",
+      "kanaHead": "せ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "便器",
+      "kanaHead": "へ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ドア（鉄製）",
+      "kanaHead": "と",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "石こうボード",
+      "kanaHead": "せ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "家屋等の解体や改築に伴うごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "電動キックボード",
+      "kanaHead": "て",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。二輪車リサイクルの対象外",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ATV（バギー車）",
+      "kanaHead": "え",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。二輪車リサイクルの対象外",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "サイドカー",
+      "kanaHead": "さ",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。二輪車リサイクルの対象外",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "ミニカー（一人乗りの車）",
+      "kanaHead": "み",
+      "category": "notAccepted",
+      "categoryLabel": "収集できないもの",
+      "note": "販売店、専門業者へ。二輪車リサイクルの対象外。おもちゃのミニカーはもえないごみ",
+      "marks": [
+        "page11"
+      ],
+      "page": "P11"
+    },
+    {
+      "name": "加熱式タバコ",
+      "kanaHead": "か",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ",
+      "marks": [],
+      "page": "P12"
+    },
+    {
+      "name": "電子タバコ",
+      "kanaHead": "て",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ",
+      "marks": [],
+      "page": "P12"
+    },
+    {
+      "name": "ハンディクリーナー",
+      "kanaHead": "は",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ。充電式電池は外して電池回収ボックスへ",
+      "marks": [],
+      "page": "P12"
+    },
+    {
+      "name": "電動シェーバー",
+      "kanaHead": "て",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスへ。充電式電池は外して電池回収ボックスへ",
+      "marks": [],
+      "page": "P12"
+    },
+    {
+      "name": "HDDレコーダ",
+      "kanaHead": "え",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスに入らない場合は、ごみ処理施設へ直接持込み",
+      "marks": [],
+      "page": "P12"
+    },
+    {
+      "name": "CDプレーヤー",
+      "kanaHead": "し",
+      "category": "smallAppliance",
+      "categoryLabel": "小型家電",
+      "note": "回収ボックスに入らない場合は、ごみ処理施設へ直接持込み",
+      "marks": [],
+      "page": "P12"
+    }
+  ]
+}
