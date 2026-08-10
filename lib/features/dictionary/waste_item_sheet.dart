@@ -5,6 +5,7 @@ import '../../domain/waste_item.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
+import 'collection_boxes_page.dart';
 import 'not_accepted_guide_page.dart';
 import 'oversized_guide_page.dart';
 
@@ -80,6 +81,25 @@ class _WasteItemSheet extends StatelessWidget {
               ],
               // 早見表は「直接持込みまたは戸別収集」までしか書いていない。
               // いくらかかるのか、どこへ申し込むのかはここから辿れるようにする。
+              // 「回収ボックスへ」だけでは、どこにあるのか分からない。
+              // 設定済みの区の設置場所まで辿れるようにする。
+              if (item.categoryId == 'smallAppliance' ||
+                  item.categoryId == 'battery') ...[
+                const SizedBox(height: 20),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            CollectionBoxesPage(focusedBoxId: item.categoryId),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.place_outlined, size: 18),
+                  label: const Text('回収ボックスの場所を見る'),
+                ),
+              ],
               // 「市では収集できません」で終わらせると、その先を自分で
               // 調べることになる。窓口まで辿れるようにする。
               if (item.categoryId == 'notAccepted') ...[

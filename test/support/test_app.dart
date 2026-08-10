@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
+import 'package:saitama_gomi/domain/collection_boxes.dart';
 import 'package:saitama_gomi/domain/not_accepted_guide.dart';
 import 'package:saitama_gomi/domain/oversized_guide.dart';
 import 'package:saitama_gomi/data/notification_repository.dart';
@@ -70,6 +71,11 @@ final testToday = DateTime(2026, 8, 6);
 ///
 /// 画面に出るのは実際に払う金額なので、作り物に置き換えると
 /// 「値が正しく出ているか」を確かめたことにならない。
+final testCollectionBoxes = CollectionBoxes.fromJson(
+  jsonDecode(File('assets/data/collection_boxes.json').readAsStringSync())
+      as Map<String, dynamic>,
+);
+
 final testNotAcceptedGuide = NotAcceptedGuide.fromJson(
   jsonDecode(File('assets/data/not_accepted.json').readAsStringSync())
       as Map<String, dynamic>,
@@ -247,6 +253,9 @@ Future<void> pumpRootApp(
         notAcceptedGuideProvider.overrideWith(
           (ref) async => testNotAcceptedGuide,
         ),
+        collectionBoxesProvider.overrideWith(
+          (ref) async => testCollectionBoxes,
+        ),
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
       ],
       child: const SaitamaGomiApp(),
@@ -293,6 +302,9 @@ Future<void> pumpApp(
         oversizedGuideProvider.overrideWith((ref) async => testOversizedGuide),
         notAcceptedGuideProvider.overrideWith(
           (ref) async => testNotAcceptedGuide,
+        ),
+        collectionBoxesProvider.overrideWith(
+          (ref) async => testCollectionBoxes,
         ),
         // OSの通知プラグインはテスト環境では初期化できないので差し替える。
         notificationRepositoryProvider.overrideWith(
