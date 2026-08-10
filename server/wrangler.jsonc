@@ -1,0 +1,51 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saitama-gomi-relay",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "observability": { "enabled": true },
+
+  // 同じ Cloudflare の上でモデルを動かす。外への通信も、質問文を預ける
+  // 相手も増えない。
+  "ai": { "binding": "AI" },
+
+  "durable_objects": {
+    "bindings": [{ "name": "GUARD", "class_name": "Guard" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Guard"] }],
+
+  // 上限はここで締める。コードを触らずに変えられるようにしてある。
+  // 秘密の値（APIキー等）はここには書かない。`wrangler secret put` を使う。
+  "vars": {
+    // 50件の検証で9モデルを比べて選んだ（scripts/ai_eval/）。
+    // Sonnet 5 と同成績（44/50、「該当なし」12/12）で費用は11分の1。
+    "MODEL": "@cf/openai/gpt-oss-20b",
+
+    // 出力の上限。1回あたりの費用の天井でもある。
+    // このモデルは答える前に考えるので、小さすぎると考えの途中で
+    // 切られて本文が空になる。実測の最大が1,784トークンだったので
+    // 2,048を取る。最悪でも1問0.12円ほどに収まる。
+    "MAX_OUTPUT_TOKENS": "2048",
+
+    // 入力の大きさ。長い文を送りつけてトークン代を焼かれないための歯止め。
+    "MAX_QUESTION_CHARS": "100",
+    "MAX_CANDIDATES": "30",
+    "MAX_CANDIDATE_CHARS": "40",
+
+    // 回数。1日20問は、ふつうに使う人がぶつからない程度に取ってある。
+    "DEVICE_DAILY_LIMIT": "20",
+    "IP_DAILY_LIMIT": "60",
+    "IP_BURST_LIMIT": "5",
+
+    // 金額。これが本命の安全弁。
+    // 月額だけだと初日に使い切って月末まで止まるので、日額も併せて置く。
+    // 1問あたり0.025円ほどなので、日300円で約12,000問。
+    "DAILY_BUDGET_JPY": "300",
+    "MONTHLY_BUDGET_JPY": "3000",
+
+    // 費用の計算に使う。値上げや為替で変わったらここを直す。
+    // neuron は Workers AI の課金単位。1問あたり14前後。
+    "USD_JPY": "160",
+    "USD_PER_1K_NEURONS": "0.011"
+  }
+}
