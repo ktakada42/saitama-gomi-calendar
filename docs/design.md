@@ -330,6 +330,25 @@ ios/GomiWidget/                  ウィジェット本体（SwiftUI）
   解決されず`CFBundleVersion`が空になると、拡張のインストールに失敗する
   （`Failed to create app extension placeholder`）
 
+### 署名
+
+App Groupを使うので、配信の署名まわりに要件が増えた。
+
+- **Release構成は手動署名に固定する**（`CODE_SIGN_STYLE = Manual` と
+  `PROVISIONING_PROFILE_SPECIFIER`）。自動署名のままだと
+  `iOS Team Provisioning Profile: *` が選ばれ、App Groupを含まないので
+  アーカイブが落ちる
+- **アーカイブは署名ありで作る**。`--no-codesign`だとentitlementsが
+  アーカイブに残らず、後から書き出しても署名に入らない。
+  ウィジェットが共有領域を読めなくなる
+- **プロファイルは2つ要る**（アプリ本体・ウィジェット）。
+  書き出しの`ExportOptions.plist`に両方書く
+
+App Group自体（`group.io.github.ktakada42.saitamagomicalendar`）の作成と、
+各Bundle IDへの割り当ては**Developerサイトでの手作業**。App Store Connect API
+には`appGroups`のエンドポイントが無い。Bundle IDの登録と
+App Groups capabilityの有効化まではAPIでできる。
+
 ## 10. 配布
 
 - **iPhone専用**（`TARGETED_DEVICE_FAMILY = 1`）。画面はすべて縦1カラムの前提で
