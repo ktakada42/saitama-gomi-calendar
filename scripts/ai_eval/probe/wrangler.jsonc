@@ -1,0 +1,8 @@
+{
+  "name": "gomi-eval-probe",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  // Workers AI を手元から叩くためだけの足場。デプロイはしない。
+  // `wrangler dev` で動かすと、バインディング越しに本物の Workers AI に繋がる。
+  "ai": { "binding": "AI" }
+}

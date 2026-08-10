@@ -1,0 +1,12 @@
+{
+  "name": "gomi-eval-probe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260810.1",
+    "wrangler": "^4.120.0"
+  }
+}
