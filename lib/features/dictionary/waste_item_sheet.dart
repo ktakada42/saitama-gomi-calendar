@@ -5,6 +5,7 @@ import '../../domain/waste_item.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
+import 'not_accepted_guide_page.dart';
 import 'oversized_guide_page.dart';
 
 /// 品目1件の詳しい出し方。
@@ -79,6 +80,24 @@ class _WasteItemSheet extends StatelessWidget {
               ],
               // 早見表は「直接持込みまたは戸別収集」までしか書いていない。
               // いくらかかるのか、どこへ申し込むのかはここから辿れるようにする。
+              // 「市では収集できません」で終わらせると、その先を自分で
+              // 調べることになる。窓口まで辿れるようにする。
+              if (item.categoryId == 'notAccepted') ...[
+                const SizedBox(height: 20),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            NotAcceptedGuidePage(focusedItem: item.name),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.support_agent_outlined, size: 18),
+                  label: const Text('どこへ持って行くか見る'),
+                ),
+              ],
               if (item.categoryId == 'oversized') ...[
                 const SizedBox(height: 20),
                 FilledButton.tonalIcon(
