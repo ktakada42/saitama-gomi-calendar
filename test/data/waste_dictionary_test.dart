@@ -81,13 +81,15 @@ void main() {
       // 「カーペット」のように途中に含むだけの品目の両方がある。
       final results = dictionary.search('ペット');
       expect(results.length, greaterThan(1));
+      // searchKey はカタカナをひらがなに寄せてある（「生ゴミ」と「生ごみ」を
+      // 同じものとして扱うため）ので、比較は表示名で行う。
       expect(
-        results.first.searchKey.startsWith('ペット'),
+        results.first.name.startsWith('ペット'),
         isTrue,
         reason: '前方一致（${results.first.name}）が先に来るべき',
       );
       // 途中に含むだけのものも結果には入る。
-      expect(results.any((item) => !item.searchKey.startsWith('ペット')), isTrue);
+      expect(results.any((item) => !item.name.startsWith('ペット')), isTrue);
     });
 
     test('記号や中黒を無視して引ける', () {

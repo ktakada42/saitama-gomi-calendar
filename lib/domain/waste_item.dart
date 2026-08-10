@@ -15,6 +15,7 @@ class WasteItem {
     required this.categoryLabel,
     required this.note,
     this.markIds = const [],
+    this.keywords = const [],
   });
 
   /// 品目名。「ペットボトル」「電気スタンド」など。
@@ -67,6 +68,13 @@ class WasteItem {
     };
   }
 
+  /// 市の表記と、利用者が打つ言葉のずれを埋める言い換え。
+  ///
+  /// 市は「かん」「びん」「フタ」とかなで書くが、利用者は「缶」「瓶」「ふた」
+  /// と打つ。品目を足しても、この対応が無いと引けない。
+  /// 決まっている言い換えは、推測させる前にここで確実に当てる。
+  final List<String> keywords;
+
   /// 検索用に正規化した名前。
   ///
   /// 早見表の品目名には「（プラスチック製）」のような補足や、中黒・波ダッシュが
@@ -74,16 +82,57 @@ class WasteItem {
   /// 困るので、記号を落として比較できるようにしておく。
   String get searchKey => _normalize(name);
 
+  /// 括弧の補足を落とした主要部。
+  ///
+  /// 「新聞紙（折込チラシ含）」の主要部は「新聞紙」。利用者が「古い新聞紙」と
+  /// 打ったとき、括弧の中まで含めた名前では入力に収まらず、0件になる。
+  String get _baseKey =>
+      _normalize(name.replaceAll(RegExp(r'[（(][^）)]*[）)]'), ''));
+
   bool matches(String query) {
     final q = _normalize(query);
     if (q.isEmpty) return true;
-    return searchKey.contains(q) || _normalize(categoryLabel).contains(q);
+    if (searchKey.contains(q) || _normalize(categoryLabel).contains(q)) {
+      return true;
+    }
+    if (keywords.any((word) => _normalize(word).contains(q))) return true;
+
+    // 入力のほうが品目名を含む場合も拾う。
+    //
+    // 利用者は品目名だけを打つとは限らない。「こわれた電球」「金属の
+    // フライパン」のように、状態や材質を添えて打つ。前方の一致だけを
+    // 見ていると、いちばん困っている人が0件になる。
+    //
+    // 1文字の名前（「石」「土」）は、長い入力にたまたま含まれることが
+    // 多いので除く。
+    if (searchKey.length >= 2 && q.contains(searchKey)) return true;
+    if (_baseKey.length >= 2 && q.contains(_baseKey)) return true;
+    return keywords.any((word) {
+      final normalized = _normalize(word);
+      return normalized.length >= 2 && q.contains(normalized);
+    });
   }
 
-  static String _normalize(String value) => value
-      .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
-      .replaceAll(RegExp(r'[〜~ー－―\-\s]'), '')
-      .toLowerCase();
+  static String _normalize(String value) => _foldKatakana(
+    value
+        .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
+        .replaceAll(RegExp(r'[〜~ー－―\-\s]'), '')
+        .toLowerCase(),
+  );
+
+  /// カタカナをひらがなに寄せる。
+  ///
+  /// 市は「生ごみ」、利用者は「生ゴミ」と打つ。どちらで打っても同じ品目に
+  /// 当たるようにする。
+  static String _foldKatakana(String value) {
+    final buffer = StringBuffer();
+    for (final code in value.runes) {
+      // 「ァ」〜「ヶ」を、同じ並びのひらがなへ移す。
+      final isKatakana = code >= 0x30A1 && code <= 0x30F6;
+      buffer.writeCharCode(isKatakana ? code - 0x60 : code);
+    }
+    return buffer.toString();
+  }
 
   factory WasteItem.fromJson(Map<String, dynamic> json) => WasteItem(
     name: json['name'] as String,
@@ -91,6 +140,10 @@ class WasteItem {
     categoryId: json['category'] as String,
     categoryLabel: json['categoryLabel'] as String,
     note: json['note'] as String? ?? '',
+    keywords: [
+      for (final word in (json['keywords'] as List<dynamic>? ?? const []))
+        word as String,
+    ],
     markIds: [
       for (final mark in (json['marks'] as List<dynamic>? ?? const []))
         mark as String,
