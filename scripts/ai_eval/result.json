@@ -1,0 +1,402 @@
+[
+  {
+    "q": "プラスチックの弁当箱",
+    "kind": "言い換え",
+    "expected": "弁当の容器（プラスチック製）",
+    "answer": "弁当の容器（プラスチック製）",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ペットボトルのフタ",
+    "kind": "判断が割れる",
+    "expected": "ペットボトル",
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "歯みがきのブラシ",
+    "kind": "言い換え",
+    "expected": "歯ブラシ",
+    "answer": "歯ブラシ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "飲み物を飲むときの細い管",
+    "kind": "言い換え",
+    "expected": "ストロー",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": false
+  },
+  {
+    "q": "こわれた電球",
+    "kind": "言い換え",
+    "expected": "電球",
+    "answer": "電球",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ジュースの缶",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "新聞",
+    "kind": "言い換え",
+    "expected": "新聞紙（折込チラシ含）",
+    "answer": "新聞紙（折込チラシ含）",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ダンボール",
+    "kind": "表記ゆれ",
+    "expected": "段ボール",
+    "answer": "段ボール",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "だんぼーる",
+    "kind": "表記ゆれ",
+    "expected": "段ボール",
+    "answer": "段ボール",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "食用の油",
+    "kind": "判断が割れる",
+    "expected": "油（食用油）",
+    "answer": "食用油",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "使い終わった乾電池",
+    "kind": "言い換え",
+    "expected": "乾電池",
+    "answer": "乾電池",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "こわれた傘",
+    "kind": "言い換え",
+    "expected": "かさ",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": false
+  },
+  {
+    "q": "赤ちゃんのオムツ",
+    "kind": "言い換え",
+    "expected": "紙おむつ",
+    "answer": "紙おむつ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "スプレー缶",
+    "kind": "表記ゆれ",
+    "expected": "スプレーかん",
+    "answer": "スプレーかん",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "料理に使うなべ",
+    "kind": "言い換え",
+    "expected": "なべ",
+    "answer": "なべ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "陶器のお皿",
+    "kind": "言い換え",
+    "expected": "皿（陶器・スチール・ガラス）",
+    "answer": "皿（陶器・スチール・ガラス）",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "自転車",
+    "kind": "そのまま",
+    "expected": "自転車",
+    "answer": "自転車",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "こたつ",
+    "kind": "そのまま",
+    "expected": "こたつ",
+    "answer": "こたつ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "electric fan",
+    "kind": "外国語",
+    "expected": "扇風機",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": false
+  },
+  {
+    "q": "ふとん",
+    "kind": "そのまま",
+    "expected": "ふとん",
+    "answer": "ふとん",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "本",
+    "kind": "判断が割れる",
+    "expected": "本",
+    "answer": "本",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ゴルフのクラブ",
+    "kind": "言い換え",
+    "expected": "ゴルフクラブ",
+    "answer": "ゴルフクラブ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "けいこうとう",
+    "kind": "ひらがな",
+    "expected": "蛍光管・蛍光ランプ",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": false
+  },
+  {
+    "q": "まくら",
+    "kind": "そのまま",
+    "expected": "まくら",
+    "answer": "まくら",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "паспорт",
+    "kind": "無関係",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "加湿器のフィルター",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ドローン",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "スマートウォッチのバンド",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ぬか床",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "太陽光パネル",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "犬のフン",
+    "kind": "言い換え",
+    "expected": "ペットのふん",
+    "answer": "ペットのふん",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "使用済みの注射針",
+    "kind": "言い換え",
+    "expected": "注射針",
+    "answer": "注射針",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "コンタクトレンズ",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "土",
+    "kind": "そのまま",
+    "expected": "土",
+    "answer": "土",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "パチンコ台",
+    "kind": "辞書にない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "今日は何ごみですか",
+    "kind": "品目でない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "こんにちは",
+    "kind": "品目でない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "収集は何時までですか",
+    "kind": "品目でない",
+    "expected": null,
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "電池が入ったおもちゃ",
+    "kind": "複合",
+    "expected": "おもちゃ",
+    "answer": "おもちゃ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "金属のフライパン",
+    "kind": "複合",
+    "expected": "フライパン",
+    "answer": "フライパン",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "プラスチックのハンガー",
+    "kind": "複合",
+    "expected": "ハンガー",
+    "answer": "ハンガー",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ガラスのコップ",
+    "kind": "複合",
+    "expected": "コップ（ガラス）",
+    "answer": "コップ（ガラス）",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "ノートパソコン",
+    "kind": "言い換え",
+    "expected": "パソコン本体（ノート型も）",
+    "answer": "パソコン本体（ノート型も）",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "けいたいでんわ",
+    "kind": "ひらがな",
+    "expected": "携帯電話・ＰＨＳ",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": false
+  },
+  {
+    "q": "テレビ",
+    "kind": "そのまま",
+    "expected": "テレビ",
+    "answer": "テレビ",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "冷蔵庫",
+    "kind": "そのまま",
+    "expected": "冷蔵庫",
+    "answer": "冷蔵庫",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "エアコンの室外機",
+    "kind": "言い換え",
+    "expected": "エアコン",
+    "answer": null,
+    "ok": false,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "植木鉢",
+    "kind": "判断が割れる",
+    "expected": "植木鉢（素焼き）",
+    "answer": null,
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "たんす",
+    "kind": "そのまま",
+    "expected": "たんす",
+    "answer": "たんす",
+    "ok": true,
+    "expected_in_candidates": true
+  },
+  {
+    "q": "衣装ケース",
+    "kind": "そのまま",
+    "expected": "衣装ケース",
+    "answer": "衣装ケース",
+    "ok": true,
+    "expected_in_candidates": true
+  }
+]
