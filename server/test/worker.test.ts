@@ -10,33 +10,32 @@ const env = rawEnv as unknown as Env;
 
 /// 入口から出口までの通し。
 ///
-/// Claude API への問い合わせだけ差し替える。ここで本物を呼ぶと、
-/// テストを回すたびに費用がかかる。
+/// モデルの呼び出しだけ差し替える。本物を呼ぶと、テストを回すたびに
+/// 費用がかかるうえ、CIから外に出ることになる。
 
 const CANDIDATES = ['かさ', 'ペットボトル', '電池'];
 
-/// APIが返す形の最小限。
-function reply(item: string | null, tokens = { input: 500, output: 20 }) {
-  return new Response(
-    JSON.stringify({
-      content: [{ type: 'text', text: JSON.stringify({ item }) }],
-      usage: { input_tokens: tokens.input, output_tokens: tokens.output },
-    }),
-    { headers: { 'content-type': 'application/json' } },
-  );
+/// Workers AI が返す形の最小限。
+function reply(item: string | null, neurons = 14.1) {
+  return {
+    choices: [{ message: { content: JSON.stringify({ item }) } }],
+    usage: { neurons },
+  };
 }
 
-/// Claude API に渡した中身。組み立てた本文まで見たいので、形を決めておく。
-type Sent = { headers: Record<string, string>; body: string };
+/// モデルに渡した中身。組み立てたプロンプトまで見たいので形を決めておく。
+type Sent = { messages: Array<{ content: string }>; max_tokens: number };
 
-let upstream: Mock<(input: RequestInfo, init: Sent) => Promise<Response>>;
+let model: Mock<(name: string, inputs: Sent) => Promise<unknown>>;
 
 beforeEach(() => {
-  upstream = vi.fn(async () => reply('ペットボトル'));
-  vi.stubGlobal('fetch', (input: RequestInfo, init: RequestInit) => {
+  model = vi.fn(async () => reply('ペットボトル'));
+  env.AI = { run: model as never };
+  // 中継サーバーは外に出ない。モデルも同じ Cloudflare の上で動くので、
+  // ここで fetch が呼ばれたら設計が崩れている。
+  vi.stubGlobal('fetch', (input: RequestInfo) => {
     const url = typeof input === 'string' ? input : (input as Request).url;
-    if (url.startsWith('https://api.anthropic.com/')) return upstream(input, init as unknown as Sent);
-    throw new Error(`外に出てはいけない宛先: ${url}`);
+    throw new Error(`外に出てはいけない: ${url}`);
   });
 });
 
@@ -71,7 +70,7 @@ describe('分別の問い合わせ', () => {
   });
 
   it('該当なしは null を返す', async () => {
-    upstream.mockImplementation(async () => reply(null));
+    model.mockImplementation(async () => reply(null));
     const response = await ask({
       deviceId: newDevice(),
       question: 'よくわからないもの',
@@ -81,7 +80,7 @@ describe('分別の問い合わせ', () => {
   });
 
   it('候補に無い答えは null にする', async () => {
-    upstream.mockImplementation(async () => reply('宇宙船'));
+    model.mockImplementation(async () => reply('宇宙船'));
     const response = await ask({
       deviceId: newDevice(),
       question: '傘',
@@ -100,16 +99,26 @@ describe('分別の問い合わせ', () => {
   });
 
   it('出力の長さに天井を付けている', async () => {
+    // 1回あたりの費用の天井。無ければ、思考が長引くだけで費用が伸びる。
     await ask({ deviceId: newDevice(), question: '傘', candidates: CANDIDATES });
-    const body = JSON.parse(upstream.mock.calls[0]![1].body);
-    expect(body.max_tokens).toBeLessThanOrEqual(64);
+    const [, inputs] = model.mock.calls[0]!;
+    expect(inputs.max_tokens).toBe(Number(env.MAX_OUTPUT_TOKENS));
   });
 
-  it('APIキーはヘッダで渡し、本文には入れない', async () => {
+  it('設定したモデルに投げる', async () => {
     await ask({ deviceId: newDevice(), question: '傘', candidates: CANDIDATES });
-    const [, init] = upstream.mock.calls[0]!;
-    expect(init.headers['x-api-key']).toBe('test-api-key');
-    expect(init.body).not.toContain('test-api-key');
+    expect(model.mock.calls[0]![0]).toBe(env.MODEL);
+  });
+
+  it('質問と候補だけを渡し、端末IDは渡さない', async () => {
+    const device = newDevice();
+    await ask({ deviceId: device, question: 'こわれた傘', candidates: CANDIDATES });
+
+    const prompt = model.mock.calls[0]![1].messages[0]!.content;
+    expect(prompt).toContain('こわれた傘');
+    expect(prompt).toContain('- かさ');
+    // 端末IDは数え上げにしか使わない。モデルに渡す理由がない。
+    expect(prompt).not.toContain(device);
   });
 });
 
@@ -120,7 +129,7 @@ describe('合言葉', () => {
       body: JSON.stringify({ deviceId: newDevice(), question: '傘', candidates: CANDIDATES }),
     });
     expect(response.status).toBe(401);
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 
   it('違っていれば断る', async () => {
@@ -129,7 +138,7 @@ describe('合言葉', () => {
       { 'x-app-token': 'ちがう' },
     );
     expect(response.status).toBe(401);
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 });
 
@@ -141,7 +150,7 @@ describe('形が違うものを外に出さない', () => {
       body: '{壊れている',
     });
     expect(response.status).toBe(400);
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 
   it('長すぎる質問は400で返し、APIを呼ばない', async () => {
@@ -152,7 +161,7 @@ describe('形が違うものを外に出さない', () => {
       candidates: CANDIDATES,
     });
     expect(response.status).toBe(400);
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 
   it('候補が多すぎれば400で返し、APIを呼ばない', async () => {
@@ -162,7 +171,7 @@ describe('形が違うものを外に出さない', () => {
       candidates: Array.from({ length: 200 }, (_, i) => `品目${i}`),
     });
     expect(response.status).toBe(400);
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 });
 
@@ -178,13 +187,13 @@ describe('回数を使い切ったとき', () => {
       const ok = await ask({ deviceId: device, question: '傘', candidates: CANDIDATES });
       expect(ok.status).toBe(200);
     }
-    upstream.mockClear();
+    model.mockClear();
 
     const denied = await ask({ deviceId: device, question: '傘', candidates: CANDIDATES });
     expect(denied.status).toBe(429);
     expect(denied.headers.get('retry-after')).toBeTruthy();
     expect(await denied.json()).toMatchObject({ error: 'device_quota_exhausted' });
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 });
 
@@ -192,7 +201,7 @@ describe('APIが落ちたとき', () => {
   it('503で返し、取った回数は戻す', async () => {
     const device = newDevice();
     const ip = '198.51.100.99';
-    upstream.mockImplementation(async () => new Response('overloaded', { status: 529 }));
+    model.mockRejectedValue(new Error('model unavailable'));
 
     const failed = await ask(
       { deviceId: device, question: '傘', candidates: CANDIDATES },
@@ -202,7 +211,7 @@ describe('APIが落ちたとき', () => {
     expect(await failed.json()).toMatchObject({ error: 'upstream_unavailable' });
 
     // こちらの都合で失敗したぶんは、利用者の回数から引かない。
-    upstream.mockImplementation(async () => reply('かさ'));
+    model.mockImplementation(async () => reply('かさ'));
     const retried = await ask(
       { deviceId: device, question: '傘', candidates: CANDIDATES },
       { 'cf-connecting-ip': ip },
@@ -213,7 +222,7 @@ describe('APIが落ちたとき', () => {
   });
 
   it('通信そのものが失敗しても503で返す', async () => {
-    upstream.mockRejectedValue(new Error('network down'));
+    model.mockRejectedValue(new Error('capacity'));
     const response = await ask({ deviceId: newDevice(), question: '傘', candidates: CANDIDATES });
     expect(response.status).toBe(503);
   });

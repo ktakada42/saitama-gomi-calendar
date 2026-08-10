@@ -5,9 +5,10 @@
 
 export interface Env {
   GUARD: DurableObjectNamespace<import('./guard').Guard>;
+  /// Workers AI。同じ Cloudflare の上で動くので、外への通信は発生しない。
+  AI: import('./model').Runner;
 
   // Secrets（`wrangler secret put` で入れる。リポジトリには置かない）
-  ANTHROPIC_API_KEY: string;
   /// アプリに埋め込む合言葉。抜き出せてしまうので防御の本命ではない。
   /// URLを見つけただけの相手を弾くための一段目。
   APP_TOKEN: string;
@@ -18,6 +19,7 @@ export interface Env {
 
   // Vars
   MODEL: string;
+  MAX_OUTPUT_TOKENS: string;
   MAX_QUESTION_CHARS: string;
   MAX_CANDIDATES: string;
   MAX_CANDIDATE_CHARS: string;
@@ -27,11 +29,11 @@ export interface Env {
   DAILY_BUDGET_JPY: string;
   MONTHLY_BUDGET_JPY: string;
   USD_JPY: string;
-  PRICE_IN_USD_PER_MTOK: string;
-  PRICE_OUT_USD_PER_MTOK: string;
+  USD_PER_1K_NEURONS: string;
 }
 
 export interface Limits {
+  maxOutputTokens: number;
   maxQuestionChars: number;
   maxCandidates: number;
   maxCandidateChars: number;
@@ -44,8 +46,7 @@ export interface Limits {
 
 export interface Price {
   usdJpy: number;
-  inUsdPerMTok: number;
-  outUsdPerMTok: number;
+  usdPer1kNeurons: number;
 }
 
 function num(raw: string | undefined, fallback: number): number {
@@ -61,6 +62,7 @@ export const MICRO = 1_000_000;
 
 export function limitsOf(env: Env): Limits {
   return {
+    maxOutputTokens: num(env.MAX_OUTPUT_TOKENS, 2048),
     maxQuestionChars: num(env.MAX_QUESTION_CHARS, 100),
     maxCandidates: num(env.MAX_CANDIDATES, 30),
     maxCandidateChars: num(env.MAX_CANDIDATE_CHARS, 40),
@@ -75,22 +77,16 @@ export function limitsOf(env: Env): Limits {
 export function priceOf(env: Env): Price {
   return {
     usdJpy: num(env.USD_JPY, 160),
-    inUsdPerMTok: num(env.PRICE_IN_USD_PER_MTOK, 1),
-    outUsdPerMTok: num(env.PRICE_OUT_USD_PER_MTOK, 5),
+    usdPer1kNeurons: num(env.USD_PER_1K_NEURONS, 0.011),
   };
 }
 
 /// 1回の問い合わせにかかった額。
 ///
-/// 見積もりではなく、APIが返した実際のトークン数から出す。
-/// 見積もりで積むと、想定より長い応答が続いたときに上限をすり抜ける。
-export function microJpyOf(
-  inputTokens: number,
-  outputTokens: number,
-  price: Price,
-): number {
-  const usdPerMTok =
-    inputTokens * price.inUsdPerMTok + outputTokens * price.outUsdPerMTok;
-  // /1e6（100万トークンあたり）と ×1e6（マイクロ円）が打ち消し合う。
-  return Math.round(usdPerMTok * price.usdJpy);
+/// 見積もりではなく、Workers AI が応答に返す実際の neuron 数から出す。
+/// 見積もりで積むと、思考が長引いたときに上限をすり抜ける。
+/// neuron は Cloudflare が課金に使う単位そのものなので、請求と食い違わない。
+export function microJpyOfNeurons(neurons: number, price: Price): number {
+  const usd = (neurons / 1000) * price.usdPer1kNeurons;
+  return Math.round(usd * price.usdJpy * MICRO);
 }

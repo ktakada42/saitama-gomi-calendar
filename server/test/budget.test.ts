@@ -1,5 +1,4 @@
 import { env as rawEnv, SELF } from 'cloudflare:test';
-import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MICRO, type Env } from '../src/config';
@@ -17,22 +16,17 @@ const env = rawEnv as unknown as Env;
 /// Claude API に渡した中身。組み立てた本文まで見たいので、形を決めておく。
 type Sent = { headers: Record<string, string>; body: string };
 
-let upstream: Mock<(input: RequestInfo, init: Sent) => Promise<Response>>;
+let model: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
-  upstream = vi.fn(
-    async () =>
-      new Response(
-        JSON.stringify({
-          content: [{ type: 'text', text: '{"item": "かさ"}' }],
-          usage: { input_tokens: 500, output_tokens: 20 },
-        }),
-      ),
-  );
-  vi.stubGlobal('fetch', (input: RequestInfo, init: RequestInit) => {
+  model = vi.fn(async () => ({
+    choices: [{ message: { content: '{"item": "かさ"}' } }],
+    usage: { neurons: 14.1 },
+  }));
+  env.AI = { run: model as never };
+  vi.stubGlobal('fetch', (input: RequestInfo) => {
     const url = typeof input === 'string' ? input : (input as Request).url;
-    if (url.startsWith('https://api.anthropic.com/')) return upstream(input, init as unknown as Sent);
-    throw new Error(`外に出てはいけない宛先: ${url}`);
+    throw new Error(`外に出てはいけない: ${url}`);
   });
 });
 
@@ -63,18 +57,18 @@ async function burnBudget(microJpy: number) {
 describe('予算を使い切ったとき', () => {
   it('まず、使い切る前は通る', async () => {
     expect((await ask()).status).toBe(200);
-    expect(upstream).toHaveBeenCalled();
+    expect(model).toHaveBeenCalled();
   });
 
   it('日額に達したら、APIを呼ばずに断る', async () => {
     await burnBudget(Number(env.DAILY_BUDGET_JPY) * MICRO);
-    upstream.mockClear();
+    model.mockClear();
 
     const response = await ask();
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ error: 'budget_exceeded' });
     // ここが肝心。断るだけで呼んでいたら、費用は止まらない。
-    expect(upstream).not.toHaveBeenCalled();
+    expect(model).not.toHaveBeenCalled();
   });
 
   it('いつ戻るかを伝える', async () => {

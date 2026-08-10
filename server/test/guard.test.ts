@@ -13,6 +13,7 @@ const env = rawEnv as unknown as Env;
 /// 広告を入れない以上、費用はそのまま開発者に来る。
 
 const LIMITS: Limits = {
+  maxOutputTokens: 2048,
   maxQuestionChars: 100,
   maxCandidates: 30,
   maxCandidateChars: 40,

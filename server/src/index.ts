@@ -1,5 +1,5 @@
-import { askClaude, UpstreamError } from './claude';
-import { limitsOf, microJpyOf, priceOf, MICRO, type Env } from './config';
+import { limitsOf, priceOf, MICRO, type Env } from './config';
+import { askModel, UpstreamError } from './model';
 import { Guard, type DenyReason } from './guard';
 import { hashIp, parseSortRequest } from './request';
 
@@ -63,20 +63,20 @@ async function handleSort(request: Request, env: Env): Promise<Response> {
   }
 
   try {
-    const answer = await askClaude(question, candidates, {
-      apiKey: env.ANTHROPIC_API_KEY,
+    const answer = await askModel(question, candidates, {
+      ai: env.AI,
       model: env.MODEL,
+      maxTokens: limits.maxOutputTokens,
+      price: priceOf(env),
     });
-    await guard.settle(
-      microJpyOf(answer.inputTokens, answer.outputTokens, priceOf(env)),
-      now,
-    );
+    await guard.settle(answer.microJpy, now);
     return json({ index: answer.index, remainingToday: verdict.remainingToday });
   } catch (error) {
     // 落ちたのはこちらの都合なので、取った席は返す。
     await guard.refund(deviceId, ipHash, now);
-    const status = error instanceof UpstreamError ? error.status : 0;
-    console.error(`upstream failed: ${status || 'network'}`);
+    console.error(
+      `model failed: ${error instanceof UpstreamError ? error.kind : 'unknown'}`,
+    );
     return json({ error: 'upstream_unavailable' }, 503);
   }
 }

@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { MICRO, microJpyOf, type Limits } from '../src/config';
+import { MICRO, microJpyOfNeurons, type Limits } from '../src/config';
 import { hashIp, parseSortRequest } from '../src/request';
-import { buildPrompt, pickIndex } from '../src/claude';
+import { buildPrompt, pickIndex, textOf } from '../src/model';
 
 const LIMITS: Limits = {
+  maxOutputTokens: 2048,
   maxQuestionChars: 10,
   maxCandidates: 3,
   maxCandidateChars: 8,
@@ -121,6 +122,14 @@ describe('答えの読み取り', () => {
     expect(pickIndex('はい。\n{"item": "電池"}\n以上です', candidates)).toBe(2);
   });
 
+  it('考えを書いてから答えるモデルでも、最後の答えを採る', () => {
+    // 選んだモデルは答える前に考える。前から採ると、考えの途中に出てくる
+    // 例のほうを拾ってしまう。
+    const thinking =
+      'まず{"item": "かさ"}かと思ったが、よく見ると違う。\n{"item": "電池"}';
+    expect(pickIndex(thinking, candidates)).toBe(2);
+  });
+
   it('該当なしは null', () => {
     expect(pickIndex('{"item": null}', candidates)).toBeNull();
   });
@@ -153,18 +162,40 @@ describe('プロンプト', () => {
 });
 
 describe('費用の計算', () => {
-  const price = { usdJpy: 160, inUsdPerMTok: 1, outUsdPerMTok: 5 };
+  const price = { usdJpy: 160, usdPer1kNeurons: 0.011 };
 
-  it('実際のトークン数から円を出す', () => {
-    // 入力500・出力20トークンで (500×1 + 20×5) ÷ 100万 × 160円 = 0.096円
-    expect(microJpyOf(500, 20, price)).toBe(0.096 * MICRO);
+  it('実際のneuron数から円を出す', () => {
+    // 14.1 neuron ÷ 1000 × $0.011 × 160円 = 0.024816円。
+    // 14.1 は検証（scripts/ai_eval/）での1問あたりの実測値。
+    expect(microJpyOfNeurons(14.1, price)).toBe(24_816);
   });
 
   it('0なら0', () => {
-    expect(microJpyOf(0, 0, price)).toBe(0);
+    expect(microJpyOfNeurons(0, price)).toBe(0);
   });
 
-  it('出力のほうが単価が高い', () => {
-    expect(microJpyOf(0, 100, price)).toBeGreaterThan(microJpyOf(100, 0, price));
+  it('使った量に比例する', () => {
+    expect(microJpyOfNeurons(28.2, price)).toBe(2 * microJpyOfNeurons(14.1, price));
+  });
+});
+
+describe('応答の読み取り', () => {
+  it('choices に入る形を読む', () => {
+    expect(textOf({ choices: [{ message: { content: ' かさ ' } }] })).toBe('かさ');
+  });
+
+  it('response に入る形を読む', () => {
+    expect(textOf({ response: ' かさ ' })).toBe('かさ');
+  });
+
+  it('両方あって choices が空なら response を採る', () => {
+    // モデルによっては両方の鍵を持ち、片方が空で返る。
+    expect(textOf({ choices: [{ message: { content: null } }], response: 'かさ' }))
+      .toBe('かさ');
+  });
+
+  it('どちらも無ければ空', () => {
+    expect(textOf({})).toBe('');
+    expect(textOf({ response: null })).toBe('');
   });
 });
