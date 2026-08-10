@@ -34,21 +34,31 @@ class WasteDictionary {
     final extra = await rootBundle.loadString(
       'assets/data/dictionary_extra.json',
     );
+    final keywords = await rootBundle.loadString(
+      'assets/data/dictionary_keywords.json',
+    );
     return WasteDictionary.fromJson(
       jsonDecode(raw) as Map<String, dynamic>,
       extra: jsonDecode(extra) as Map<String, dynamic>,
+      keywords: jsonDecode(keywords) as Map<String, dynamic>,
     );
   }
 
   factory WasteDictionary.fromJson(
     Map<String, dynamic> json, {
     Map<String, dynamic>? extra,
+    Map<String, dynamic>? keywords,
   }) {
+    final byName = (keywords?['keywords'] as Map<String, dynamic>?) ?? const {};
     final items = [
-      for (final item in (json['items'] as List<dynamic>? ?? const []))
-        WasteItem.fromJson(item as Map<String, dynamic>),
-      for (final item in (extra?['items'] as List<dynamic>? ?? const []))
-        WasteItem.fromJson(item as Map<String, dynamic>),
+      for (final source in [json['items'], extra?['items']])
+        for (final item in (source as List<dynamic>? ?? const []))
+          WasteItem.fromJson({
+            ...item as Map<String, dynamic>,
+            // 言い換えは別ファイルで持つ。品目の出どころ（早見表／図解ページ）と
+            // 分けておかないと、市の資料が変わったときに突き合わせられない。
+            'keywords': byName[item['name']] ?? const <dynamic>[],
+          }),
     ];
     // 五十音の索引が飛ばないよう、行の見出しで並べ直す。
     // 補いを後ろに繋いだままだと、「わ」の次に「い」が来る。
