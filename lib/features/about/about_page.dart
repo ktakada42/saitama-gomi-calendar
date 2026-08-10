@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../providers.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/section_header.dart';
+import '../dictionary/collection_boxes_page.dart';
 import '../dictionary/not_accepted_guide_page.dart';
 import '../dictionary/oversized_guide_page.dart';
 
@@ -76,6 +77,17 @@ class AboutPage extends ConsumerWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const NotAcceptedGuidePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.place_outlined),
+            title: const Text('回収ボックス'),
+            subtitle: const Text('小型家電・電池。市内55か所'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const CollectionBoxesPage(),
               ),
             ),
           ),

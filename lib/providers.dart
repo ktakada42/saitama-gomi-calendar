@@ -7,6 +7,7 @@ import 'data/notification_repository.dart';
 import 'data/settings_repository.dart';
 import 'data/widget_bridge.dart';
 import 'data/waste_dictionary.dart';
+import 'domain/collection_boxes.dart';
 import 'domain/not_accepted_guide.dart';
 import 'domain/oversized_guide.dart';
 import 'domain/collection_area.dart';
@@ -48,6 +49,11 @@ final oversizedGuideProvider = FutureProvider<OversizedGuide>(
 /// 市では収集・処理できないものの持って行き先。
 final notAcceptedGuideProvider = FutureProvider<NotAcceptedGuide>(
   (ref) => NotAcceptedGuide.load(),
+);
+
+/// 小型家電・電池の回収ボックスの置き場所。
+final collectionBoxesProvider = FutureProvider<CollectionBoxes>(
+  (ref) => CollectionBoxes.load(),
 );
 
 /// 設定済みの地区。null は「まだ設定していない」＝初回起動。

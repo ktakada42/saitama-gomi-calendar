@@ -53,6 +53,8 @@ void main() {
     testWidgets('ライセンス一覧を開ける', (tester) async {
       await pumpApp(tester, const AboutPage());
 
+      // 「ごみの出し方」の項目が増えて、画面の外へ出た。
+      await tester.scrollUntilVisible(find.text('ライセンス'), 300);
       await tester.tap(find.text('ライセンス'));
       await tester.pumpAndSettle();
 
