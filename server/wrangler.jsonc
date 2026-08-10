@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saitama-gomi-relay",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "observability": { "enabled": true },
+
+  "durable_objects": {
+    "bindings": [{ "name": "GUARD", "class_name": "Guard" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Guard"] }],
+
+  // 上限はここで締める。コードを触らずに変えられるようにしてある。
+  // 秘密の値（APIキー等）はここには書かない。`wrangler secret put` を使う。
+  "vars": {
+    "MODEL": "claude-haiku-4-5-20251001",
+
+    // 入力の大きさ。長い文を送りつけてトークン代を焼かれないための歯止め。
+    "MAX_QUESTION_CHARS": "100",
+    "MAX_CANDIDATES": "30",
+    "MAX_CANDIDATE_CHARS": "40",
+
+    // 回数。1日20問は、ふつうに使う人がぶつからない程度に取ってある。
+    "DEVICE_DAILY_LIMIT": "20",
+    "IP_DAILY_LIMIT": "60",
+    "IP_BURST_LIMIT": "5",
+
+    // 金額。これが本命の安全弁。
+    // 月額だけだと初日に使い切って月末まで止まるので、日額も併せて置く。
+    // 1問あたり0.1円ほどなので、日300円で約3,000問。
+    "DAILY_BUDGET_JPY": "300",
+    "MONTHLY_BUDGET_JPY": "3000",
+
+    // 費用の計算に使う。値上げや為替で変わったらここを直す。
+    "USD_JPY": "160",
+    "PRICE_IN_USD_PER_MTOK": "1",
+    "PRICE_OUT_USD_PER_MTOK": "5"
+  }
+}
