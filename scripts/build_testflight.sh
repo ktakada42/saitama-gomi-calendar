@@ -10,19 +10,42 @@
 #   - 配布プロファイルが ~/Library/Developer/Xcode/UserData/Provisioning Profiles/
 #     に入っていること (Xcodeで一度配信するか、App Store Connect APIで作る)
 #   - App Store Connect APIキーが ~/.appstoreconnect/private_keys/ にあること
+#     （AuthKey_<KEY_ID>.p8 の形で置く）
 #
-# 使い方: scripts/build_testflight.sh <issuer-id>
-#   issuer IDは秘密情報なので、ファイルに書かず引数で渡す。
+# 使い方:
+#   scripts/build_testflight.sh <issuer-id> [key-id]
+#
+# issuer IDとkey IDはこのリポジトリの持ち主に固有の値なので、
+# 公開リポジトリに書かず、引数か環境変数で渡す。
+#   ASC_ISSUER_ID / ASC_KEY_ID でも指定できる。
+# key IDは、~/.appstoreconnect/private_keys/ に鍵が1つだけあれば
+# ファイル名から拾うので、ふだんは省略してよい。
 
 set -euo pipefail
 
-ISSUER_ID="${1:-}"
+ISSUER_ID="${1:-${ASC_ISSUER_ID:-}}"
 if [ -z "$ISSUER_ID" ]; then
-  echo "使い方: $0 <issuer-id>" >&2
+  echo "使い方: $0 <issuer-id> [key-id]" >&2
+  echo "  または環境変数 ASC_ISSUER_ID を設定する" >&2
   exit 1
 fi
 
-API_KEY_ID="G5TVPJHS7M"
+KEYS_DIR="$HOME/.appstoreconnect/private_keys"
+API_KEY_ID="${2:-${ASC_KEY_ID:-}}"
+if [ -z "$API_KEY_ID" ]; then
+  # AuthKey_XXXX.p8 が1つだけならファイル名から拾う。
+  # 複数あると取り違えるので、その場合は明示させる。
+  found=("$KEYS_DIR"/AuthKey_*.p8)
+  if [ "${#found[@]}" -eq 1 ] && [ -e "${found[0]}" ]; then
+    API_KEY_ID="$(basename "${found[0]}" .p8)"
+    API_KEY_ID="${API_KEY_ID#AuthKey_}"
+  else
+    echo "APIキーを特定できません。key-id を渡すか ASC_KEY_ID を設定してください。" >&2
+    echo "  探した場所: $KEYS_DIR" >&2
+    exit 1
+  fi
+fi
+
 TEAM_ID="R9DDB6ZX39"
 BUNDLE_ID="io.github.ktakada42.saitamagomicalendar"
 PROFILE_NAME="Saitama Gomi Calendar App Store"
