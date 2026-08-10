@@ -7,6 +7,7 @@ import 'data/notification_repository.dart';
 import 'data/settings_repository.dart';
 import 'data/widget_bridge.dart';
 import 'data/waste_dictionary.dart';
+import 'domain/oversized_guide.dart';
 import 'domain/collection_area.dart';
 import 'domain/collection_calendar.dart';
 import 'domain/collection_reminder.dart';
@@ -36,6 +37,11 @@ final packageInfoProvider = FutureProvider<PackageInfo>(
 /// 品目から出し先を引く分別早見表。
 final wasteDictionaryProvider = FutureProvider<WasteDictionary>(
   (ref) => WasteDictionary.load(),
+);
+
+/// 粗大ごみの料金と申込み方法。早見表には金額も窓口も書かれていない。
+final oversizedGuideProvider = FutureProvider<OversizedGuide>(
+  (ref) => OversizedGuide.load(),
 );
 
 /// 設定済みの地区。null は「まだ設定していない」＝初回起動。
