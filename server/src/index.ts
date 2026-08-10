@@ -1,6 +1,6 @@
 import { limitsOf, priceOf, MICRO, type Env } from './config';
 import { askModel, UpstreamError } from './model';
-import { Guard, type DenyReason } from './guard';
+import { Guard, type DenyReason, type Verdict } from './guard';
 import { hashIp, parseSortRequest } from './request';
 
 export { Guard };
@@ -13,20 +13,37 @@ export { Guard };
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-
-    if (url.pathname === '/v1/sort' && request.method === 'POST') {
-      return handleSort(request, env);
+    try {
+      return await route(request, env);
+    } catch (error) {
+      // ここから先へ例外を出さない。素通ししてしまうと Cloudflare の
+      // エラー画面（1101）が返り、アプリはJSONを期待しているので
+      // 「サーバーが壊れた」ではなく「応答が読めない」として出る。
+      console.error(`unhandled: ${nameOf(error)}`);
+      return json({ error: 'internal' }, 500);
     }
-    if (url.pathname === '/v1/status' && request.method === 'GET') {
-      return handleStatus(request, env);
-    }
-    if (url.pathname === '/healthz') {
-      return json({ ok: true });
-    }
-    return json({ error: 'not_found' }, 404);
   },
 } satisfies ExportedHandler<Env>;
+
+function route(request: Request, env: Env): Promise<Response> | Response {
+  const url = new URL(request.url);
+
+  if (url.pathname === '/v1/sort' && request.method === 'POST') {
+    return handleSort(request, env);
+  }
+  if (url.pathname === '/v1/status' && request.method === 'GET') {
+    return handleStatus(request, env);
+  }
+  if (url.pathname === '/healthz') {
+    return json({ ok: true });
+  }
+  return json({ error: 'not_found' }, 404);
+}
+
+/// 中身に利用者の入力が混ざりうるので、種類だけを持ち出す。
+function nameOf(error: unknown): string {
+  return error instanceof Error ? error.name : 'unknown';
+}
 
 async function handleSort(request: Request, env: Env): Promise<Response> {
   if (request.headers.get('x-app-token') !== env.APP_TOKEN) {
@@ -53,7 +70,20 @@ async function handleSort(request: Request, env: Env): Promise<Response> {
   const guard = env.GUARD.get(env.GUARD.idFromName('global'));
   const now = Date.now();
 
-  const verdict = await guard.reserve(deviceId, ipHash, limits, now);
+  // 安全弁に訊けなかったら、断る。
+  //
+  // 訊けないまま先へ進むと、上限を数えないままモデルを呼ぶことになる。
+  // 止めるための仕組みが、止まっているときにいちばん緩むのでは意味がない。
+  // 使えない間サービスが止まるのは承知のうえで、閉じる側に倒す。
+  // Durable Object は配信のたびに入れ替わるので、ここは実際に通る。
+  let verdict: Verdict;
+  try {
+    verdict = await guard.reserve(deviceId, ipHash, limits, now);
+  } catch (error) {
+    console.error(`guard unavailable: ${nameOf(error)}`);
+    return json({ error: 'guard_unavailable' }, 503, { 'retry-after': '5' });
+  }
+
   if (!verdict.ok) {
     return json(
       { error: errorNameOf(verdict.reason), retryAfterSec: verdict.retryAfterSec },
@@ -69,14 +99,29 @@ async function handleSort(request: Request, env: Env): Promise<Response> {
       maxTokens: limits.maxOutputTokens,
       price: priceOf(env),
     });
-    await guard.settle(answer.microJpy, now);
+    // 記録に失敗しても答えは返す。もう払ったぶんなので、捨てると
+    // 費用だけかかって利用者にも何も渡らない。
+    //
+    // 積み損ねると上限の集計は甘くなるが、暴走はしない。安全弁が
+    // 答えられない状態なら、次の問い合わせは reserve の段で断られる。
+    try {
+      await guard.settle(answer.microJpy, now);
+    } catch (error) {
+      console.error(`settle failed: ${nameOf(error)}`);
+    }
     return json({ index: answer.index, remainingToday: verdict.remainingToday });
   } catch (error) {
-    // 落ちたのはこちらの都合なので、取った席は返す。
-    await guard.refund(deviceId, ipHash, now);
     console.error(
-      `model failed: ${error instanceof UpstreamError ? error.kind : 'unknown'}`,
+      `model failed: ${error instanceof UpstreamError ? error.kind : nameOf(error)}`,
     );
+    // 落ちたのはこちらの都合なので、取った席は返す。
+    // 返すのに失敗しても、利用者に返すのは元の失敗のほうにする。
+    // 席が1つ戻らないより、応答が壊れるほうが困る。
+    try {
+      await guard.refund(deviceId, ipHash, now);
+    } catch (refundError) {
+      console.error(`refund failed: ${nameOf(refundError)}`);
+    }
     return json({ error: 'upstream_unavailable' }, 503);
   }
 }
