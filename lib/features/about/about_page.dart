@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../providers.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/section_header.dart';
+import '../dictionary/not_accepted_guide_page.dart';
 import '../dictionary/oversized_guide_page.dart';
 
 /// アプリの素性を並べる画面。
@@ -64,6 +65,17 @@ class AboutPage extends ConsumerWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const OversizedGuidePage(),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.support_agent_outlined),
+            title: const Text('市では収集できないもの'),
+            subtitle: const Text('家電・パソコン・バイクなど。持って行き先'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const NotAcceptedGuidePage(),
               ),
             ),
           ),
