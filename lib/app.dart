@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -166,6 +168,20 @@ class _Root extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final area = ref.watch(selectedAreaProvider);
+
+    // 地区が決まった／変わったら、ホーム画面ウィジェットの内容を書き直す。
+    // ウィジェットはアプリが起動していなくても表示され続けるので、
+    // アプリを開いたこの機会に先の分までまとめて渡しておく。
+    // 失敗してもアプリの動作は止めない（WidgetBridge側で握りつぶす）。
+    //
+    // watchで今の値を取り、そのまま書き出す。listenだと変化したときしか
+    // 呼ばれず、アプリを開き直しただけでは書き直されない。
+    unawaited(
+      ref
+          .read(widgetSyncProvider)
+          .sync(ref.watch(calendarProvider), DateTime.now()),
+    );
+
     return switch (area) {
       AsyncData(:final value) =>
         value == null
