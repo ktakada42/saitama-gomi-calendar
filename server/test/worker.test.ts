@@ -39,7 +39,28 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => vi.unstubAllGlobals());
+const realGuard = env.GUARD;
+afterEach(() => {
+  vi.unstubAllGlobals();
+  env.GUARD = realGuard;
+});
+
+/// 安全弁が答えられない状態を作る。配信のたびに Durable Object は
+/// 入れ替わるので、これは実際に起きる。
+function breakGuard(failing: Partial<Record<'reserve' | 'refund' | 'settle', true>>) {
+  const stub = new Proxy(
+    {},
+    {
+      get(_, name: string) {
+        if (failing[name as keyof typeof failing]) {
+          return () => Promise.reject(new Error('Durable Object reset'));
+        }
+        return () => Promise.resolve({ ok: true, remainingToday: 19 });
+      },
+    },
+  );
+  env.GUARD = { idFromName: () => 'x', get: () => stub } as never;
+}
 
 function ask(body: unknown, headers: Record<string, string> = {}) {
   return SELF.fetch('https://relay.test/v1/sort', {
@@ -255,5 +276,64 @@ describe('その他', () => {
 
   it('知らない道は404', async () => {
     expect((await SELF.fetch('https://relay.test/v1/anything')).status).toBe(404);
+  });
+});
+
+describe('安全弁に訊けないとき', () => {
+  it('断る。モデルは呼ばない', async () => {
+    // 訊けないまま先へ進むと、上限を数えないままモデルを呼ぶことになる。
+    // 止めるための仕組みが止まっているときにいちばん緩むのでは意味がない。
+    breakGuard({ reserve: true });
+
+    const response = await ask({
+      deviceId: newDevice(),
+      question: '傘',
+      candidates: CANDIDATES,
+    });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({ error: 'guard_unavailable' });
+    expect(model).not.toHaveBeenCalled();
+  });
+
+  it('Cloudflareのエラー画面ではなくJSONで返す', async () => {
+    // アプリはJSONを期待している。素通しすると「サーバーが壊れた」ではなく
+    // 「応答が読めない」として出てしまう。
+    breakGuard({ reserve: true });
+
+    const response = await ask({
+      deviceId: newDevice(),
+      question: '傘',
+      candidates: CANDIDATES,
+    });
+    expect(response.headers.get('content-type')).toContain('application/json');
+  });
+
+  it('席を返せなくても、元の失敗を伝える', async () => {
+    // 席が1つ戻らないより、応答が壊れるほうが困る。
+    breakGuard({ refund: true });
+    model.mockRejectedValue(new Error('capacity'));
+
+    const response = await ask({
+      deviceId: newDevice(),
+      question: '傘',
+      candidates: CANDIDATES,
+    });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({ error: 'upstream_unavailable' });
+  });
+
+  it('使った額を記録できなくても、答えは返す', async () => {
+    // もう払ったぶんなので、捨てると費用だけかかって利用者にも何も渡らない。
+    // 積み損ねても暴走はしない。安全弁が答えられない状態なら、次の
+    // 問い合わせは席を取る段で断られる。
+    breakGuard({ settle: true });
+
+    const response = await ask({
+      deviceId: newDevice(),
+      question: '傘',
+      candidates: CANDIDATES,
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ index: 1 });
   });
 });
