@@ -1,6 +1,7 @@
-# AI分別相談の精度検証（issue #41）
+# AI分別相談の精度・費用の検証（issue #41, #42）
 
-サーバーも広告も作る前に、機能として成立するかを測るためのもの。
+サーバーを作る前に機能として成立するかを測り（#41）、
+その後どのモデルを使うかを決めるために使う（#42）。
 
 ## 何を測っているか
 
@@ -17,16 +18,36 @@ AIが間違った区分を答える余地が構造的に無い。
 ## 使い方
 
 ```bash
-python3 scripts/ai_eval/run_eval.py            # 全50件
-python3 scripts/ai_eval/run_eval.py --limit 5  # 抜き取り
-```
+# Claude（手元の claude CLI 経由。APIキーは要らない）
+python3 scripts/ai_eval/run_eval.py --model "Sonnet 5"
 
-手元の `claude` CLIに投げるだけなので、サーバーもAPIキーも要らない。
+# Workers AI（先に足場を立てておく）
+cd scripts/ai_eval/probe && npm ci && npm run dev
+python3 scripts/ai_eval/run_eval.py --model "GPT-OSS 20B"
+
+# 出揃ったら並べる
+python3 scripts/ai_eval/compare_models.py
+python3 scripts/ai_eval/measure_latency.py "GPT-OSS 20B" "Qwen3 30B"
+```
 
 - `cases.json` … 検証データ。`expected` は辞書に実在する品目名か、
   該当なしを表す `null`。判断が割れる問いは `accept_also` に別解を書く
+- `backends.py` … 比べるモデルと、その呼び出し方・料金
 - `run_eval.py` … 候補の絞り込み＋問い合わせ＋答え合わせ
-- `result.json` … 実行結果（`--out` で変えられる）
+- `compare_models.py` … `results/` を並べる
+- `probe/` … Workers AI を手元から叩くための足場（デプロイしない）
+
+**候補の絞り込みはモデルによらず同じにしてある。** そうしないと、
+比べているのがモデルの差なのか絞り込みの差なのか分からなくなる。
+
+### 費用の出し方が2通りあること
+
+- **Workers AI** … 応答に実際の neuron 数が入るので、それを使う（実測）
+- **Claude** … APIキーが無く CLI 経由でしか叩けない。CLIは自前の
+  システムプロンプトを2万トークン規模で積むので、CLIの申告額は使えない。
+  こちらのプロンプトのトークン数と公表価格から出す（見積もり）
+
+比べたい差は10倍〜50倍あるので、この粗さは結論に効かない。
 
 ## 検証データを直すときの注意
 
@@ -62,3 +83,22 @@ AIはほぼ正しく選べている。
 **辞書に読みがなを持たせれば、上4件は拾える見込みがある。**
 市の早見表はかな行（`kanaHead`）しか持っていないので、
 読みがな自体を別途用意する必要がある。
+
+## 測るときに踏んだ落とし穴
+
+**正解データのほうが間違っていた（5件）。** 辞書に実在するか確かめずに
+正解を書いたため、AIの答えのほうが正しかった。`cases.json` の `expected`
+は、必ず `assets/data/dictionary.json` にある名前と一致させること。
+
+**claude CLI を並列に呼ぶと、応答が空で返る。** 並列にしたところ
+Sonnet 5 が 0/50 になった。モデルの成績ではなく呼び方の失敗を測っていた。
+CLI経由は逐次で回す（`backends.py` の `max_jobs = 1`）。
+
+**思考するモデルは、出力枠が足りないと本文が空になる。** Qwen3・Gemma・
+GPT-OSS は思考トークンを吐く。`max_tokens` が小さいと思考だけで
+使い切って `finish_reason: length` になり、「分別が分からない」ではなく
+「言い終わる前に切られた」を数えることになる。枠を広げてから測る。
+
+**応答の形がモデルによって3通りある。** `choices[].message.content` に
+入るもの、`response` に文字列で入るもの、`response` が `null` で
+`choices` 側にあるもの。片方だけ見ていると空文字を拾う。
