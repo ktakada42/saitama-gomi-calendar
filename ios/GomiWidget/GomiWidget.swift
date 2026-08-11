@@ -102,11 +102,20 @@ struct GomiWidgetView: View {
 
     // MARK: 中 4×2
 
+    /// 横長は、左右とも上端から積む。
+    ///
+    /// 縦長と同じ `Spacer` の組み方にすると、こちらだけ余白が目立つ。
+    /// 横長はアイコンを名前の横に置くぶん中身が縦に詰まり、余る高さが
+    /// 1.5倍になるため（縦長は約39pt、横長は約60pt）。上限の無い
+    /// `Spacer` がそれを全部吸って、見出しと分別の間が空いていた。
+    ///
+    /// 左を下寄せ・右を中央寄せのままにすると、左右で見出しの高さも
+    /// 揃わない。どちらも上端に揃える。
     private var mediumBody: some View {
-        HStack(spacing: 14) {
+        HStack(alignment: .top, spacing: 14) {
             VStack(alignment: .leading, spacing: 0) {
                 header
-                Spacer(minLength: 4)
+                Spacer(minLength: 4).frame(maxHeight: 10)
                 if let featured {
                     HStack(spacing: 9) {
                         Image(systemName: featured.day.resolvedCategories.first?.symbol ?? "trash")
@@ -118,8 +127,10 @@ struct GomiWidgetView: View {
                 } else {
                     emptyText
                 }
+                // 余った高さは下端へ落とす。上で吸わせない。
+                Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
             if let payload = entry.payload, !upcoming(payload).isEmpty {
                 Divider().overlay(Color.white.opacity(0.28))
@@ -128,7 +139,7 @@ struct GomiWidgetView: View {
                         upcomingRow(day)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
