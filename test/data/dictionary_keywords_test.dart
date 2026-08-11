@@ -167,9 +167,61 @@ void main() {
     });
   });
 
+  group('言い換えを増やしても、関係ないものを拾わない', () {
+    test('長音を含む語が、短く縮んで紛れ込まない', () {
+      // 正規化で「ー」を落とすと「クーラー」が「くら」、「スキー」が
+      // 「すき」まで縮み、「プラズマクラスター」「モレスキン」に
+      // 紛れ込む。実際に空気清浄機や手帳が出ていた。
+      expect(found('クーラー'), isNot(contains('空気清浄機')));
+      expect(found('クーラー'), isNot(contains('座いす')));
+      expect(found('スキー'), isNot(contains('手帳')));
+      expect(found('スキー'), isNot(contains('フライパン')));
+
+      // 本来出るべきものは出る。
+      expect(found('クーラー'), contains('エアコン'));
+      expect(found('スキー'), contains('スキー板・スノーボード'));
+    });
+
+    test('長音のゆれは言い換えで受ける', () {
+      // 正規化で吸収しない代わりに、対応表で担保している。
+      for (final q in ['ダンボール', 'だんぼーる', '段ボール']) {
+        expect(found(q), contains('段ボール'), reason: q);
+      }
+    });
+
+    test('同じ品目に、同じ言い換えを二重に持たない', () {
+      // 「ヤカン」は正規化すると「やかん」で品目名と同じになり、
+      // 語数を増やすだけで何も拾えるようにならない。
+      for (final item in dictionary.items) {
+        final keys = item.keywords.map(normalizeForTest).toList();
+        expect(keys.toSet(), hasLength(keys.length), reason: item.name);
+        expect(
+          keys,
+          isNot(contains(normalizeForTest(item.name))),
+          reason: item.name,
+        );
+      }
+    });
+  });
+
   test('言い換えを足しても、元の名前で引ける', () {
     // 上書きしていないこと。
     expect(found('やかん'), contains('やかん'));
     expect(found('ペットボトル'), contains('ペットボトル'));
   });
+}
+
+/// テストから正規化の結果を確かめるための写し。
+/// lib/domain/waste_item.dart の _normalize と同じ規則にしてある。
+String normalizeForTest(String value) {
+  final stripped = value
+      .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
+      .replaceAll(RegExp(r'[〜~－―\-\s]'), '')
+      .toLowerCase();
+  final buffer = StringBuffer();
+  for (final code in stripped.runes) {
+    final isKatakana = code >= 0x30A1 && code <= 0x30F6;
+    buffer.writeCharCode(isKatakana ? code - 0x60 : code);
+  }
+  return buffer.toString();
 }
