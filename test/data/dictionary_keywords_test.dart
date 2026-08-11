@@ -125,6 +125,48 @@ void main() {
     });
   });
 
+  group('AIで生成した言い換え', () {
+    test('かな書きの品目を、漢字で引ける', () {
+      // 「椅子」で「いす」が出ない、という実機での指摘がきっかけ。
+      // 市はかなで書き、利用者は漢字で打つ。手で埋めると取りこぼす
+      // （実際に取りこぼした）ので、ビルド時にAIで作らせている。
+      expect(found('椅子'), contains('いす'));
+      expect(found('玩具'), contains('おもちゃ'));
+      expect(found('鞄'), contains('かばん・バッグ'));
+      expect(found('襖'), contains('ふすま'));
+      expect(found('箪笥'), contains('たんす'));
+      expect(found('瓦'), contains('かわら'));
+      expect(found('雑巾'), contains('ぞうきん'));
+      expect(found('蝋燭'), contains('ろうそく'));
+    });
+
+    test('商品名で引ける。英字の綴りも', () {
+      // 「アイコスやiQOSで調べる人がいそう」という指摘から。
+      // 正規化はカタカナをひらがなに寄せるだけで、英字とは結び付かない。
+      // 「アイコス」を入れても「iQOS」では出ないので、両方を持つ。
+      for (final q in ['アイコス', 'iQOS', 'iqos', 'IQOS', 'プルーム', 'glo']) {
+        expect(found(q), contains('加熱式電子たばこ'), reason: q);
+      }
+      for (final q in ['ルンバ', 'ダイソン', 'Dyson']) {
+        expect(found(q), contains('掃除機'), reason: q);
+      }
+    });
+
+    test('同じものが、区分違いで二重に載っていない', () {
+      // 早見表に「加熱式電子たばこ」があるのに、図解ページから
+      // 「加熱式タバコ」を足してしまい、電池回収ボックスと小型家電の
+      // 2つが並んでいた。生成物のレビュー中に見つけた実バグ。
+      final smoking = dictionary.items
+          .where((i) => i.name.contains('たばこ') || i.name.contains('タバコ'))
+          .toList();
+      final categories = smoking
+          .where((i) => !i.name.contains('紙箱'))
+          .map((i) => i.categoryLabel)
+          .toSet();
+      expect(categories, hasLength(1), reason: '$smoking');
+    });
+  });
+
   test('言い換えを足しても、元の名前で引ける', () {
     // 上書きしていないこと。
     expect(found('やかん'), contains('やかん'));
