@@ -113,10 +113,19 @@ class WasteItem {
     });
   }
 
+  /// 長音符「ー」は残す。
+  ///
+  /// 落とすと「クーラー」が「くら」、「スキー」が「すき」まで縮み、
+  /// 「プラズマクラスター」「モレスキン」のような無関係な語に紛れ込む。
+  /// 実際、言い換えを増やしたときに「クーラー」で空気清浄機や座いすが、
+  /// 「スキー」で手帳やフライパンが出た。
+  ///
+  /// 長音の有無のゆれ（「ダンボール」と「だんぼーる」）は、
+  /// dictionary_keywords.json の言い換えで受ける。
   static String _normalize(String value) => _foldKatakana(
     value
         .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
-        .replaceAll(RegExp(r'[〜~ー－―\-\s]'), '')
+        .replaceAll(RegExp(r'[〜~－―\-\s]'), '')
         .toLowerCase(),
   );
 

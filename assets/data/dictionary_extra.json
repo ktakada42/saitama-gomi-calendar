@@ -489,24 +489,6 @@
       "page": "P11"
     },
     {
-      "name": "加熱式タバコ",
-      "kanaHead": "か",
-      "category": "smallAppliance",
-      "categoryLabel": "小型家電",
-      "note": "回収ボックスへ",
-      "marks": [],
-      "page": "P12"
-    },
-    {
-      "name": "電子タバコ",
-      "kanaHead": "て",
-      "category": "smallAppliance",
-      "categoryLabel": "小型家電",
-      "note": "回収ボックスへ",
-      "marks": [],
-      "page": "P12"
-    },
-    {
       "name": "ハンディクリーナー",
       "kanaHead": "は",
       "category": "smallAppliance",
