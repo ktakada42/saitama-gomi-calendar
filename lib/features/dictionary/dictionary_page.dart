@@ -18,7 +18,7 @@ import 'waste_item_sheet.dart';
 /// 収集日を知りたいのがホーム・カレンダーなら、こちらは「これは何ごみか」を
 /// 調べるための画面。名前で絞り込めることが第一なので、検索欄を最上部に置く。
 ///
-/// 一覧は市の早見表と同じ五十音順で、右端に索引を出す。443件あるので、
+/// 一覧は市の早見表と同じ五十音順で、右端に索引を出す。495件あるので、
 /// 検索語を思いつかないときに「た行あたり」と当たりを付けて飛べる必要がある。
 class DictionaryPage extends ConsumerStatefulWidget {
   const DictionaryPage({super.key});
