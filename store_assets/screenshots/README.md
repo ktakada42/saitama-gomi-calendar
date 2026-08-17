@@ -30,6 +30,43 @@ plistを消すだけでは`cfprefsd`がキャッシュを持っていて効か�
 
 また、起動直後は描画が間に合わないので数秒待ってから撮る。
 
+### ウィジェットを置いた画面の撮り方
+
+**シミュレータ（iOS 26.5）のウィジェットギャラリーは空のまま開く。**
+自作のものだけでなくマップやカレンダーなど標準のものも一切出てこないので、
+「ホーム画面を長押し →編集 →ウィジェットを追加」からは置けない。
+`chronod`はウィジェットを認識できている（ログに`GomiWidget`が出る）ので、
+出せないのはギャラリーの描画側の問題。
+
+代わりにSpringBoardのホーム画面の配置そのものを書き換える。
+シミュレータを**停止してから**次のplistを編集し、起動し直すと置かれた状態になる。
+
+```
+~/Library/Developer/CoreSimulator/Devices/<UDID>/data/Library/SpringBoard/IconState.plist
+```
+
+`iconLists`がページの配列で、その要素にこの形の辞書を混ぜるとウィジェットになる。
+`widgetIdentifier`は`GomiWidget.swift`の`kind`、`gridSize`は`small`か`medium`。
+
+```python
+{
+    "elementType": "widget",
+    "widgetIdentifier": "GomiWidget",
+    "containerBundleIdentifier": "io.github.ktakada42.saitamagomicalendar",
+    "bundleIdentifier": "io.github.ktakada42.saitamagomicalendar.GomiWidget",
+    "displayIdentifier": <UUID>,   # 大文字のUUID文字列。他と重複させない
+    "uniqueIdentifier": <UUID>,
+    "gridSize": "medium",
+    "iconType": "custom",
+    "allowsSuggestions": False,
+    "allowsExternalSuggestions": False,
+}
+```
+
+ウィジェットが読むのはApp Groupに書き出された共有データなので、
+**書き換えたあとにアプリを一度起動してから**撮る。起動していないと
+「地区が未設定」の見た目になる。
+
 ## ディレクトリ
 
 | | |
@@ -56,7 +93,8 @@ python3 scripts/make_store_screenshots.py
 | ファイル | 画面 | コピー |
 |---|---|---|
 | `00_onboarding.png` | 初回設定（地区選択） | 郵便番号だけで／すぐ使える |
-| `00_home.png` | ホーム | 明日は何ごみ？ |
-| `01_calendar.png` | カレンダー | 今月の収集日が／ひと目で |
-| `02_dictionary.png` | 分別 | 443品目を／五十音で探せる |
-| `03_settings.png` | 設定 | 前日の夜に／お知らせ |
+| `01_home.png` | ホーム | 明日は何ごみ？ |
+| `02_widget.png` | ホーム画面ウィジェット（中・小） | ホーム画面に／置いておける |
+| `03_calendar.png` | カレンダー | 今月の収集日が／ひと目で |
+| `04_dictionary.png` | 分別 | 495品目を／五十音で探せる |
+| `05_settings.png` | 設定 | 前日の夜に／お知らせ |

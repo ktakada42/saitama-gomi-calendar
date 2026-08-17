@@ -181,7 +181,7 @@ SaitamaGomiApp (MaterialApp, ja固定)
     │   └ IndexedStack（タブ切り替えでカレンダーの表示月を失わないため）
     │       ├ HomePage       今日／明日を最大化、もう一方、この先6件、分別ごとの次回
     │       ├ CalendarPage   月表示。前1か月・後3か月まで送れる
-    │       ├ DictionaryPage 443品目を五十音で。右端に行の索引
+    │       ├ DictionaryPage 495品目を五十音で。右端に行の索引
     │       └ SettingsPage   地区・通知・画面の明るさ・設定中の曜日・分別と出し方
     └ AsyncError             → エラー表示（設定読み込み失敗）
 
