@@ -9,18 +9,20 @@ interface Env {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const { model, prompt, maxTokens } = (await request.json()) as {
+    const { model, prompt, maxTokens, inputs } = (await request.json()) as {
       model: string;
-      prompt: string;
+      prompt?: string;
       maxTokens?: number;
+      // 埋め込みなど、messages 以外の形の入力をそのまま渡すため。
+      inputs?: unknown;
     };
     try {
       const result = await env.AI.run(
         model as Parameters<Ai['run']>[0],
-        {
+        (inputs ?? {
           messages: [{ role: 'user', content: prompt }],
           max_tokens: maxTokens ?? 64,
-        } as never,
+        }) as never,
       );
       return Response.json({ ok: true, result });
     } catch (error) {
