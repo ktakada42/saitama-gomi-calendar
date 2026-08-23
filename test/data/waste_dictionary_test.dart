@@ -63,10 +63,11 @@ void main() {
     // 「炭酸ボンベ」（た行の最後に置かれている）と、
     // 「パソコン本体／パソコンディスプレイ」（本体を先に置いている）の2箇所。
     final booklet = [
-      for (final item in jsonDecode(
-            File('assets/data/dictionary.json').readAsStringSync(),
-          )['items']
-          as List)
+      for (final item
+          in jsonDecode(
+                File('assets/data/dictionary.json').readAsStringSync(),
+              )['items']
+              as List)
         (item as Map<String, dynamic>)['name'] as String,
     ];
     final sorted = dictionary.items.map((item) => item.name).toList();
@@ -74,7 +75,14 @@ void main() {
       for (var i = 0; i < booklet.length; i++)
         if (booklet[i] != sorted[i]) booklet[i],
     ];
-    expect(moved, ['たんす', 'ダンベル', '段ボール', '炭酸ボンベ', 'パソコン本体（ノート型も）', 'パソコンディスプレイ']);
+    expect(moved, [
+      'たんす',
+      'ダンベル',
+      '段ボール',
+      '炭酸ボンベ',
+      'パソコン本体（ノート型も）',
+      'パソコンディスプレイ',
+    ]);
   });
 
   test('欄に収まらない品目名も落ちていない', () {

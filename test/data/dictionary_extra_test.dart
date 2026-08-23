@@ -26,7 +26,9 @@ void main() {
       base,
       extra: extra,
       kana:
-          jsonDecode(File('assets/data/dictionary_kana.json').readAsStringSync())
+          jsonDecode(
+                File('assets/data/dictionary_kana.json').readAsStringSync(),
+              )
               as Map<String, dynamic>,
     );
   });

@@ -38,7 +38,9 @@ class WasteDictionary {
     final keywords = await rootBundle.loadString(
       'assets/data/dictionary_keywords.json',
     );
-    final kana = await rootBundle.loadString('assets/data/dictionary_kana.json');
+    final kana = await rootBundle.loadString(
+      'assets/data/dictionary_kana.json',
+    );
     return WasteDictionary.fromJson(
       jsonDecode(raw) as Map<String, dynamic>,
       extra: jsonDecode(extra) as Map<String, dynamic>,
@@ -76,14 +78,15 @@ class WasteDictionary {
     // 同じ読みが並んだとき（「衣装ケース」とその括弧付き、「びん・かんの
     // フタ」のあり／なし）は資料の並び順を保つ。List.sortは安定ではない
     // ので、元の位置を最後のキーに添える。
-    final order = [
-      for (var i = 0; i < items.length; i++)
-        (_kanaOrder(items[i].kanaHead), items[i].sortKana, i),
-    ]..sort((a, b) {
-      if (a.$1 != b.$1) return a.$1 - b.$1;
-      final byKana = KanaCollation.compare(a.$2, b.$2);
-      return byKana != 0 ? byKana : a.$3 - b.$3;
-    });
+    final order =
+        [
+          for (var i = 0; i < items.length; i++)
+            (_kanaOrder(items[i].kanaHead), items[i].sortKana, i),
+        ]..sort((a, b) {
+          if (a.$1 != b.$1) return a.$1 - b.$1;
+          final byKana = KanaCollation.compare(a.$2, b.$2);
+          return byKana != 0 ? byKana : a.$3 - b.$3;
+        });
     return WasteDictionary(
       items: [for (final (_, _, i) in order) items[i]],
       source: json['source'] as String? ?? '',
