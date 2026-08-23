@@ -1,0 +1,26 @@
+# gwx（git worktreeの作成・移動）でworktreeを作ったときに走らせるもの。
+#
+# worktreeの置き場所（base_dir）はここに書かない。各自の好みなので
+# ~/.config/gwx/config.toml 側に置く。両者はキー単位で合成され、
+# フックは両方走る。
+version = "1"
+
+# コミット前チェック（dart format / flutter analyze / flutter test）を
+# 有効にする。.githooks/pre-commit はリポジトリに入っているが、Gitは
+# core.hooksPath を向けないと見に行かない。設定を忘れるとフォーマット漏れや
+# テスト崩れに気づかずpushすることになる。
+#
+# git config の書き込み先はworktreeごとではなく共有の設定ファイルなので、
+# 二度目以降は同じ値を書くだけ。
+[[hooks.post_create]]
+type = "command"
+command = "git config core.hooksPath .githooks"
+
+# 依存を解決しておく。.dart_tool/ はworktreeごとに要る。
+#
+# これが無いと dart format が flutter_lints を解決できず、触っていない
+# ファイルまで「変更あり」と報告する。pre-commitフックを有効にした直後の
+# 1回目のコミットが、必ずその誤検知で止まることになる。
+[[hooks.post_create]]
+type = "command"
+command = "flutter pub get"
