@@ -8,6 +8,16 @@ set -euo pipefail
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
+# Gitはフックに GIT_DIR や GIT_INDEX_FILE を渡す。worktreeではこれが
+# 絶対パスになるため、環境に残したままFlutterを呼ぶと、Flutterが自分の
+# SDKのバージョンを調べるために走らせる git まで、SDKではなくこの
+# リポジトリを指してしまう。Flutterは自分を 0.0.0-unknown だと判断し、
+# pubの解決が「Flutter SDK version >=3.38.1 が要る」と言って落ちる。
+#
+# flutter.version.json が温まっていると起きないので、SDKを更新した直後
+# などに、急にコミットできなくなる形で出る。
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_PREFIX GIT_CONFIG_PARAMETERS
+
 echo "[pre-commit] dart format --set-exit-if-changed"
 if ! dart format --output=none --set-exit-if-changed lib test; then
   echo "[pre-commit] フォーマットが崩れています。'dart format lib test' を実行してから再コミットしてください。" >&2
