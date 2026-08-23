@@ -5,24 +5,64 @@ App Storeが必須とするサイズ。
 
 ## 撮り方
 
+シミュレータには`flutter build ios --simulator`のdebugビルドを入れる。
+Releaseはシミュレータ向けに作れない（`flutter build`が断る）が、
+`debugShowCheckedModeBanner: false`にしてあるので見た目は変わらない。
+
 シミュレータでは実機のように地区選択のUI操作を自動化するのが難しいため、
 `NSUserDefaults`（`flutter.selected_area`キー）に地区データを直接書き込んで
 状態を再現している。
 
+`plutil`や`defaults`で書くのではなく、**シミュレータを停止させてから
+plistを丸ごと置き、起動し直す**。動いている間に書いても`cfprefsd`が
+自分のキャッシュを正としてしまい、アプリからは読めない。
+`xcrun simctl spawn <UDID> defaults write` も効かない。spawnした
+プロセスはアプリのサンドボックスの外にいるので、書き込み先が
+アプリのコンテナではなくシミュレータ側のルートになる。
+
 ```bash
 SIM=<シミュレータのUDID>
-CONTAINER=$(xcrun simctl get_app_container $SIM io.github.ktakada42.saitamagomicalendar data)
-PLIST="$CONTAINER/Library/Preferences/io.github.ktakada42.saitamagomicalendar.plist"
-# アプリを一度起動してplistを作らせてから、terminateして書き込む
+BID=io.github.ktakada42.saitamagomicalendar
+CONTAINER=$(xcrun simctl get_app_container $SIM $BID data)
+xcrun simctl shutdown $SIM
+# $CONTAINER/Library/Preferences/$BID.plist を作る（plistlibなど）
+#   flutter.selected_area        … areas.json の地区をそのままJSON文字列で
+#   flutter.notification_enabled … true（通知のコピーと画面を合わせるため）
+#   flutter.notification_minutes … 1200（20:00）
+#   flutter.theme_mode           … light
+xcrun simctl boot $SIM
 ```
 
-使用した地区は「浦和区 大原1〜5丁目」（`assets/data/areas.json`の`manual-151`）。
-5区分がバランスよく別々の曜日に散らばっており、カレンダー・ホームの
-見た目が分かりやすいため選んだ。
+地区は撮る日によって選び直す。**翌日に何区分の収集があるかで、ホームの
+「明日」とウィジェットの見え方が決まる**ため。1.1.1では日曜に撮ったので、
+月曜が3区分（もえない・有害危険・資源物2類）ある「南区 南浦和1〜4丁目」
+（`areas.json`の`manual-213`）を使った。1.1.0までは「浦和区 大原1〜5丁目」
+（`manual-151`）で、こちらは月曜がもえるごみだけになる。
 
-タブの遷移はSystem Eventsのアクセシビリティ経由でボトムメニューの
-`AXButton`を直接クリックしている（座標クリックは機種ごとの余白の違いで
-ずれるため使っていない）。
+ステータスバーは`xcrun simctl status_bar`で揃える。再起動すると外れるので、
+`boot`のたびに掛け直す。
+
+```bash
+xcrun simctl status_bar $SIM override --time "9:41" \
+  --dataNetwork wifi --wifiMode active --wifiBars 3 \
+  --cellularMode active --cellularBars 4 \
+  --batteryState charging --batteryLevel 100
+```
+
+タブの遷移はSystem Events経由でボトムメニューを座標クリックする。
+Flutterはアクセシビリティが要求されるまで意味づけの木を作らないので、
+`AXButton`を名前で探しても出てこない。
+
+画面の座標からMacの座標への変換は、Simulatorウィンドウの`group 1`
+（＝端末の画面そのもの）の位置と大きさから出す。ウィンドウの位置や
+表示倍率が変わっても、これなら追随する。
+
+```bash
+osascript -e 'tell application "System Events" to tell process "Simulator" \
+  to return {position of group 1 of window 1, size of group 1 of window 1}'
+# 画面(pt) → Mac = 位置 + 画面座標 × (group1の大きさ ÷ 440x956)
+# タブの中心は y=879pt、x はホーム55 / カレンダー164 / 分別273 / 設定384
+```
 
 **初回設定の画面を撮るときは、アプリを`uninstall`してから入れ直す。**
 plistを消すだけでは`cfprefsd`がキャッシュを持っていて効かず、
@@ -96,5 +136,5 @@ python3 scripts/make_store_screenshots.py
 | `01_home.png` | ホーム | 明日は何ごみ？ |
 | `02_widget.png` | ホーム画面ウィジェット（中・小） | ホーム画面に／置いておける |
 | `03_calendar.png` | カレンダー | 今月の収集日が／ひと目で |
-| `04_dictionary.png` | 分別 | 495品目を／五十音で探せる |
+| `04_dictionary.png` | 分別 | 498品目を／五十音で探せる |
 | `05_settings.png` | 設定 | 前日の夜に／お知らせ |
