@@ -26,13 +26,15 @@ PAD_X = int(W * 0.08)
 STATUS_BAR = 170
 
 # (元ファイル, コピー（改行は\nで）, 添え書き)
+#
+# 添え書きは None にできる。コピーだけで言い切れているものに一行足すと、
+# 同じことを二度言うことになるため。
 STRIPS = [
-    ("00_onboarding.png", "郵便番号だけで\nすぐ使える", "地区を選ぶのは最初の一度きり"),
-    ("01_home.png", "明日は何ごみ？", "開いた瞬間に分かる"),
-    ("02_widget.png", "ホーム画面に\n置いておける", "開かなくても明日が分かる"),
-    ("03_calendar.png", "今月の収集日が\nひと目で", "なぞって月をめくる"),
-    ("04_dictionary.png", "498品目を\n五十音で探せる", "「椅子」でも「いす」でも引ける"),
-    ("05_settings.png", "前日の夜に\nお知らせ", "出し忘れを防ぐ"),
+    ("00_home.png", "明日は何ごみ？", "開いた瞬間に分かる"),
+    ("01_widget.png", "ホーム画面から\n確認可能", "アプリを開かなくても明日のごみが分かる"),
+    ("02_calendar.png", "今月の収集日が\nひと目で", None),
+    ("03_dictionary.png", "498品目を\n五十音で探せる", "あいまい検索も可能"),
+    ("04_settings.png", "前日の夜に\nお知らせ", "出し忘れを防ぐ"),
 ]
 
 
@@ -94,16 +96,20 @@ def build(src_name, copy, sub):
     def ink_bottom(text, f):
         return draw.textbbox((0, 0), text, font=f)[3]
 
-    # 1行目の字面の上端から、添え書きの字面の下端までを本文の高さとする。
+    # 1行目の字面の上端から、いちばん下の字面の下端までを本文の高さとする。
+    # 添え書きが無いときは、コピーの最終行の下端がそこになる。
     first_top = ink_top(lines[0], copy_font)
-    last_baseline = line_h * (len(lines) - 1) + gap + line_h
-    visual_h = last_baseline + ink_bottom(sub, sub_font) - first_top
-    y = (BAND - visual_h) // 2 - first_top
+    if sub:
+        bottom = line_h * (len(lines) - 1) + gap + line_h + ink_bottom(sub, sub_font)
+    else:
+        bottom = line_h * (len(lines) - 1) + ink_bottom(lines[-1], copy_font)
+    y = (BAND - (bottom - first_top)) // 2 - first_top
 
     for line in lines:
         draw.text((PAD_X, y), line, font=copy_font, fill=INK)
         y += line_h
-    draw.text((PAD_X, y + gap), sub, font=sub_font, fill=GREEN)
+    if sub:
+        draw.text((PAD_X, y + gap), sub, font=sub_font, fill=GREEN)
 
     return canvas
 
