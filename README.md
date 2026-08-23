@@ -102,7 +102,6 @@ design/         アプリアイコンのマスターSVGと生成スクリプト
 store_assets/   App Store用のスクリーンショット（素のものと装飾版）
 test/           domain層の単体テストと画面のウィジェットテスト
 .githooks/      pre-commitフック（CIと同じ3チェック）
-.gwx.toml       gwxでworktreeを作るときの置き場所とフック
 ```
 
 ### アプリアイコン
@@ -120,16 +119,35 @@ flutter test
 flutter run
 ```
 
-コミット前チェック（`dart format` / `flutter analyze` / `flutter test`）は
-`.githooks/pre-commit` にある。Gitは`core.hooksPath`を向けないとこれを見に行かないので、
-cloneした直後に一度だけ次を実行する。
+### コミット前チェック
+
+CIと同じ3つ（`dart format` / `flutter analyze` / `flutter test`）を
+`.githooks/pre-commit` に置いてある。Gitは`core.hooksPath`を向けないとこれを見に行かないので、
+cloneした直後に一度実行する。
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-[gwx](https://github.com/ktakada42/gwx)でworktreeを作る場合は、`.gwx.toml`の
-`post_create`フックが同じことをするので、この操作は要らない。
+書き込み先はworktreeごとではなく共有の設定ファイルなので、後からworktreeを増やしても効く。
+
+新しいworktreeでは`flutter pub get`も先に済ませておく。`.dart_tool/`が無いと
+`dart format`が`flutter_lints`を解決できず、触っていないファイルまで「変更あり」として
+コミットが止まる。
+
+worktreeの作成に[gwx](https://github.com/ktakada42/gwx)を使っているなら、
+`.gwx.toml`の`post_create`に両方書いておくと作成時に済む。この設定ファイルは
+`base_dir`のように各自の置き場所を書くもので、追跡していない。
+
+```toml
+[[hooks.post_create]]
+type = "command"
+command = "git config core.hooksPath .githooks"
+
+[[hooks.post_create]]
+type = "command"
+command = "flutter pub get"
+```
 
 ## 配布
 
