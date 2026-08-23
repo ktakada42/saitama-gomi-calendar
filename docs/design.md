@@ -103,7 +103,7 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 
 WasteDictionary.load()       assets/data/dictionary.json を読み込む
-  items:  品目ごとの出し先（443件）。かな行と印（marks）も持つ
+  items:  品目ごとの出し先（446件）。かな行と印（marks）も持つ
   search(query)  記号を無視して絞り込む。前方一致を先に出す
 
 SettingsRepository           shared_preferences 経由で利用者の設定を保存
@@ -181,7 +181,7 @@ SaitamaGomiApp (MaterialApp, ja固定)
     │   └ IndexedStack（タブ切り替えでカレンダーの表示月を失わないため）
     │       ├ HomePage       今日／明日を最大化、もう一方、この先6件、分別ごとの次回
     │       ├ CalendarPage   月表示。前1か月・後3か月まで送れる
-    │       ├ DictionaryPage 495品目を五十音で。右端に行の索引
+    │       ├ DictionaryPage 498品目を五十音で。右端に行の索引
     │       └ SettingsPage   地区・通知・画面の明るさ・設定中の曜日・分別と出し方
     └ AsyncError             → エラー表示（設定読み込み失敗）
 
