@@ -5,6 +5,7 @@
   "items": [
     {
       "name": "飲料のかん",
+      "kana": "いんりょうのかん",
       "kanaHead": "い",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -14,6 +15,7 @@
     },
     {
       "name": "ミルクのかん",
+      "kana": "みるくのかん",
       "kanaHead": "み",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -23,6 +25,7 @@
     },
     {
       "name": "缶詰のかん",
+      "kana": "かんづめのかん",
       "kanaHead": "か",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -32,6 +35,7 @@
     },
     {
       "name": "お茶のかん",
+      "kana": "おちゃのかん",
       "kanaHead": "お",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -41,6 +45,7 @@
     },
     {
       "name": "お菓子のかん",
+      "kana": "おかしのかん",
       "kanaHead": "お",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -50,6 +55,7 @@
     },
     {
       "name": "油のかん",
+      "kana": "あぶらのかん",
       "kanaHead": "あ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
@@ -59,6 +65,7 @@
     },
     {
       "name": "ジャムのびん",
+      "kana": "じゃむのびん",
       "kanaHead": "し",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -68,6 +75,7 @@
     },
     {
       "name": "調味料のびん",
+      "kana": "ちょうみりょうのびん",
       "kanaHead": "ち",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -77,6 +85,7 @@
     },
     {
       "name": "コーヒーのびん",
+      "kana": "こーひーのびん",
       "kanaHead": "こ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -86,6 +95,7 @@
     },
     {
       "name": "栄養ドリンクのびん",
+      "kana": "えいようどりんくのびん",
       "kanaHead": "え",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -95,6 +105,7 @@
     },
     {
       "name": "油のびん",
+      "kana": "あぶらのびん",
       "kanaHead": "あ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
@@ -104,6 +115,7 @@
     },
     {
       "name": "びんのフタ（金属製）",
+      "kana": "びんのふた",
       "kanaHead": "ひ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
@@ -113,6 +125,7 @@
     },
     {
       "name": "かんのフタ（金属製）",
+      "kana": "かんのふた",
       "kanaHead": "か",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -122,6 +135,7 @@
     },
     {
       "name": "ペットボトルのフタ",
+      "kana": "ぺっとぼとるのふた",
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -133,6 +147,7 @@
     },
     {
       "name": "びん・かんのフタ（プラスチック製・プラマークあり）",
+      "kana": "びんかんのふた",
       "kanaHead": "ひ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -144,6 +159,7 @@
     },
     {
       "name": "びん・かんのフタ（プラスチック製・プラマークなし）",
+      "kana": "びんかんのふた",
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
@@ -155,6 +171,7 @@
     },
     {
       "name": "おそうざいの容器",
+      "kana": "おそうざいのようき",
       "kanaHead": "お",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -167,6 +184,7 @@
     },
     {
       "name": "飲料の容器（プラスチック製）",
+      "kana": "いんりょうのようき",
       "kanaHead": "い",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -179,6 +197,7 @@
     },
     {
       "name": "梱包材",
+      "kana": "こんぽうざい",
       "kanaHead": "こ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
@@ -190,6 +209,7 @@
     },
     {
       "name": "油食品等の容器",
+      "kana": "あぶらしょくひんとうのようき",
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
@@ -199,6 +219,7 @@
     },
     {
       "name": "耐火性ガラス",
+      "kana": "たいかせいがらす",
       "kanaHead": "た",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
@@ -208,6 +229,7 @@
     },
     {
       "name": "殺虫剤（くん煙・くん蒸など）",
+      "kana": "さっちゅうざい",
       "kanaHead": "さ",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
@@ -217,6 +239,7 @@
     },
     {
       "name": "CD",
+      "kana": "しーでぃー",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
@@ -226,6 +249,7 @@
     },
     {
       "name": "ワインセラー",
+      "kana": "わいんせらー",
       "kanaHead": "わ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -237,6 +261,7 @@
     },
     {
       "name": "太陽ソーラー",
+      "kana": "たいようそーらー",
       "kanaHead": "た",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -248,6 +273,7 @@
     },
     {
       "name": "うす",
+      "kana": "うす",
       "kanaHead": "う",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -259,6 +285,7 @@
     },
     {
       "name": "ドラムかん",
+      "kana": "どらむかん",
       "kanaHead": "と",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -270,6 +297,7 @@
     },
     {
       "name": "浴槽",
+      "kana": "よくそう",
       "kanaHead": "よ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -281,6 +309,7 @@
     },
     {
       "name": "ワイヤーロープ",
+      "kana": "わいやーろーぷ",
       "kanaHead": "わ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -292,6 +321,7 @@
     },
     {
       "name": "エンジン機器",
+      "kana": "えんじんきき",
       "kanaHead": "え",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -303,6 +333,7 @@
     },
     {
       "name": "流し台",
+      "kana": "ながしだい",
       "kanaHead": "な",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -314,6 +345,7 @@
     },
     {
       "name": "レンジフード",
+      "kana": "れんじふーど",
       "kanaHead": "れ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -325,6 +357,7 @@
     },
     {
       "name": "ホーロー製品",
+      "kana": "ほーろーせいひん",
       "kanaHead": "ほ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -336,6 +369,7 @@
     },
     {
       "name": "揮発油",
+      "kana": "きはつゆ",
       "kanaHead": "き",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -347,6 +381,7 @@
     },
     {
       "name": "劇薬",
+      "kana": "げきやく",
       "kanaHead": "け",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -358,6 +393,7 @@
     },
     {
       "name": "インスリン注射用の針",
+      "kana": "いんすりんちゅうしゃようのはり",
       "kanaHead": "い",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -369,6 +405,7 @@
     },
     {
       "name": "点滴針（個人使用）",
+      "kana": "てんてきばり",
       "kanaHead": "て",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -380,6 +417,7 @@
     },
     {
       "name": "ブロック塀",
+      "kana": "ぶろっくへい",
       "kanaHead": "ふ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -391,6 +429,7 @@
     },
     {
       "name": "廃材",
+      "kana": "はいざい",
       "kanaHead": "は",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -402,6 +441,7 @@
     },
     {
       "name": "洗面台",
+      "kana": "せんめんだい",
       "kanaHead": "せ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -413,6 +453,7 @@
     },
     {
       "name": "便器",
+      "kana": "べんき",
       "kanaHead": "へ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -424,6 +465,7 @@
     },
     {
       "name": "ドア（鉄製）",
+      "kana": "どあ",
       "kanaHead": "と",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -435,6 +477,7 @@
     },
     {
       "name": "石こうボード",
+      "kana": "せっこうぼーど",
       "kanaHead": "せ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -446,6 +489,7 @@
     },
     {
       "name": "電動キックボード",
+      "kana": "でんどうきっくぼーど",
       "kanaHead": "て",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -457,6 +501,7 @@
     },
     {
       "name": "ATV（バギー車）",
+      "kana": "えーてぃーぶい",
       "kanaHead": "え",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -468,6 +513,7 @@
     },
     {
       "name": "サイドカー",
+      "kana": "さいどかー",
       "kanaHead": "さ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -479,6 +525,7 @@
     },
     {
       "name": "ミニカー（一人乗りの車）",
+      "kana": "みにかー",
       "kanaHead": "み",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
@@ -490,6 +537,7 @@
     },
     {
       "name": "ハンディクリーナー",
+      "kana": "はんでぃくりーなー",
       "kanaHead": "は",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
@@ -499,6 +547,7 @@
     },
     {
       "name": "電動シェーバー",
+      "kana": "でんどうしぇーばー",
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
@@ -508,6 +557,7 @@
     },
     {
       "name": "HDDレコーダ",
+      "kana": "えいちでぃーでぃーれこーだ",
       "kanaHead": "え",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
@@ -517,6 +567,7 @@
     },
     {
       "name": "CDプレーヤー",
+      "kana": "しーでぃーぷれーやー",
       "kanaHead": "し",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
@@ -526,6 +577,7 @@
     },
     {
       "name": "食品くず・残飯",
+      "kana": "しょくひんくずざんぱん",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",

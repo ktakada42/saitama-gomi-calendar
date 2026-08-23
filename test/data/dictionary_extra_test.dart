@@ -22,7 +22,15 @@ void main() {
     extra =
         jsonDecode(File('assets/data/dictionary_extra.json').readAsStringSync())
             as Map<String, dynamic>;
-    merged = WasteDictionary.fromJson(base, extra: extra);
+    merged = WasteDictionary.fromJson(
+      base,
+      extra: extra,
+      kana:
+          jsonDecode(
+                File('assets/data/dictionary_kana.json').readAsStringSync(),
+              )
+              as Map<String, dynamic>,
+    );
   });
 
   group('補いのデータ', () {
@@ -120,6 +128,36 @@ void main() {
         if (index < 0) continue;
         expect(index, greaterThanOrEqualTo(previous), reason: item.name);
         previous = index;
+      }
+    });
+
+    test('補いも読みの順に混ざる', () {
+      // 補いを行の末尾に足すだけだと、「あ」の早見表の品目を全部見終わった
+      // 後ろに「油のかん」が来る。読みを持たせて混ぜ込む。
+      expect(
+        merged.items
+            .where((item) => item.kanaHead == 'あ')
+            .map((item) => item.name),
+        [
+          'アイロン',
+          '足拭きマット',
+          '油（食用油）',
+          '油食品等の容器',
+          '油のかん',
+          '油のびん',
+          '雨衣（カッパ）',
+          '網戸',
+          'アルバム（写真用）',
+          'アルミ箔',
+        ],
+      );
+    });
+
+    test('補い全件に読みがある', () {
+      // 読みが無いと名前から起こそうとして、漢字のまま比べることになる。
+      for (final item in extra['items'] as List) {
+        final map = item as Map<String, dynamic>;
+        expect(map['kana'], isNotEmpty, reason: map['name'] as String);
       }
     });
   });

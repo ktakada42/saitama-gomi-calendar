@@ -125,14 +125,75 @@ def cluster_rows(words, tol=3.0):
 
 
 def join_row(words):
-    return "".join(w["text"] for w in sorted(words, key=lambda w: w["x0"])).strip()
+    """語を、上の行から下の行へ、行の中は左から右へ繋ぐ。
+
+    折り返した品目名を1つにまとめたときのために行へ分けてから並べる。
+    x0だけで並べると、2行目の語が1行目の語の間に食い込む。
+    """
+    return "".join(
+        "".join(w["text"] for w in sorted(line, key=lambda w: w["x0"]))
+        for line in cluster_rows(words)
+    ).strip()
+
+
+# 表の行の間隔はおよそ13.6pt。字を小さくして折り返した品目名の続きは、
+# それより詰まった位置に置かれる。
+WRAPPED_LINE_GAP = 10.0
+
+
+def merge_wrapped_rows(rows):
+    """小さい字で組まれた品目名の、折り返した続きを前の行に繋ぐ。
+
+    「カセットボンベ（カートリッジ式ボンベ）」のように欄に収まらない品目名は、
+    市が字を小さくして2行に折り返している。別の行のままにすると
+    「（カートリッジ式ボンベ）」だけの品目ができる。
+    """
+    merged = []
+    for row in rows:
+        previous = merged[-1] if merged else None
+        if (
+            previous
+            and all(not is_body_text(w) for w in row)
+            and all(not is_body_text(w) for w in previous)
+            and min(w["top"] for w in row) - max(w["top"] for w in previous)
+            < WRAPPED_LINE_GAP
+        ):
+            previous.extend(row)
+        else:
+            merged.append(list(row))
+    return merged
+
+
+def split_joined_kana_head(words, item_x):
+    """かな行の見出しと品目名がくっついた語を分ける。
+
+    「ほ（車の）ホイール」のように見出しのかなと品目名が続けて置かれると、
+    pdfplumberはこれを1語として読む。語のx0は見出しの位置になるので、
+    そのままでは品目列の外に落ちて品目ごと消え、見出しも拾えなくなる
+    （「ほ」が抜けると、以降の品目が直前の「へ」に流れ込む）。
+    """
+    split = []
+    for w in words:
+        head = w["text"][:1]
+        if (
+            item_x - 16 <= w["x0"] < item_x - 6
+            and len(w["text"]) > 1
+            and "ぁ" <= head <= "ん"
+        ):
+            split.append({**w, "text": head})
+            # 残りは品目名。x0は品目列の左端に置き直す。
+            split.append({**w, "text": w["text"][1:], "x0": item_x})
+        else:
+            split.append(w)
+    return split
 
 
 def extract_page(page):
-    words = page.extract_words(use_text_flow=False, keep_blank_chars=False)
+    all_words = page.extract_words(use_text_flow=False, keep_blank_chars=False)
     entries = []
 
     for item_x, cat_x, note_x, end_x in BLOCKS:
+        words = split_joined_kana_head(all_words, item_x)
         block = [
             w
             for w in words
@@ -157,13 +218,23 @@ def extract_page(page):
         ]
 
         # 品目名にはバッジの小さな文字を混ぜない。
-        item_words = [w for w in block if w["x0"] < cat_x - 3 and is_body_text(w)]
+        #
+        # ただし大きさだけで落とすと品目ごと消える。欄に収まらない品目名は
+        # 市が本文より小さい字で組んでいて（「カセットボンベ（カートリッジ式
+        # ボンベ）」6.4pt、「マーガリン・バターの容器（プラスチック製）」5.7pt）、
+        # バッジと同じ大きさになる。バッジは区分列の手前に寄せて置かれ、
+        # 品目名は列の左から始まるので、位置で見分ける。
+        item_words = [
+            w
+            for w in block
+            if w["x0"] < cat_x - 3 and (is_body_text(w) or w["x0"] < cat_x - 20)
+        ]
         cat_words = [w for w in block if cat_x - 3 <= w["x0"] < note_x - 3]
         # ブロックの右端には、ページをまたぐ縦書きの装飾帯が重なっていることがある。
         # 注意点の実データはブロック終端より十分内側に収まるので、手前で切る。
         note_words = [w for w in block if note_x - 3 <= w["x0"] < end_x - 12]
 
-        item_rows = cluster_rows(item_words)
+        item_rows = merge_wrapped_rows(cluster_rows(item_words))
         # 各品目行の代表topを先に出しておく。注意点は「この品目行から
         # 次の品目行の手前まで」に入るものを全部拾う（複数行になるため）。
         item_tops = [sum(w["top"] for w in r) / len(r) for r in item_rows]
@@ -327,18 +398,18 @@ def main():
         seen.add(key)
         items.append(e)
 
-    # 五十音順に並べる。
-    # 単純な文字列比較だとUnicodeのコードポイント順になり、
-    # ASCII→ひらがな→カタカナ→漢字と並んでしまって五十音順にならない。
-    # 市の表が付けているかな行を第1キーにすれば、漢字の読みを推測せずに
-    # 資料どおりの並びを再現できる。
+    # 表の並びは市が付けた読みの五十音順なので、抽出した順を崩さない。
+    # 品目名で並べ直すとUnicodeのコードポイント順になり、「アイロン」の次に
+    # 「アルバム」、その後ろに「油」と、読みと無関係な並びになる。
+    # かな行だけを見て安定ソートすれば、複数ページにまたがった行（「あ」が
+    # 1ページ目の末尾と2ページ目の先頭に分かれる等）を繋ぎつつ、
+    # 行の中は表どおりの読み順が残る。
     kana_order = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん"
-    def sort_key(e):
+    def kana_rank(e):
         head = e["kanaHead"] or ""
-        rank = kana_order.index(head) if head in kana_order and head else len(kana_order)
-        return (rank, e["name"])
+        return kana_order.index(head) if head in kana_order and head else len(kana_order)
 
-    items.sort(key=sort_key)
+    items.sort(key=kana_rank)
 
     missing = [e["name"] for e in items if not e["kanaHead"]]
     if missing:
