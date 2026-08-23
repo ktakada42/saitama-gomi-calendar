@@ -24,3 +24,24 @@ command = "git config core.hooksPath .githooks"
 [[hooks.post_create]]
 type = "command"
 command = "flutter pub get"
+
+# ここから server/（Cloudflare Workers の中継サーバー）の分。
+#
+# ローカル開発用の秘匿値。.gitignore 対象なので、worktree を作っただけでは
+# 存在せず、無いまま `npm run dev` すると起動時に落ちる。
+#
+# copy フックではなくコマンドにしているのは、copy は元ファイルが無いと
+# 「飛ばす」ではなく「失敗」になるため。クローンしただけの人には main 側にも
+# 無いので、その場合は飛ばして進む。
+[[hooks.post_create]]
+type = "command"
+command = 'src="$GWX_MAIN_WORKTREE/server/.dev.vars"; if [ -f "$src" ]; then cp "$src" server/.dev.vars; else echo "gwx: server/.dev.vars が main に無いので飛ばした（server/README.md 参照）"; fi'
+
+# server の依存を解決する。node_modules/ はworktreeごとに要る。
+#
+# `npm install` ではなく `npm ci` なのは、lockfile のとおりに入れたいのと、
+# worktree ごとにブランチが違う（＝依存も違いうる）ため。
+[[hooks.post_create]]
+type = "command"
+command = "npm ci"
+work_dir = "server"
