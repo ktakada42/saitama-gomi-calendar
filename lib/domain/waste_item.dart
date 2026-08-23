@@ -14,6 +14,7 @@ class WasteItem {
     required this.categoryId,
     required this.categoryLabel,
     required this.note,
+    this.kana = '',
     this.markIds = const [],
     this.keywords = const [],
   });
@@ -24,9 +25,30 @@ class WasteItem {
   /// 五十音の「行」を示すかな1文字。
   ///
   /// 市の早見表が付けているものをそのまま持つ。「石」「鏡」のように漢字だけの
-  /// 品目でも、市がどの行に置いたかが分かるので、読みを推測せずに
-  /// 五十音順の並びと索引を作れる。
+  /// 品目でも、市がどの行に置いたかが分かるので、行の見出しと索引は
+  /// 読みを推測せずに作れる。
   final String kanaHead;
+
+  /// 並べ替えに使う読み。
+  ///
+  /// 名前がかなだけの品目（「ペットボトル」）は名前から起こすので空のまま。
+  /// 漢字や英字を含む品目（「網戸」「ＭＤ」）だけ、資料に無い読みを
+  /// dictionary_kana.json / dictionary_extra.json で与える。
+  final String kana;
+
+  /// 五十音順に並べるときの読み。
+  ///
+  /// 与えられていなければ名前から起こす。括弧の補足は落とす。
+  /// 「衣装ケース」と「衣装ケース（プラスチック製）」は同じ読みになり、
+  /// 資料の並び順で前後が決まる。
+  String get sortKana {
+    if (kana.isNotEmpty) return kana;
+    return _foldKatakana(
+      name
+          .replaceAll(RegExp(r'[（(][^）)]*[）)]'), '')
+          .replaceAll(RegExp(r'[・、。／/～〜\s]'), ''),
+    );
+  }
 
   /// 出し先の識別子。5区分なら[GarbageCategory.id]と一致する。
   final String categoryId;
@@ -146,6 +168,7 @@ class WasteItem {
   factory WasteItem.fromJson(Map<String, dynamic> json) => WasteItem(
     name: json['name'] as String,
     kanaHead: json['kanaHead'] as String? ?? '',
+    kana: json['kana'] as String? ?? '',
     categoryId: json['category'] as String,
     categoryLabel: json['categoryLabel'] as String,
     note: json['note'] as String? ?? '',

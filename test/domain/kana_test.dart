@@ -30,4 +30,54 @@ void main() {
       expect(row.kana[0], row.head);
     }
   });
+
+  _collation();
+}
+
+void _collation() {
+  group('五十音順に比べる', () {
+    /// [readings] がその順に並んでいることを確かめる。
+    void inOrder(List<String> readings) {
+      for (var i = 0; i + 1 < readings.length; i++) {
+        expect(
+          KanaCollation.compare(readings[i], readings[i + 1]),
+          lessThan(0),
+          reason: '${readings[i]} < ${readings[i + 1]}',
+        );
+      }
+    }
+
+    test('清音の並びで決まる', () {
+      inOrder(['あしふきまっと', 'あぶら', 'あまい', 'あみど', 'あるばむ']);
+    });
+
+    test('濁点は清音に均してから比べる', () {
+      // 「はんガー」が「はんカチ」より前に来るのは、3文字目の濁点ではなく
+      // 4文字目（あ／ち）で決まるため。コードポイント順だと逆になる。
+      inOrder(['はんがー', 'はんかち']);
+      inOrder(['かんそうざい', 'かんでんち', 'かんねつし']);
+    });
+
+    test('清音・大文字が先。同じ音のときだけ効く', () {
+      // 「くつした」と「くっしょん」は、つ／っの大小ではなく3文字目で決まる。
+      inOrder(['くつした', 'くっしょん']);
+      // 読みが同じところまで並ぶときだけ、大小と濁点を見る。
+      expect(KanaCollation.compare('つ', 'っ'), lessThan(0));
+      expect(KanaCollation.compare('か', 'が'), lessThan(0));
+      expect(KanaCollation.compare('は', 'ば'), lessThan(0));
+      expect(KanaCollation.compare('ば', 'ぱ'), lessThan(0));
+    });
+
+    test('長音符は直前の母音に開く', () {
+      // 「こーひー」を開かないと「こんぽうざい」の後ろに落ちる。
+      inOrder(['こーひーのびん', 'こんぽうざい']);
+      inOrder(['えあこん', 'えーしーあだぷた', 'えきしょうてれび']);
+      expect(KanaCollation.compare('こーひー', 'こおひい'), 0);
+    });
+
+    test('短いほうが先', () {
+      inOrder(['ほん', 'ほんだな']);
+      expect(KanaCollation.compare('いしょうけーす', 'いしょうけーす'), 0);
+    });
+  });
 }

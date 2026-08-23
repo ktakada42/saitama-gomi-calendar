@@ -12,7 +12,11 @@ import 'package:saitama_gomi/domain/garbage_category.dart';
 /// しておく。テスト用の作り物ではなく本物のアセットを読む。
 WasteDictionary _loadBundled() {
   final raw = File('assets/data/dictionary.json').readAsStringSync();
-  return WasteDictionary.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+  final kana = File('assets/data/dictionary_kana.json').readAsStringSync();
+  return WasteDictionary.fromJson(
+    jsonDecode(raw) as Map<String, dynamic>,
+    kana: jsonDecode(kana) as Map<String, dynamic>,
+  );
 }
 
 void main() {
@@ -26,6 +30,71 @@ void main() {
   test('出典が入っている', () {
     expect(dictionary.source, isNotEmpty);
     expect(dictionary.sourceUrl, startsWith('https://'));
+  });
+
+  test('読みの五十音順に並んでいる', () {
+    // 品目名で並べ直すとUnicodeのコードポイント順になり、「アイロン」の次に
+    // 「アルバム」、その後ろに「油」と、読みと無関係な並びになる。
+    expect(
+      dictionary.items
+          .where((item) => item.kanaHead == 'あ')
+          .map((item) => item.name),
+      ['アイロン', '足拭きマット', '油（食用油）', '雨衣（カッパ）', '網戸', 'アルバム（写真用）', 'アルミ箔'],
+    );
+  });
+
+  test('全件に読みがある', () {
+    // 名前がかなだけの品目は名前から起こす。漢字や英字を含む品目は
+    // dictionary_kana.json に読みが要る。市が資料を更新して品目が増えたとき、
+    // 読みを足し忘れるとその品目だけ行の中で違う場所に出る。
+    final unreadable = RegExp(r'[^ぁ-んー]');
+    for (final item in dictionary.items) {
+      expect(
+        unreadable.hasMatch(item.sortKana),
+        isFalse,
+        reason: '${item.name} の読みが無い（${item.sortKana}）',
+      );
+    }
+  });
+
+  test('資料の並びと食い違うのは、資料の側が五十音から外れている2件だけ', () {
+    // 早見表そのものが市の付けた読みの五十音順なので、読みを1つでも
+    // 書き間違えると並びが資料とずれる。資料の側が外れているのは
+    // 「炭酸ボンベ」（た行の最後に置かれている）と、
+    // 「パソコン本体／パソコンディスプレイ」（本体を先に置いている）の2箇所。
+    final booklet = [
+      for (final item in jsonDecode(
+            File('assets/data/dictionary.json').readAsStringSync(),
+          )['items']
+          as List)
+        (item as Map<String, dynamic>)['name'] as String,
+    ];
+    final sorted = dictionary.items.map((item) => item.name).toList();
+    final moved = [
+      for (var i = 0; i < booklet.length; i++)
+        if (booklet[i] != sorted[i]) booklet[i],
+    ];
+    expect(moved, ['たんす', 'ダンベル', '段ボール', '炭酸ボンベ', 'パソコン本体（ノート型も）', 'パソコンディスプレイ']);
+  });
+
+  test('欄に収まらない品目名も落ちていない', () {
+    // 市は欄に収まらない品目名を本文より小さい字で組み、2行に折り返す。
+    // 「プラマーク付き」バッジを字の大きさだけで落とすと、これも消える。
+    final names = dictionary.items.map((item) => item.name).toSet();
+    expect(names, contains('カセットボンベ（カートリッジ式ボンベ）'));
+    expect(names, contains('マーガリン・バターの容器（プラスチック製）'));
+  });
+
+  test('かな行の見出しが飛んでいない', () {
+    // 「ほ」の見出しは品目名とくっついてPDFに入っている（「ほ（車の）ホイール」）。
+    // 分けそこねると見出しごと消え、「ほ」以降が「へ」に流れ込んで、
+    // 麻雀牌やマウスまでは行に並ぶ。
+    final headOf = {
+      for (final item in dictionary.items) item.name: item.kanaHead,
+    };
+    expect(headOf['（車の）ホイール'], 'ほ');
+    expect(headOf['ボンベ'], 'ほ');
+    expect(headOf['麻雀牌'], 'ま');
   });
 
   test('品目名と出し先が空でない', () {

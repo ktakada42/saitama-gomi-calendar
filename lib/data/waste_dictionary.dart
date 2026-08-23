@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../domain/kana.dart';
 import '../domain/waste_item.dart';
 
 /// アセットに同梱した分別早見表。
@@ -37,10 +38,12 @@ class WasteDictionary {
     final keywords = await rootBundle.loadString(
       'assets/data/dictionary_keywords.json',
     );
+    final kana = await rootBundle.loadString('assets/data/dictionary_kana.json');
     return WasteDictionary.fromJson(
       jsonDecode(raw) as Map<String, dynamic>,
       extra: jsonDecode(extra) as Map<String, dynamic>,
       keywords: jsonDecode(keywords) as Map<String, dynamic>,
+      kana: jsonDecode(kana) as Map<String, dynamic>,
     );
   }
 
@@ -48,23 +51,41 @@ class WasteDictionary {
     Map<String, dynamic> json, {
     Map<String, dynamic>? extra,
     Map<String, dynamic>? keywords,
+    Map<String, dynamic>? kana,
   }) {
     final byName = (keywords?['keywords'] as Map<String, dynamic>?) ?? const {};
+    final kanaByName = (kana?['kana'] as Map<String, dynamic>?) ?? const {};
     final items = [
       for (final source in [json['items'], extra?['items']])
         for (final item in (source as List<dynamic>? ?? const []))
           WasteItem.fromJson({
+            // 早見表の品目の読みは別ファイルで持つ。dictionary.jsonは抽出
+            // スクリプトの出力そのままなので、手で足した読みをそちらに
+            // 書くと、市が資料を更新して抽出をやり直したときに消える。
+            'kana': kanaByName[item['name']],
             ...item as Map<String, dynamic>,
             // 言い換えは別ファイルで持つ。品目の出どころ（早見表／図解ページ）と
             // 分けておかないと、市の資料が変わったときに突き合わせられない。
             'keywords': byName[item['name']] ?? const <dynamic>[],
           }),
     ];
-    // 五十音の索引が飛ばないよう、行の見出しで並べ直す。
-    // 補いを後ろに繋いだままだと、「わ」の次に「い」が来る。
-    items.sort((a, b) => _kanaOrder(a.kanaHead) - _kanaOrder(b.kanaHead));
+    // 読みの五十音順に並べる。
+    //
+    // 行の見出し（市が付けたもの）を第1キーにして、行そのものは資料どおりに
+    // 置く。読みを1つ書き間違えても品目が別の行へ飛ばないようにするため。
+    // 同じ読みが並んだとき（「衣装ケース」とその括弧付き、「びん・かんの
+    // フタ」のあり／なし）は資料の並び順を保つ。List.sortは安定ではない
+    // ので、元の位置を最後のキーに添える。
+    final order = [
+      for (var i = 0; i < items.length; i++)
+        (_kanaOrder(items[i].kanaHead), items[i].sortKana, i),
+    ]..sort((a, b) {
+      if (a.$1 != b.$1) return a.$1 - b.$1;
+      final byKana = KanaCollation.compare(a.$2, b.$2);
+      return byKana != 0 ? byKana : a.$3 - b.$3;
+    });
     return WasteDictionary(
-      items: items,
+      items: [for (final (_, _, i) in order) items[i]],
       source: json['source'] as String? ?? '',
       sourceUrl: json['sourceUrl'] as String? ?? '',
     );
