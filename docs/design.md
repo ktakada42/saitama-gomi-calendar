@@ -287,7 +287,8 @@ test/ui/        配色のコントラスト（WCAG AA）と、文字列の折り
 - `scripts/build_testflight.sh <issuer-id>`：TestFlightへの配信を1コマンドで行う。
   `flutter build ipa`を使わないのは、あれが自動署名を前提にしていてXcodeに
   サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
-  書き出しは手動署名で行う
+  書き出しは手動署名で行う。ビルドした瞬間のコミットと作業ツリーの状態を
+  `store_assets/app_store/BUILDS.md`に自動で記録する（詳細は同ファイル）
 
 ## 9. ホーム画面ウィジェット
 
