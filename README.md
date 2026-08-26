@@ -162,6 +162,11 @@ issuer IDはこのリポジトリの持ち主に固有の値なので、公開�
 サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
 書き出しは手動署名で行っている。
 
+ビルドした瞬間のコミットと作業ツリーの状態は
+[store_assets/app_store/BUILDS.md](store_assets/app_store/BUILDS.md) に
+自動で記録される。あとから「このビルドはどのコミットから作ったか」を
+git logの中から当て推量する必要がなくなる。
+
 App Store用のスクリーンショットは `store_assets/screenshots/`。装飾版（キャッチコピーの
 帯を足したもの）は `scripts/make_store_screenshots.py` で生成する。
 

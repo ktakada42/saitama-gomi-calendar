@@ -57,11 +57,28 @@ WIDGET_PROFILE_NAME="Saitama Gomi Widget App Store"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE="$ROOT/build/ios/archive/Runner.xcarchive"
 OUT="$ROOT/build/ios/testflight"
+LEDGER="$ROOT/store_assets/app_store/BUILDS.md"
 
 # pubspec.yamlのビルド番号。同じ番号は二度受け付けてもらえないので、
 # 上げ忘れていないか先に見せる。
 VERSION=$(grep '^version:' "$ROOT/pubspec.yaml" | sed 's/version: *//')
 echo "==> $VERSION をビルドします"
+
+# ビルドする瞬間のコミットと作業ツリーの状態を控える。ビルドが終われば
+# git statusは失われ、あとから「どのコミットから作ったか」を突き止める
+# 手立てがなくなるため（v1.1.1のビルド23で実際に迷った）。
+GIT_SHA=$(git -C "$ROOT" rev-parse HEAD)
+GIT_SHORT_SHA=$(git -C "$ROOT" rev-parse --short HEAD)
+DIRTY_FILES=$(git -C "$ROOT" status --porcelain)
+if [ -n "$DIRTY_FILES" ]; then
+  DIRTY_COUNT=$(echo "$DIRTY_FILES" | wc -l | tr -d ' ')
+  WORKTREE_STATE="dirty（${DIRTY_COUNT}件）"
+  echo "==> 作業ツリーがdirty（${DIRTY_COUNT}件）。$LEDGER には元のSHAとして"
+  echo "    ${GIT_SHORT_SHA} を記録するが、これは基点であって全内容ではない。"
+  echo "    あとで対応するコミットができたら「対応するコミット」列を埋めること。"
+else
+  WORKTREE_STATE="clean"
+fi
 
 # 署名ありでアーカイブする。--no-codesignだと、entitlements（App Group）が
 # アーカイブに残らず、後から書き出しても署名に入らない。ウィジェットが
@@ -112,8 +129,22 @@ xcodebuild -exportArchive \
 
 IPA=$(find "$OUT" -name '*.ipa' -maxdepth 1 | head -1)
 echo "==> アップロードします: $IPA"
+# 出力をtee経由でも残す。Delivery UUIDを記録に拾うため。
+# pipefailが効いているので、altoolが失敗すればここで止まる。
+ALTOOL_LOG="$OUT/altool.log"
 xcrun altool --upload-app -f "$IPA" -t ios \
-  --apiKey "$API_KEY_ID" --apiIssuer "$ISSUER_ID"
+  --apiKey "$API_KEY_ID" --apiIssuer "$ISSUER_ID" 2>&1 | tee "$ALTOOL_LOG"
+DELIVERY_UUID=$(grep -oE 'Delivery UUID: [0-9a-f-]+' "$ALTOOL_LOG" | awk '{print $3}' || true)
+DELIVERY_UUID="${DELIVERY_UUID:-不明}"
+
+# ビルドとコミットの対応を記録に残す。「対応するコミット」列だけは手で埋める
+# （dirtyなビルドが最終的にどのコミットになったかは、ビルドした時点では
+# まだ分からないため）。詳しくは store_assets/app_store/BUILDS.md を参照。
+REPO_URL="https://github.com/ktakada42/saitama-gomi-calendar"
+printf '| %s | %s | [`%s`](%s/commit/%s) | %s | – | `%s` |\n' \
+  "$VERSION" "$(date '+%Y-%m-%d %H:%M')" "$GIT_SHORT_SHA" "$REPO_URL" "$GIT_SHA" \
+  "$WORKTREE_STATE" "$DELIVERY_UUID" >> "$LEDGER"
 
 echo "==> 完了。処理が終わるまで数分かかります。"
 echo "    処理が終わればTestFlightの内部テストグループへ自動で配信されます。"
+echo "==> $LEDGER に記録した。対応するコミットが決まったら手で埋めること。"
