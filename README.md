@@ -150,13 +150,27 @@ base_dir = "~/worktrees/{repo}"
 TestFlightへの配信は1コマンドで行える。
 
 ```bash
-scripts/build_testflight.sh <issuer-id>
+scripts/build_testflight.sh
 ```
 
-issuer IDはこのリポジトリの持ち主に固有の値なので、公開リポジトリには書かず
-引数で渡す（`ASC_ISSUER_ID` でも可）。APIキーのIDは
-`~/.appstoreconnect/private_keys/AuthKey_*.p8` のファイル名から拾うので、
-ふだんは省略してよい。
+issuer IDとAPIキーのIDはこのリポジトリの持ち主に固有の値なので、公開リポジトリには
+書かない。かわりに手元の `~/.appstoreconnect/` から拾うので、ふだんは引数が要らない。
+
+- **key ID**：`~/.appstoreconnect/private_keys/AuthKey_*.p8` のファイル名から拾う
+- **issuer ID**：`~/.appstoreconnect/issuers` の、そのkey IDの行から拾う
+
+```
+# ~/.appstoreconnect/issuers
+G5TVPJHS7M  <issuer-id>
+```
+
+issuer IDは秘密ではない。App Store ConnectのKeysページに平文で表示されるUUIDで、
+`.p8` 秘密鍵が無ければJWTを署名できず何もできないため、平文で置いてよい。秘密なのは
+`private_keys/*.p8` のほうだけ。ただしAppleアカウントを特定できる値なので、
+リポジトリではなくホーム以下に置いている（複数のアプリから使い回せる、という利点もある）。
+
+引数や環境変数（`ASC_ISSUER_ID` / `ASC_KEY_ID`）でも渡せる。優先順位は
+引数 > 環境変数 > ファイル。
 
 `flutter build ipa` を直接使わないのは、あれが自動署名を前提にしていてXcodeに
 サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、

@@ -284,11 +284,17 @@ test/ui/        配色のコントラスト（WCAG AA）と、文字列の折り
   `git config core.hooksPath .githooks`で有効化
 - 実機/シミュレータ向けの`flutter build ios`はCIに含めていない（macOSランナーは
   Actionsの無料枠消費が大きいため、必要になった段階で別ジョブに切り出す）
-- `scripts/build_testflight.sh <issuer-id>`：TestFlightへの配信を1コマンドで行う。
+- `scripts/build_testflight.sh`：TestFlightへの配信を1コマンドで行う。
   `flutter build ipa`を使わないのは、あれが自動署名を前提にしていてXcodeに
   サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
   書き出しは手動署名で行う。ビルドした瞬間のコミットと作業ツリーの状態を
   `store_assets/app_store/BUILDS.md`に自動で記録する（詳細は同ファイル）
+- 配信に要るApp Store Connectの識別子は`~/.appstoreconnect/`から拾う。key IDは
+  `private_keys/AuthKey_*.p8`のファイル名から、issuer IDは`issuers`
+  （`<key-id> <issuer-id>`の並び）から。リポジトリ内に置かないのは、公開リポジトリで
+  Appleアカウントを晒さないためと、worktreeを作るたびに用意し直すのを避けるため。
+  他のアプリからも同じ場所を読めばよい。issuer ID自体は秘密ではない（Keysページに
+  平文で出る値で、`.p8`秘密鍵が無ければ使えない）
 
 ## 9. ホーム画面ウィジェット
 
