@@ -1,8 +1,6 @@
 # さいたま市ゴミ収集カレンダー（非公式）
 
 さいたま市の家庭ごみの収集日と分別を確認するアプリです。
-（元々は [TenpAI](https://github.com/ktakada42/TenpAI) リポジトリ内で開発され、
-無関係な別アプリのため本リポジトリに履歴ごと分離した）
 **iPhone専用**（iOS 18以降）。Flutter実装なので将来Androidにも展開できます。
 
 市の公式アプリと同じ情報を扱いますが、**トップページを開いた瞬間に「明日は何ごみか」が分かる**
@@ -153,24 +151,14 @@ TestFlightへの配信は1コマンドで行える。
 scripts/build_testflight.sh
 ```
 
-issuer IDとAPIキーのIDはこのリポジトリの持ち主に固有の値なので、公開リポジトリには
-書かない。かわりに手元の `~/.appstoreconnect/` から拾うので、ふだんは引数が要らない。
+証明書・APIキー・issuer IDといった配信に要るものは、どれもリポジトリではなく
+手元の `~/.appstoreconnect/` に置く。スクリプトがそこから拾うので、ふだんは
+引数が要らない。
 
-- **key ID**：`~/.appstoreconnect/private_keys/AuthKey_*.p8` のファイル名から拾う
-- **issuer ID**：`~/.appstoreconnect/issuers` の、そのkey IDの行から拾う
-
-```
-# ~/.appstoreconnect/issuers
-G5TVPJHS7M  <issuer-id>
-```
-
-issuer IDは秘密ではない。App Store ConnectのKeysページに平文で表示されるUUIDで、
-`.p8` 秘密鍵が無ければJWTを署名できず何もできないため、平文で置いてよい。秘密なのは
-`private_keys/*.p8` のほうだけ。ただしAppleアカウントを特定できる値なので、
-リポジトリではなくホーム以下に置いている（複数のアプリから使い回せる、という利点もある）。
-
-引数や環境変数（`ASC_ISSUER_ID` / `ASC_KEY_ID`）でも渡せる。優先順位は
-引数 > 環境変数 > ファイル。
+これらはこのリポジトリの持ち主のApple Developerアカウントに固有の値なので、
+手順書もリポジトリには置いていない。`docs/local/distribution.md`（`.gitignore`
+対象）に分けてある。事前に要るものと、どの値が秘密でどれがそうでないかは
+そちらを参照。
 
 `flutter build ipa` を直接使わないのは、あれが自動署名を前提にしていてXcodeに
 サインイン済みのアカウントを探しに行くため。アーカイブまでをflutterに任せ、
