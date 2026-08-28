@@ -12,25 +12,32 @@
 #   - App Store Connect APIキーが ~/.appstoreconnect/private_keys/ にあること
 #     （AuthKey_<KEY_ID>.p8 の形で置く）
 #
-# 使い方:
-#   scripts/build_testflight.sh <issuer-id> [key-id]
+#   - issuer IDが ~/.appstoreconnect/issuers にあること
+#     （`<key-id> <issuer-id>` を1行ずつ。引数や環境変数でも渡せる）
 #
-# issuer IDとkey IDはこのリポジトリの持ち主に固有の値なので、
-# 公開リポジトリに書かず、引数か環境変数で渡す。
-#   ASC_ISSUER_ID / ASC_KEY_ID でも指定できる。
-# key IDは、~/.appstoreconnect/private_keys/ に鍵が1つだけあれば
-# ファイル名から拾うので、ふだんは省略してよい。
+# 使い方:
+#   scripts/build_testflight.sh [issuer-id] [key-id]
+#
+# issuer IDとkey IDはこのリポジトリの持ち主に固有の値なので、公開リポジトリには
+# 書かない。ただし毎回ブラウザで調べ直すのも無駄なので、手元の
+# ~/.appstoreconnect/ に置いて、そこから拾う。どちらもふだんは省略してよい。
+#
+#   key ID    : private_keys/ に鍵が1つだけならファイル名から拾う
+#   issuer ID : issuers ファイルの、そのkey IDの行から拾う
+#
+# 引数 > 環境変数 (ASC_ISSUER_ID / ASC_KEY_ID) > ファイル の順に優先する。
+#
+# issuer IDは秘密ではない（App Store ConnectのKeysページに平文で出るUUIDで、
+# .p8 秘密鍵が無ければJWTを署名できず何もできない）。平文で置いてよい。
+# 秘密なのは private_keys/*.p8 のほうだけ。
 
 set -euo pipefail
 
-ISSUER_ID="${1:-${ASC_ISSUER_ID:-}}"
-if [ -z "$ISSUER_ID" ]; then
-  echo "使い方: $0 <issuer-id> [key-id]" >&2
-  echo "  または環境変数 ASC_ISSUER_ID を設定する" >&2
-  exit 1
-fi
+ASC_DIR="$HOME/.appstoreconnect"
+KEYS_DIR="$ASC_DIR/private_keys"
+ISSUERS_FILE="$ASC_DIR/issuers"
 
-KEYS_DIR="$HOME/.appstoreconnect/private_keys"
+# issuer IDはkey IDごとに引くので、key IDを先に決める。
 API_KEY_ID="${2:-${ASC_KEY_ID:-}}"
 if [ -z "$API_KEY_ID" ]; then
   # AuthKey_XXXX.p8 が1つだけならファイル名から拾う。
@@ -44,6 +51,23 @@ if [ -z "$API_KEY_ID" ]; then
     echo "  探した場所: $KEYS_DIR" >&2
     exit 1
   fi
+fi
+
+ISSUER_ID="${1:-${ASC_ISSUER_ID:-}}"
+if [ -z "$ISSUER_ID" ] && [ -f "$ISSUERS_FILE" ]; then
+  # `<key-id> <issuer-id>` の並び。'#' 以降はコメント。
+  ISSUER_ID=$(awk -v k="$API_KEY_ID" '
+    { sub(/#.*/, "") }
+    $1 == k { print $2; exit }
+  ' "$ISSUERS_FILE")
+fi
+if [ -z "$ISSUER_ID" ]; then
+  echo "issuer IDが分かりません。次のどれかで渡してください:" >&2
+  echo "  1. $ISSUERS_FILE に1行足す: $API_KEY_ID  <issuer-id>" >&2
+  echo "  2. 環境変数 ASC_ISSUER_ID を設定する" >&2
+  echo "  3. 引数で渡す: $0 <issuer-id>" >&2
+  echo "  調べる場所: https://appstoreconnect.apple.com/access/integrations/api" >&2
+  exit 1
 fi
 
 TEAM_ID="R9DDB6ZX39"
