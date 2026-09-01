@@ -22,7 +22,7 @@ dependencies:
   # 選択した地区の永続化。保存するのは地区IDだけなので軽量なKVSで足りる。
   shared_preferences: ^2.5.3
   # 収集日前夜のローカル通知。端末内で完結し、サーバーとは通信しない。
-  flutter_local_notifications: ^22.2.0
+  flutter_local_notifications: ^22.3.0
   # 上記が日時指定の予約に要求する、タイムゾーン付きの日時（TZDateTime）のため。
   timezone: ^0.11.1
   # 出典（市の公式ページ）を外部ブラウザで開くため。
