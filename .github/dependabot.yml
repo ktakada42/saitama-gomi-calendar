@@ -23,6 +23,26 @@ updates:
       time: "09:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 10
+    groups:
+      # vitest and @cloudflare/vitest-pool-workers are locked together by peer
+      # dependencies, so a single-dependency PR can never move them: bumping
+      # vitest alone breaks the peer range, and bumping the pool alone breaks it
+      # from the other side. Grouping is what makes the coordinated bump
+      # expressible as one PR.
+      #
+      # Watch item: vitest 5 is currently unreachable. It folded @vitest/runner
+      # into core and that package has no v5 release, while pool-workers 0.22.0
+      # still peers on @vitest/runner and @vitest/snapshot ^4.1.0 -- so the jump
+      # needs a pool-workers release that supports vitest 5, and no amount of
+      # overrides or --legacy-peer-deps gets there. Until that release lands,
+      # the weekly vitest 5 PR keeps failing on `npm ci`. That failure is left
+      # visible on purpose rather than silenced with an `ignore` rule: the day
+      # it goes green is how we find out the upstream support arrived.
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@cloudflare/vitest-pool-workers"
 
   # GitHub Actions workflows
   - package-ecosystem: "github-actions"
