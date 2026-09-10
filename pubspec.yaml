@@ -18,7 +18,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   # 状態管理。TenpAI と揃えて Riverpod を使う。
-  flutter_riverpod: ^3.3.2
+  flutter_riverpod: ^3.4.3
   # 選択した地区の永続化。保存するのは地区IDだけなので軽量なKVSで足りる。
   shared_preferences: ^2.5.3
   # 収集日前夜のローカル通知。端末内で完結し、サーバーとは通信しない。
