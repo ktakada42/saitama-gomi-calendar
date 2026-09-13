@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
+import 'package:saitama_gomi/domain/sorting_change.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
+import 'package:saitama_gomi/ui/paren_wrap.dart';
 import 'package:saitama_gomi/ui/widgets/category_pill.dart';
 
 import '../support/test_app.dart';
@@ -373,6 +375,24 @@ void main() {
       // 同梱の分別が古くなっているので、一覧を見る前に気づけるようにする。
       expect(find.text('プラスチックの分別が変わりました'), findsOneWidget);
       expect(find.text('市の最新の案内を見る'), findsOneWidget);
+    });
+
+    testWidgets('市が挙げている条件も出す', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        today: DateTime(2026, 10, 1),
+      );
+
+      // 品目ごとの分別はまだ市から出ていない。条件が読めれば、
+      // 手元の品物については利用者が自分で判断できる。
+      for (final condition in SortingChange.plastic2026.conditions) {
+        expect(
+          find.text(keepParenthesesTogether(condition)),
+          findsOneWidget,
+          reason: condition,
+        );
+      }
     });
 
     testWidgets('切り替え日の前は出さない', (tester) async {
