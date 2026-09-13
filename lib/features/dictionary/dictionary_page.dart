@@ -73,8 +73,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
           children: [
             // 決まりが変わった日を過ぎているのに、同梱の分別が古いまま。
             // 一覧を見る前に気づけるよう、検索欄より上に出す。
-            if (change != null)
-              _SortingChangeNotice(change: change, manualUrl: value.sourceUrl),
+            if (change != null) _SortingChangeNotice(change: change),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: TextField(
@@ -283,13 +282,13 @@ class _Results extends StatelessWidget {
 /// 分別の決まりが変わったことの知らせ。
 ///
 /// 同梱の分別が古くなっているので、まず「当てにしないでほしい」と伝え、
-/// 市の案内へ行けるようにする。閉じられるようにはしない。
+/// 市が挙げている条件を渡して、市の案内へ行けるようにする。
+/// 閉じられるようにはしない。
 /// 消してしまうと、古い分類を正しいものとして読み続けることになる。
 class _SortingChangeNotice extends StatelessWidget {
-  const _SortingChangeNotice({required this.change, required this.manualUrl});
+  const _SortingChangeNotice({required this.change});
 
   final SortingChange change;
-  final String manualUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -329,6 +328,24 @@ class _SortingChangeNotice extends StatelessWidget {
             keepParenthesesTogether(change.description),
             style: theme.textTheme.bodySmall,
           ),
+          // 品目ごとの分別はまだ市から出ていない。条件だけでも渡しておけば、
+          // 手元の品物については利用者が自分で判断できる。
+          for (final condition in change.conditions)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('・', style: theme.textTheme.bodySmall),
+                  Expanded(
+                    child: Text(
+                      keepParenthesesTogether(condition),
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           const SizedBox(height: 4),
           Align(
             alignment: Alignment.centerLeft,
@@ -339,7 +356,7 @@ class _SortingChangeNotice extends StatelessWidget {
                 foregroundColor: color,
               ),
               onPressed: () => launchUrl(
-                Uri.parse(manualUrl),
+                Uri.parse(change.noticeUrl),
                 mode: LaunchMode.externalApplication,
               ),
               icon: const Icon(Icons.open_in_new, size: 16),

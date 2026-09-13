@@ -20,7 +20,15 @@ void main() {
   test('表示に使う文言がそろっている', () {
     expect(change.title, isNotEmpty);
     expect(change.description, isNotEmpty);
-    // 何をすればよいかまで書く。古いと言われるだけでは行き先がない。
-    expect(change.description, contains('市の最新の案内'));
+    // 古いと言われるだけでは行き先がない。品目ごとの分別はまだ市から
+    // 出ていないので、手元の品物を自分で判断できる条件を渡す。
+    expect(change.conditions, hasLength(3));
+    expect(change.conditions.any((c) => c.isEmpty), isFalse);
+  });
+
+  test('リンク先は変更を告知しているページ', () {
+    // 分別一覧のページ（p005300）ではない。そちらを開いても
+    // 何がどう変わったのかは書かれていない。
+    expect(change.noticeUrl, contains('p127278'));
   });
 }
