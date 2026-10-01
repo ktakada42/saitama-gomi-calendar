@@ -106,14 +106,47 @@ void main() {
     });
   });
 
-  testWidgets('収集の無い日をタップしたらそう伝える', (tester) async {
+  testWidgets('収集の無い日は押せない', (tester) async {
     await pumpApp(tester, const CalendarPage());
 
-    // 8月7日は金曜で収集がない。
+    // 8月7日は金曜で収集がない。開いても「収集はありません」としか出せず、
+    // マスに帯が無いことで既に伝わっている。
     await tester.tap(find.text('7'));
     await tester.pumpAndSettle();
 
-    expect(find.text('収集はありません。'), findsOneWidget);
+    expect(find.text('収集はありません。'), findsNothing);
+    expect(find.byType(BottomSheet), findsNothing);
+  });
+
+  testWidgets('年末年始は、収集が無くても押せて理由が読める', (tester) async {
+    await pumpApp(tester, const CalendarPage(), today: DateTime(2027, 1, 10));
+
+    // 1月1日は金曜。年末年始でなければ押せないが、いつもの曜日なのに帯が
+    // 無い日（1月2日・3日など）もあるので、3日間は理由を読めるようにしておく。
+    await tester.tap(find.text('1'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('年末年始のため収集はお休みです。'), findsOneWidget);
+  });
+
+  testWidgets('短い文だけの日でも、シートは画面の幅いっぱいに出る', (tester) async {
+    await pumpApp(tester, const CalendarPage(), today: DateTime(2027, 1, 10));
+    await tester.tap(find.text('1'));
+    await tester.pumpAndSettle();
+
+    // シートの面（Material）の幅は中身に合わせて縮む。文の幅しかない
+    // 細いシートになっていた。外側のBottomSheetは常に画面の幅なので、
+    // 面のほうを測る。
+    final surface = tester.getSize(
+      find
+          .descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Material),
+          )
+          .first,
+    );
+    final screen = tester.getSize(find.byType(MaterialApp));
+    expect(surface.width, screen.width);
   });
 
   testWidgets('凡例は出さない。区分名はマスの帯に直接書いてある', (tester) async {

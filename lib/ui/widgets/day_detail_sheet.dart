@@ -45,34 +45,40 @@ class _DayDetailSheet extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              DateLabel.headline(day.date, today),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (day.isEmpty)
+        // シートの幅は中身に合わせて縮む。区分のある日は区分の枠が幅いっぱいに
+        // 広がるので気づかないが、「年末年始のため収集はお休みです。」のように
+        // 短い文だけの日は、文の幅しかない細いシートになる。
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(
-                CollectionCalendar.isSuspended(day.date)
-                    ? '年末年始のため収集はお休みです。'
-                    : '収集はありません。',
-                style: theme.textTheme.bodyLarge,
-              )
-            else
-              for (final category in day.categories) ...[
-                _CategoryDetail(
-                  category: category,
-                  day: day.date,
-                  deadline: area.depositDeadline(category),
+                DateLabel.headline(day.date, today),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 12),
-              ],
-          ],
+              ),
+              const SizedBox(height: 16),
+              if (day.isEmpty)
+                Text(
+                  CollectionCalendar.isSuspended(day.date)
+                      ? '年末年始のため収集はお休みです。'
+                      : '収集はありません。',
+                  style: theme.textTheme.bodyLarge,
+                )
+              else
+                for (final category in day.categories) ...[
+                  _CategoryDetail(
+                    category: category,
+                    day: day.date,
+                    deadline: area.depositDeadline(category),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+            ],
+          ),
         ),
       ),
     );

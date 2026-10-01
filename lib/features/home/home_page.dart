@@ -114,8 +114,16 @@ class _FeaturedCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () =>
-            showDayDetailSheet(context, day: day, area: area, today: today),
+        // 収集の無い日は押せなくする。開いても、このカードに書いてあること
+        // （「収集はありません」「年末年始のお休み」）しか出せない。
+        onTap: day.isEmpty
+            ? null
+            : () => showDayDetailSheet(
+                context,
+                day: day,
+                area: area,
+                today: today,
+              ),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -221,8 +229,11 @@ class _SecondaryRow extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () =>
-          showDayDetailSheet(context, day: day, area: area, today: today),
+      // 大きいカードと同じく、収集の無い日は押せなくする。
+      onTap: day.isEmpty
+          ? null
+          : () =>
+                showDayDetailSheet(context, day: day, area: area, today: today),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
         child: Row(

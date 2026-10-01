@@ -247,7 +247,13 @@ class _MonthGrid extends StatelessWidget {
         _DayCell(
           day: day,
           isToday: CollectionCalendar.isSameDate(day.date, today),
-          onTap: () => onTapDay(day),
+          // 収集の無い日は押せなくする。開いても「収集はありません」としか
+          // 出せず、マスに帯が無いことで既に伝わっている。
+          // 年末年始だけは押せるままにする。いつもなら収集のある曜日なのに
+          // 帯が無い理由を、マスの中では伝えられないため。
+          onTap: day.isEmpty && !CollectionCalendar.isSuspended(day.date)
+              ? null
+              : () => onTapDay(day),
         ),
     ];
     while (cells.length % 7 != 0) {
@@ -284,7 +290,9 @@ class _DayCell extends StatelessWidget {
 
   final CollectionDay day;
   final bool isToday;
-  final VoidCallback onTap;
+
+  /// 押したときの動き。null なら押せない。
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
