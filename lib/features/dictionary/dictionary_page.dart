@@ -228,7 +228,7 @@ class _Results extends StatelessWidget {
   static int subtitleLines(WasteItem item) {
     if (item.hasDetail) return item.note.isEmpty ? 1 : 2;
     if (item.note.isEmpty) return 0;
-    // 「※」で分けた文はそれぞれ1行を使う。長い文はもう1行に折り返る。
+    // 但し書きはそれぞれ1行を使う。長い文はもう1行に折り返る。
     final lines = splitNoteLines(
       item.note,
     ).split('\n').fold(0, (sum, line) => sum + (line.length > 24 ? 2 : 1));
