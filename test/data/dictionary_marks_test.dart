@@ -53,6 +53,58 @@ void main() {
     expect(noteOf('扇風機'), '充電式のものは、小型家電回収ボックスへ');
   });
 
+  group('但し書きの切れ目', () {
+    String noteOf(String name) =>
+        dictionary.items.firstWhere((i) => i.name == name).note;
+
+    test('別々の但し書きは改行で分かれている', () {
+      // 区切らずに繋ぐと、どこで文が切れるのか読めない。
+      expect(noteOf('おもちゃ'), '金属製は、もえないごみ\n電池が外れないものは、小型家電回収ボックスへ');
+      expect(noteOf('アイロン'), '回収ボックスヘ\nもえないごみとしても出せます');
+      expect(noteOf('自転車'), '直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ');
+    });
+
+    test('同じ行に横に並べてある但し書きも分かれている', () {
+      expect(noteOf('ふとん'), '90㎝未満にしばる\n1回に1枚まで');
+      expect(noteOf('血圧計'), '回収ボックスへ\nもえないごみとしても出せます\n水銀を使用している場合は有害危険ごみ');
+      // 「〜まで」は文の終わり。次の行へ続いているのではない。
+      expect(
+        noteOf('かわら'),
+        '直接持込みまたは戸別収集\n直接持込みの場合は1日につき10個まで\n戸別収集の場合は4枚1品、最大8枚まで',
+      );
+    });
+
+    test('欄に収まらず折り返した文は、途中で切らない', () {
+      // 冊子では2行に折り返してあるが、1つの文。
+      expect(noteOf('歯ブラシ'), '電動歯ブラシは電池を抜いて、回収ボックスへ');
+      expect(noteOf('ベニヤ板'), '厚さ10cm未満で長さ90cm未満の場合のみ');
+      expect(noteOf('ペットボトル'), '中をすすいで（フタとラベルははずして容器包装プラスチックへ）');
+      expect(noteOf('サイリウム（ケミカルライト）'), '電池式ペンライトは、電池を外して回収ボックスまたはもえないごみへ');
+      // カタカナ語の途中で折り返している（「フロンガ／スを回収済み」）。
+      expect(noteOf('冷風機'), contains('フロンガスを回収済みである'));
+      expect(noteOf('冷風機'), isNot(contains('\n')));
+    });
+
+    test('括弧の但し書きは前の文に付ける', () {
+      expect(noteOf('本'), endsWith('一緒にまとめてしばる（雨の日は次回に）'));
+      expect(noteOf('ティッシュペーパーの箱'), 'ビニールは除いて、その他の紙へ（雨の日は次回に）');
+    });
+
+    test('文の途中の区分のバッジは、区分の名前に直してある', () {
+      // 冊子は「箱は口金部分をはずして [資2] その他の紙へ」と略号で書いている。
+      expect(noteOf('ラップ類'), '箱は口金部分をはずして資源物2類のその他の紙へ');
+    });
+
+    test('空の行や、行頭・行末の空白が残っていない', () {
+      for (final item in dictionary.items.where((i) => i.note.isNotEmpty)) {
+        for (final line in item.note.split('\n')) {
+          expect(line, isNotEmpty, reason: item.name);
+          expect(line.trim(), line, reason: item.name);
+        }
+      }
+    });
+  });
+
   test('表のいちばん下の行の注意点が落ちていない', () {
     // 脚注の手前で切る位置がページによって違う。
     final dishwasher = dictionary.items.firstWhere((i) => i.name == '食器洗浄器');

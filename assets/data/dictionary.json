@@ -8,7 +8,7 @@
       "kanaHead": "あ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスヘもえないごみとしても出せます",
+      "note": "回収ボックスヘ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -24,7 +24,7 @@
       "kanaHead": "あ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めてから※液体のものは、排出禁止",
+      "note": "紙等にしみ込ませるか、固めてから\n※液体のものは、排出禁止",
       "marks": []
     },
     {
@@ -40,7 +40,7 @@
       "kanaHead": "あ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "戸別収集の場合は2枚1品、最大8枚まで90cm未満なら、もえないごみ",
+      "note": "戸別収集の場合は2枚1品、最大8枚まで\n90cm未満なら、もえないごみ",
       "marks": [
         "star2"
       ]
@@ -132,7 +132,7 @@
       "kanaHead": "い",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -219,7 +219,7 @@
       "kanaHead": "う",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "PETマークがある場合は、ペットボトルとして出してくださいPET・プラマークがないものはもえるごみ",
+      "note": "PETマークがある場合は、ペットボトルとして出してください\nPET・プラマークがないものはもえるごみ",
       "marks": [
         "box",
         "star1",
@@ -241,7 +241,7 @@
       "kanaHead": "え",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -283,7 +283,7 @@
       "kanaHead": "え",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえるごみとしても出せますコードリールははずして、もえないごみへ",
+      "note": "回収ボックスへ\nもえるごみとしても出せます\nコードリールははずして、もえないごみへ",
       "marks": []
     },
     {
@@ -291,7 +291,7 @@
       "kanaHead": "お",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "市販の廃油パック等に染み込ませる※液体のものは、排出禁止",
+      "note": "市販の廃油パック等に染み込ませる\n※液体のものは、排出禁止",
       "marks": []
     },
     {
@@ -371,7 +371,7 @@
       "kanaHead": "お",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "金属製は、もえないごみ電池が外れないものは、小型家電回収ボックスへ",
+      "note": "金属製は、もえないごみ\n電池が外れないものは、小型家電回収ボックスへ",
       "marks": [
         "box"
       ]
@@ -441,7 +441,7 @@
       "kanaHead": "か",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -493,7 +493,7 @@
       "kanaHead": "か",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "電池をはずすビルトインは許可業者（（有）太盛）へ",
+      "note": "電池をはずす\nビルトインは許可業者（（有）太盛）へ",
       "marks": [
         "page11"
       ]
@@ -611,7 +611,7 @@
       "kanaHead": "か",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -627,7 +627,7 @@
       "kanaHead": "か",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）※金属部分は、もえないごみ",
+      "note": "その他の紙として（雨の日は次回に）\n※金属部分は、もえないごみ",
       "marks": []
     },
     {
@@ -643,7 +643,7 @@
       "kanaHead": "か",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4枚1品、最大8枚まで",
+      "note": "直接持込みまたは戸別収集\n直接持込みの場合は1日につき10個まで\n戸別収集の場合は4枚1品、最大8枚まで",
       "marks": [
         "page9"
       ]
@@ -690,7 +690,7 @@
       "kanaHead": "き",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "太さが10㎝未満で長さが90㎝未満の場合のみ直径30㎝未満の束にして、1回に3束まで直接持込みは太さ長さが同条件",
+      "note": "太さが10㎝未満で長さが90㎝未満の場合のみ直径30㎝未満の束にして、1回に3束まで\n直接持込みは太さ長さが同条件",
       "marks": []
     },
     {
@@ -740,7 +740,7 @@
       "kanaHead": "き",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ※耐火性でない手提げ金庫は、もえないごみ",
+      "note": "許可業者（㈲太盛）へ\n※耐火性でない手提げ金庫は、もえないごみ",
       "marks": [
         "page11"
       ]
@@ -836,7 +836,7 @@
       "kanaHead": "く",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ※電動機のないものは、もえないごみ",
+      "note": "許可業者（㈲太盛）へ\n※電動機のないものは、もえないごみ",
       "marks": [
         "page11",
         "star2"
@@ -847,7 +847,7 @@
       "kanaHead": "く",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "許可業者（㈲太盛）へ※タイヤ、ホイール、バッテリーは戸別収集可",
+      "note": "許可業者（㈲太盛）へ\n※タイヤ、ホイール、バッテリーは戸別収集可",
       "marks": [
         "page11"
       ]
@@ -857,7 +857,7 @@
       "kanaHead": "け",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "単独の透明袋に入れて90㎝以上も出せます※グローランプは、もえないごみ",
+      "note": "単独の透明袋に入れて\n90㎝以上も出せます\n※グローランプは、もえないごみ",
       "marks": []
     },
     {
@@ -907,7 +907,7 @@
       "kanaHead": "け",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます水銀を使用している場合は有害危険ごみ",
+      "note": "回収ボックスへ\nもえないごみとしても出せます\n水銀を使用している場合は有害危険ごみ",
       "marks": []
     },
     {
@@ -949,7 +949,7 @@
       "kanaHead": "こ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -1023,7 +1023,7 @@
       "kanaHead": "こ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1051,7 +1051,7 @@
       "kanaHead": "こ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで",
+      "note": "直接持込みまたは戸別収集\n直接持込みの場合は1日につき10個まで\n戸別収集の場合は4個1品扱い、最大8個まで",
       "marks": [
         "page9"
       ]
@@ -1081,7 +1081,7 @@
       "kanaHead": "さ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1133,7 +1133,7 @@
       "kanaHead": "さ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "雑誌類でまとめてしばるカタログ、週刊誌等も一緒に（雨の日は次回に）",
+      "note": "雑誌類でまとめてしばる\nカタログ、週刊誌等も一緒に（雨の日は次回に）",
       "marks": []
     },
     {
@@ -1241,7 +1241,7 @@
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1369,7 +1369,7 @@
       "kanaHead": "し",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ※スプレーかん式は、有害危険ごみ",
+      "note": "販売店、専門業者へ\n※スプレーかん式は、有害危険ごみ",
       "marks": [
         "page10"
       ]
@@ -1390,7 +1390,7 @@
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1439,7 +1439,7 @@
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めて※液体のものは、排出禁止",
+      "note": "紙等にしみ込ませるか、固めて\n※液体のものは、排出禁止",
       "marks": []
     },
     {
@@ -1489,7 +1489,7 @@
       "kanaHead": "し",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1569,7 +1569,7 @@
       "kanaHead": "す",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1624,7 +1624,7 @@
       "kanaHead": "す",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "灯油を抜き、電池をはずす※本体部分の灯油も抜く",
+      "note": "灯油を抜き、電池をはずす\n※本体部分の灯油も抜く",
       "marks": [
         "star2"
       ]
@@ -1652,7 +1652,7 @@
       "kanaHead": "す",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1769,7 +1769,7 @@
       "kanaHead": "せ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "中身を出し切って注ぎ口部分を水ですすぐすすいで汚れが落ちなければもえるごみへ",
+      "note": "中身を出し切って注ぎ口部分を水ですすぐ\nすすいで汚れが落ちなければもえるごみへ",
       "marks": []
     },
     {
@@ -1835,7 +1835,7 @@
       "kanaHead": "そ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため※びんの場合は、もえないごみ",
+      "note": "汚れが取れないため\n※びんの場合は、もえないごみ",
       "marks": []
     },
     {
@@ -1853,7 +1853,7 @@
       "kanaHead": "そ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -1881,7 +1881,7 @@
       "kanaHead": "た",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せますアルコール式のものは、もえないごみ",
+      "note": "回収ボックスへ\nもえないごみとしても出せます\nアルコール式のものは、もえないごみ",
       "marks": []
     },
     {
@@ -1889,7 +1889,7 @@
       "kanaHead": "た",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せますデジタル式でないものは、もえないごみ",
+      "note": "回収ボックスへ\nもえないごみとしても出せます\nデジタル式でないものは、もえないごみ",
       "marks": []
     },
     {
@@ -1933,7 +1933,7 @@
       "kanaHead": "た",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "太さが10cm未満で長さが50cm未満の場合のみ直径30cm未満の束にして、1回に3束まで直接持込みは太さ長さが同条件",
+      "note": "太さが10cm未満で長さが50cm未満の場合のみ直径30cm未満の束にして、1回に3束まで\n直接持込みは太さ長さが同条件",
       "marks": []
     },
     {
@@ -1957,7 +1957,7 @@
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10枚まで戸別収集の場合は1回につき4枚まで",
+      "note": "直接持込みまたは戸別収集\n直接持込みの場合は1日につき10枚まで\n戸別収集の場合は1回につき4枚まで",
       "marks": [
         "page9"
       ]
@@ -2019,7 +2019,7 @@
       "kanaHead": "た",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -2105,7 +2105,7 @@
       "kanaHead": "つ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -2165,7 +2165,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2181,7 +2181,7 @@
       "kanaHead": "て",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -2191,7 +2191,7 @@
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "金具付きは金属部分を外して金属部分はもえないごみへ",
+      "note": "金具付きは金属部分を外して\n金属部分はもえないごみへ",
       "marks": []
     },
     {
@@ -2263,7 +2263,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへ束の径が20cm以下の場合、もえるごみとしても出せます",
+      "note": "回収ボックスへ\n束の径が20cm以下の場合、もえるごみとしても出せます",
       "marks": []
     },
     {
@@ -2271,7 +2271,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます電球はもえないごみ、蛍光管は有害危険ごみへ",
+      "note": "回収ボックスへ\nもえないごみとしても出せます\n電球はもえないごみ、蛍光管は有害危険ごみへ",
       "marks": [
         "star2"
       ]
@@ -2289,7 +2289,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2307,7 +2307,7 @@
       "kanaHead": "て",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "LED電球も含む水銀を使用している場合は有害危険ごみ",
+      "note": "LED電球も含む\n水銀を使用している場合は有害危険ごみ",
       "marks": []
     },
     {
@@ -2345,7 +2345,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2353,7 +2353,7 @@
       "kanaHead": "て",
       "category": "hazardous",
       "categoryLabel": "有害危険ごみ",
-      "note": "絶縁して単独で透明袋に入れて充電式、ボタン型は電池回収ボックスへ",
+      "note": "絶縁して単独で透明袋に入れて\n充電式、ボタン型は電池回収ボックスへ",
       "marks": []
     },
     {
@@ -2361,7 +2361,7 @@
       "kanaHead": "て",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めてから※液体のものは、排出禁止",
+      "note": "紙等にしみ込ませるか、固めてから\n※液体のものは、排出禁止",
       "marks": []
     },
     {
@@ -2369,7 +2369,7 @@
       "kanaHead": "て",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2437,7 +2437,7 @@
       "kanaHead": "と",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2453,7 +2453,7 @@
       "kanaHead": "と",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -2471,7 +2471,7 @@
       "kanaHead": "と",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "汚れが取れないため※びんの場合は、もえないごみ",
+      "note": "汚れが取れないため\n※びんの場合は、もえないごみ",
       "marks": []
     },
     {
@@ -2661,7 +2661,7 @@
       "kanaHead": "は",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -2721,7 +2721,7 @@
       "kanaHead": "は",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "箱や家電品の緩衝材・梱包材など30cm以上はもえるごみ",
+      "note": "箱や家電品の緩衝材・梱包材など\n30cm以上はもえるごみ",
       "marks": [
         "star4"
       ]
@@ -2749,7 +2749,7 @@
       "kanaHead": "は",
       "category": "nonBurnable",
       "categoryLabel": "もえないごみ",
-      "note": "オイルありの場合は×。許可業者（(有)太盛）へ",
+      "note": "オイルありの場合は×。\n許可業者（(有)太盛）へ",
       "marks": [
         "star2",
         "page11"
@@ -2830,7 +2830,7 @@
       "kanaHead": "ひ",
       "category": "notAccepted",
       "categoryLabel": "収集できないもの",
-      "note": "販売店、専門業者へ電子ピアノは直接持込みまたは戸別収集",
+      "note": "販売店、専門業者へ\n電子ピアノは直接持込みまたは戸別収集",
       "marks": []
     },
     {
@@ -2838,7 +2838,7 @@
       "kanaHead": "ひ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "単体で袋に入れ、空気を抜いてください「ビーズクッション」と書いた貼り紙を付けてください",
+      "note": "単体で袋に入れ、空気を抜いてください\n「ビーズクッション」と書いた貼り紙を付けてください",
       "marks": []
     },
     {
@@ -2964,7 +2964,7 @@
       "kanaHead": "ふ",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "その他の紙として（雨の日は次回に）※窓付きは、フィルムをはがす",
+      "note": "その他の紙として（雨の日は次回に）\n※窓付きは、フィルムをはがす",
       "marks": []
     },
     {
@@ -2982,7 +2982,7 @@
       "kanaHead": "ふ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -3002,7 +3002,7 @@
       "kanaHead": "ふ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "90㎝未満にしばる1回に1枚まで",
+      "note": "90㎝未満にしばる\n1回に1枚まで",
       "marks": []
     },
     {
@@ -3153,7 +3153,7 @@
       "kanaHead": "へ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -3207,7 +3207,7 @@
       "kanaHead": "へ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "紙等にしみ込ませるか、固めて少しずつ※液体のものは、排出禁止",
+      "note": "紙等にしみ込ませるか、固めて少しずつ\n※液体のものは、排出禁止",
       "marks": []
     },
     {
@@ -3301,7 +3301,7 @@
       "kanaHead": "ほ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで",
+      "note": "直接持込みまたは戸別収集\n直接持込みの場合は1日につき10個まで",
       "marks": [
         "page9"
       ]
@@ -3311,7 +3311,7 @@
       "kanaHead": "ほ",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "90㎝未満にしばる※リールははずして、もえないごみ",
+      "note": "90㎝未満にしばる\n※リールははずして、もえないごみ",
       "marks": []
     },
     {
@@ -3351,7 +3351,7 @@
       "kanaHead": "ほ",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -3413,7 +3413,7 @@
       "kanaHead": "ほ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -3447,7 +3447,7 @@
       "kanaHead": "ま",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -3487,7 +3487,7 @@
       "kanaHead": "ま",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90cm未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90cm未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -3497,7 +3497,7 @@
       "kanaHead": "ま",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえるごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえるごみ",
       "marks": [
         "page9"
       ]
@@ -3651,7 +3651,7 @@
       "kanaHead": "も",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
-      "note": "ひもでしばる（雨の日は次回に）羽毛、羊毛、わた入りはもえるごみ",
+      "note": "ひもでしばる（雨の日は次回に）\n羽毛、羊毛、わた入りはもえるごみ",
       "marks": []
     },
     {
@@ -3680,7 +3680,7 @@
       "kanaHead": "も",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -3716,7 +3716,7 @@
       "kanaHead": "や",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "※液体のものは、排出禁止※びんは中をからにして、もえないごみへ",
+      "note": "※液体のものは、排出禁止\n※びんは中をからにして、もえないごみへ",
       "marks": []
     },
     {
@@ -3772,7 +3772,7 @@
       "kanaHead": "ら",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -3790,7 +3790,7 @@
       "kanaHead": "ら",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
-      "note": "資2箱は口金部分をはずしてその他の紙へ",
+      "note": "箱は口金部分をはずして資源物2類のその他の紙へ",
       "marks": [
         "box"
       ]
@@ -3808,7 +3808,7 @@
       "kanaHead": "り",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
-      "note": "回収ボックスへもえないごみとしても出せます",
+      "note": "回収ボックスへ\nもえないごみとしても出せます",
       "marks": []
     },
     {
@@ -3816,7 +3816,7 @@
       "kanaHead": "る",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集90㎝未満なら、もえないごみ",
+      "note": "直接持込みまたは戸別収集\n90㎝未満なら、もえないごみ",
       "marks": [
         "page9"
       ]
@@ -3902,7 +3902,7 @@
       "kanaHead": "れ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",
-      "note": "直接持込みまたは戸別収集直接持込みの場合は1日につき10個まで戸別収集の場合は4個1品扱い、最大8個まで",
+      "note": "直接持込みまたは戸別収集\n直接持込みの場合は1日につき10個まで\n戸別収集の場合は4個1品扱い、最大8個まで",
       "marks": [
         "page9"
       ]

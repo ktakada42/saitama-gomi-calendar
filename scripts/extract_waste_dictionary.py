@@ -217,6 +217,100 @@ def merge_wrapped_rows(rows):
     return merged
 
 
+# 注意点の欄で、同じ行の語のあいだがこれ以上空いていたら別の但し書き。
+#
+# 「回収ボックスへ　もえないごみとしても出せます」のように、1つの欄に
+# 但し書きを横に並べてある行がある。字の間隔は0前後で、但し書きどうしの
+# あいだは2.3〜5.5空いている。
+NOTE_GAP = 2.0
+
+# 行の終わりがこの字なら、次の行へ文が続いている。
+# 「電動歯ブラシは電池を抜いて、／回収ボックスへ」「まんが本等を／一緒に」
+# 「厚さ10cm未満で／長さ90cm未満の場合のみ」「紙などでくるむか／洗剤などの」
+WRAP_ENDINGS = ("、", "を", "で", "か")
+
+# 行の始まりがこれなら、前の行から文が続いている。
+# 「直径30㎝未満／の束にして」「フロンガス／を回収済み」
+# 「回収ボックス／またはもえないごみへ」「紙パックとして／（雨の日は次回に）」
+WRAP_BEGINNINGS = ("の", "を", "または", "（")
+
+
+def is_katakana(char) -> bool:
+    return "ァ" <= char <= "ヶ" or char == "ー"
+
+
+def continues(previous: str, following: str) -> bool:
+    """前の行から次の行へ、文が折り返して続いているか。
+
+    欄に収まらない但し書きは2行に折り返してあり、別々の但し書きを2行に
+    並べたものと、位置からは見分けられない（折り返した行が欄の幅いっぱい
+    とは限らない）。文の切れ目として不自然なところで終わっているかを見る。
+    """
+    if not previous or not following:
+        return True
+    # 「〜まで」は文の終わり。「1日につき10個まで／戸別収集の場合は…」
+    if previous.endswith(WRAP_ENDINGS) and not previous.endswith("まで"):
+        return True
+    if following.startswith(WRAP_BEGINNINGS):
+        return True
+    # 括弧が開いたまま：「（フタとラベルははずして容器包装／プラスチックへ）」
+    opened = sum(previous.count(c) for c in "（(")
+    closed = sum(previous.count(c) for c in "）)")
+    if opened > closed:
+        return True
+    # カタカナ語の途中：「フロンガ／スを回収済み」
+    return is_katakana(previous[-1]) and is_katakana(following[0])
+
+
+def join_note(words):
+    """注意点の語を繋ぐ。別々の但し書きのあいだには改行を入れる。
+
+    区切らずに繋ぐと「金属製は、もえないごみ電池が外れないものは、
+    小型家電回収ボックスへ」のように、どこで文が切れるのか読めなくなる。
+    """
+    pieces = []
+    for line in cluster_rows(words):
+        line = sorted(line, key=lambda w: w["x0"])
+        # まず、間隔の空いたところで語をまとまりに分ける。
+        runs = [line[0]["text"]]
+        for left, right in zip(line, line[1:]):
+            if right["x0"] - left["x1"] >= NOTE_GAP:
+                runs.append("")
+            runs[-1] += right["text"]
+
+        text = ""
+        glue = True
+        for run in runs:
+            if run in CATEGORIES:
+                # 文の途中に置かれた区分のバッジ。「箱は口金部分をはずして
+                # [資2] その他の紙へ」。冊子を持たない人には略号が通じないので
+                # 区分の名前に直す。市も別の欄では「資源物2類のその他の紙
+                # として」と書いている。
+                text += CATEGORIES[run][1] + "の"
+                glue = True
+                continue
+            # 印（「★2」）の前後と、括弧の但し書きの前は、文の途中。
+            inline = MARK_ONLY.fullmatch(run) or run.startswith("（")
+            if text and not glue and not inline:
+                pieces.append(text)
+                text = ""
+            text += run
+            glue = bool(MARK_ONLY.fullmatch(run))
+        pieces.append(text)
+
+    note = ""
+    for piece in pieces:
+        # 印は split_marks があとで取り除く。繋がるかどうかは印を除いて見る。
+        bare_note = strip_marks(note.split("\n")[-1])
+        note += ("" if continues(bare_note, strip_marks(piece)) else "\n") + piece
+    return note.strip()
+
+
+def tidy_note_lines(note: str) -> str:
+    """印を取り除いたあとに残った、空の行と行頭・行末の空白を落とす。"""
+    return "\n".join(line.strip() for line in note.split("\n") if line.strip())
+
+
 def split_joined_kana_head(words, item_x):
     """かな行の見出しと品目名がくっついた語を分ける。
 
@@ -362,11 +456,8 @@ def extract_page(page):
                 for w in note_words
                 if top - 4 <= w["top"] < min(next_top - 4, table_bottom)
             ]
-            note = "".join(
-                w["text"]
-                for w in sorted(note_parts, key=lambda w: (round(w["top"], 1), w["x0"]))
-            ).strip()
-            note, marks = split_marks(note)
+            note, marks = split_marks(join_note(note_parts))
+            note = tidy_note_lines(note)
 
             # 枠はこのブロックの行をまるごと囲んでいる。品目名の高さが
             # 枠の中に入っていれば、その品目の枠。
@@ -402,6 +493,16 @@ MARK_PATTERNS = (
     (re.compile(r"★[1-6１-６]"), "star"),
     (re.compile(r"▶?[PpＰ]([0-9０-９]{1,2})\s*参照"), "page"),
 )
+
+
+# 印だけでできた語。
+MARK_ONLY = re.compile(r"(★[1-6１-６]|▶?[PpＰ][0-9０-９]{1,2}\s*参照)+")
+
+
+def strip_marks(text: str) -> str:
+    for pattern, _ in MARK_PATTERNS:
+        text = pattern.sub("", text)
+    return text
 
 
 def to_ascii_digits(text):
