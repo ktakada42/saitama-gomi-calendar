@@ -37,6 +37,28 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   /// 計算だけでは正確な位置を出せない。
   final _headerKeys = <String, GlobalKey>{};
 
+  /// 分別が変わったことの知らせを、この画面を開いてから開け閉めした結果。
+  /// まだ触っていなければ null で、保存してある状態に従う。
+  ///
+  /// 広げると条件とリンクまで出て、狭い画面では半分近くを占める。
+  /// 最初は読めるように広げておき、一覧を使い始めたら畳む。
+  bool? _noticeExpanded;
+
+  /// 一覧を使い始めたので畳む。保存はしない。
+  ///
+  /// 送っただけで次からずっと畳まれると、条件を一度も読まないままになる。
+  /// 覚えるのは、見出しを押して自分で畳んだときだけ（[_toggleNotice]）。
+  void _collapseNotice() {
+    if (_noticeExpanded != false) setState(() => _noticeExpanded = false);
+  }
+
+  /// 見出しを押して開け閉めする。こちらは次に開いたときのために覚える。
+  Future<void> _toggleNotice(SortingChange change, bool expanded) async {
+    setState(() => _noticeExpanded = !expanded);
+    final settings = await ref.read(settingsRepositoryProvider.future);
+    await settings.writeSortingNoticeCollapsed(change.id, collapsed: expanded);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -48,6 +70,11 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   Widget build(BuildContext context) {
     final dictionary = ref.watch(wasteDictionaryProvider);
     final change = SortingChange.current(ref.watch(todayProvider));
+    final settings = ref.watch(settingsRepositoryProvider);
+    final noticeExpanded =
+        _noticeExpanded ??
+        !(change != null &&
+            (settings.value?.readSortingNoticeCollapsed(change.id) ?? false));
 
     return Scaffold(
       appBar: AppBar(
@@ -71,9 +98,15 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
       body: switch (dictionary) {
         AsyncData(:final value) => Column(
           children: [
-            // 決まりが変わった日を過ぎているのに、同梱の分別が古いまま。
             // 一覧を見る前に気づけるよう、検索欄より上に出す。
-            if (change != null) _SortingChangeNotice(change: change),
+            // 畳んだかどうかを読み終えるまでは出さない。先に広げて出すと、
+            // 畳んでいた人の画面で一瞬広がってから縮む。
+            if (change != null && !settings.isLoading)
+              _SortingChangeNotice(
+                change: change,
+                expanded: noticeExpanded,
+                onToggle: () => _toggleNotice(change, noticeExpanded),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: TextField(
@@ -95,16 +128,33 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                   border: const OutlineInputBorder(),
                   isDense: true,
                 ),
-                onChanged: (value) => setState(() => _query = value),
+                // キーボードが出ると、知らせと合わせて一覧がほとんど見えなくなる。
+                onTap: _collapseNotice,
+                onChanged: (value) {
+                  setState(() => _query = value);
+                  // 外付けのキーボードなど、触れずに打ち始めた場合も畳む。
+                  if (value.isNotEmpty) _collapseNotice();
+                },
               ),
             ),
             Expanded(
-              child: _Results(
-                items: value.search(_query),
-                query: _query,
-                scrollController: _scrollController,
-                headerKeys: _headerKeys,
-                manualUrl: value.sourceUrl,
+              // 一覧を指で送り始めたら畳む。索引から飛んだときの送りは
+              // ここでは拾わない（指の情報を持たない）。索引は枠の高さを
+              // 行数で割って指の位置を読むので、なぞっている最中に枠の
+              // 高さが変わると、指の下の行がずれる。離したときに畳む。
+              child: NotificationListener<ScrollStartNotification>(
+                onNotification: (notification) {
+                  if (notification.dragDetails != null) _collapseNotice();
+                  return false;
+                },
+                child: _Results(
+                  items: value.search(_query),
+                  query: _query,
+                  scrollController: _scrollController,
+                  headerKeys: _headerKeys,
+                  manualUrl: value.sourceUrl,
+                  onIndexReleased: _collapseNotice,
+                ),
               ),
             ),
           ],
@@ -157,11 +207,15 @@ class _Results extends StatelessWidget {
     required this.scrollController,
     required this.headerKeys,
     required this.manualUrl,
+    this.onIndexReleased,
   });
 
   final List<WasteItem> items;
   final String query;
   final String manualUrl;
+
+  /// 索引から指が離れたとき。
+  final VoidCallback? onIndexReleased;
   final ScrollController scrollController;
   final Map<String, GlobalKey> headerKeys;
 
@@ -272,6 +326,7 @@ class _Results extends StatelessWidget {
             offsets: offsetOfRow,
             scrollController: scrollController,
             headerKeys: headerKeys,
+            onReleased: onIndexReleased,
           ),
         ),
       ],
@@ -283,87 +338,129 @@ class _Results extends StatelessWidget {
 ///
 /// 一覧の区分だけでは決まらない品目が多いので、市が挙げている条件を渡して、
 /// 市の案内へ行けるようにする。
-/// 閉じられるようにはしない。
+///
+/// 畳めるが、消せはしない。畳んでも見出しの1行は残す。
 /// 消してしまうと、条件を見ないまま一覧の区分だけを読み続けることになる。
 class _SortingChangeNotice extends StatelessWidget {
-  const _SortingChangeNotice({required this.change});
+  const _SortingChangeNotice({
+    required this.change,
+    required this.expanded,
+    required this.onToggle,
+  });
 
   final SortingChange change;
+
+  /// 条件とリンクまで出しているか。畳むと見出しだけになる。
+  final bool expanded;
+
+  final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // 区分色と紛れないよう、注意そのものの色（エラー色）は使わない。
     final color = theme.colorScheme.tertiary;
+    final radius = BorderRadius.circular(12);
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: radius,
         border: Border.all(color: color.withValues(alpha: 0.35)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.campaign_outlined, size: 18, color: color),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  change.title,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
+      // 一覧を送り始めたときに畳むので、いきなり消えると一覧が跳ねる。
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        alignment: Alignment.topCenter,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 見出しの行のどこを押しても開け閉めできるようにする。
+            // 矢印だけを的にすると小さくて押しにくい。
+            Semantics(
+              button: true,
+              expanded: expanded,
+              child: InkWell(
+                borderRadius: radius,
+                onTap: onToggle,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.campaign_outlined, size: 18, color: color),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          change.title,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        expanded ? Icons.expand_less : Icons.expand_more,
+                        size: 20,
+                        color: color,
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            keepParenthesesTogether(change.description),
-            style: theme.textTheme.bodySmall,
-          ),
-          // 市が品目を示したのは一部だけ。条件を渡しておけば、
-          // 一覧にない品物についても利用者が自分で判断できる。
-          for (final condition in change.conditions)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('・', style: theme.textTheme.bodySmall),
-                  Expanded(
-                    child: Text(
-                      keepParenthesesTogether(condition),
+            ),
+            if (expanded)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      keepParenthesesTogether(change.description),
                       style: theme.textTheme.bodySmall,
                     ),
-                  ),
-                ],
+                    // 市が品目を示したのは一部だけ。条件を渡しておけば、
+                    // 一覧にない品物についても利用者が自分で判断できる。
+                    for (final condition in change.conditions)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('・', style: theme.textTheme.bodySmall),
+                            Expanded(
+                              child: Text(
+                                keepParenthesesTogether(condition),
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          minimumSize: const Size(0, 36),
+                          foregroundColor: color,
+                        ),
+                        onPressed: () => launchUrl(
+                          Uri.parse(change.noticeUrl),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        icon: const Icon(Icons.open_in_new, size: 16),
+                        label: const Text('市の最新の案内を見る'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          const SizedBox(height: 4),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                minimumSize: const Size(0, 36),
-                foregroundColor: color,
-              ),
-              onPressed: () => launchUrl(
-                Uri.parse(change.noticeUrl),
-                mode: LaunchMode.externalApplication,
-              ),
-              icon: const Icon(Icons.open_in_new, size: 16),
-              label: const Text('市の最新の案内を見る'),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -413,12 +510,16 @@ class _KanaIndex extends StatefulWidget {
     required this.offsets,
     required this.scrollController,
     required this.headerKeys,
+    this.onReleased,
   });
 
   /// 行ごとの、一覧の中でのおおよその位置。並び順は一覧と同じ。
   final Map<String, double> offsets;
   final ScrollController scrollController;
   final Map<String, GlobalKey> headerKeys;
+
+  /// 索引から指が離れたとき。
+  final VoidCallback? onReleased;
 
   @override
   State<_KanaIndex> createState() => _KanaIndexState();
@@ -536,6 +637,7 @@ class _KanaIndexState extends State<_KanaIndex> {
   void _endDrag() {
     if (_dragging) setState(() => _dragging = false);
     _finishScrub();
+    widget.onReleased?.call();
   }
 
   /// 索引から手が離れ、送りも落ち着いたら、現在地の追従を戻す。
@@ -568,6 +670,7 @@ class _KanaIndexState extends State<_KanaIndex> {
           onVerticalDragEnd: (_) => _endDrag(),
           onVerticalDragCancel: _endDrag,
           onTapDown: (d) => _handleTouch(d.localPosition, itemHeight),
+          onTapUp: (_) => widget.onReleased?.call(),
           child: SizedBox(
             width: 30,
             child: Column(

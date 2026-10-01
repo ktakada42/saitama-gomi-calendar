@@ -6,6 +6,7 @@ import 'package:saitama_gomi/domain/sorting_change.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/ui/paren_wrap.dart';
 import 'package:saitama_gomi/ui/widgets/category_pill.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../support/test_app.dart';
 
@@ -407,15 +408,171 @@ void main() {
       expect(find.text('プラスチックの分別が変わりました'), findsNothing);
     });
 
-    testWidgets('知らせは閉じられない', (tester) async {
+    testWidgets('知らせは消せない', (tester) async {
       await pumpApp(
         tester,
         const DictionaryPage(),
         today: DateTime(2026, 10, 1),
       );
 
-      // 消せてしまうと、古い分類を正しいものとして読み続けることになる。
+      // 消せてしまうと、条件を見ないまま一覧の区分だけを読み続けることになる。
       expect(find.byIcon(Icons.close), findsNothing);
+    });
+
+    group('畳む', () {
+      final firstCondition = keepParenthesesTogether(
+        SortingChange.plastic2026.conditions.first,
+      );
+
+      Future<void> pumpPage(WidgetTester tester) =>
+          pumpApp(tester, const DictionaryPage(), today: DateTime(2026, 10, 1));
+
+      void expectCollapsed() {
+        // 畳んでも見出しは残す。変わったこと自体は見えたままにする。
+        expect(find.text('プラスチックの分別が変わりました'), findsOneWidget);
+        expect(find.text(firstCondition), findsNothing);
+        expect(find.text('市の最新の案内を見る'), findsNothing);
+      }
+
+      testWidgets('見出しを押すと畳め、もう一度押すと広がる', (tester) async {
+        await pumpPage(tester);
+        expect(find.text(firstCondition), findsOneWidget);
+
+        await tester.tap(find.text('プラスチックの分別が変わりました'));
+        await tester.pumpAndSettle();
+        expectCollapsed();
+
+        await tester.tap(find.text('プラスチックの分別が変わりました'));
+        await tester.pumpAndSettle();
+        expect(find.text(firstCondition), findsOneWidget);
+      });
+
+      // 送れるだけの長さと、索引が出るだけの行数がある一覧。
+      final long = WasteDictionary.fromJson({
+        'source': 'テスト用の分別早見表',
+        'sourceUrl': '',
+        'items': [
+          for (final head in ['あ', 'か'])
+            for (var i = 0; i < 30; i++)
+              {
+                'name': '$head$i品目',
+                'kanaHead': head,
+                'category': 'burnable',
+                'categoryLabel': 'もえるごみ',
+                'note': '',
+              },
+        ],
+      });
+
+      testWidgets('一覧を送り始めたら畳む', (tester) async {
+        await pumpApp(
+          tester,
+          const DictionaryPage(),
+          today: DateTime(2026, 10, 1),
+          dictionary: long,
+        );
+        expect(find.text(firstCondition), findsOneWidget);
+
+        // 広げたままだと、狭い画面では知らせが半分近くを占めて、
+        // 一覧が数行しか見えない。
+        await tester.drag(find.text('あ0品目'), const Offset(0, -30));
+        await tester.pumpAndSettle();
+        expectCollapsed();
+      });
+
+      testWidgets('索引から飛んだら、指を離したときに畳む', (tester) async {
+        await pumpApp(
+          tester,
+          const DictionaryPage(),
+          today: DateTime(2026, 10, 1),
+          dictionary: long,
+        );
+
+        await tester.tap(find.text('か').last);
+        await tester.pumpAndSettle();
+        expectCollapsed();
+        // 畳んで枠の高さが変わっても、飛んだ先はずれない。
+        expect(find.text('か0品目'), findsOneWidget);
+      });
+
+      testWidgets('検索欄に触れたら畳む', (tester) async {
+        await pumpPage(tester);
+
+        // キーボードが出ると、一覧に残る高さがさらに減る。
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        expectCollapsed();
+      });
+
+      group('覚える', () {
+        const key = 'flutter.sorting_notice_collapsed_plastic2026';
+
+        Future<bool?> saved() async => (await SharedPreferences.getInstance())
+            .getBool('sorting_notice_collapsed_plastic2026');
+
+        testWidgets('見出しを押して畳んだら、次に開いたときも畳んである', (tester) async {
+          await pumpPage(tester);
+          await tester.tap(find.text('プラスチックの分別が変わりました'));
+          await tester.pumpAndSettle();
+          expect(await saved(), isTrue);
+
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {key: true},
+          );
+          expectCollapsed();
+        });
+
+        testWidgets('一覧を送って畳まれただけなら、覚えない', (tester) async {
+          // 送っただけで次からずっと畳まれると、条件を一度も読まないままになる。
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            dictionary: long,
+          );
+          await tester.drag(find.text('あ0品目'), const Offset(0, -30));
+          await tester.pumpAndSettle();
+          expectCollapsed();
+          expect(await saved(), isNull);
+        });
+
+        testWidgets('畳んであるものを広げ直したら、次からは広げて出す', (tester) async {
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {key: true},
+          );
+          await tester.tap(find.text('プラスチックの分別が変わりました'));
+          await tester.pumpAndSettle();
+          expect(find.text(firstCondition), findsOneWidget);
+          expect(await saved(), isFalse);
+        });
+
+        testWidgets('別の変更を畳んだことは、この変更に持ち込まない', (tester) async {
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {'flutter.sorting_notice_collapsed_other': true},
+          );
+          expect(find.text(firstCondition), findsOneWidget);
+        });
+      });
+
+      testWidgets('畳んだあとに広げたら、絞り込んでも広げたまま', (tester) async {
+        await pumpPage(tester);
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+
+        // 自分で広げ直したものを、画面の作り直しのたびに畳み直さない。
+        await tester.tap(find.text('プラスチックの分別が変わりました'));
+        await tester.pumpAndSettle();
+        expect(find.text(firstCondition), findsOneWidget);
+      });
     });
   });
 }

@@ -16,12 +16,17 @@
 /// 利用者が自分で判断できるようにしておく。
 class SortingChange {
   const SortingChange({
+    required this.id,
     required this.effectiveFrom,
     required this.title,
     required this.description,
     required this.conditions,
     required this.noticeUrl,
   });
+
+  /// 変更を見分ける名前。知らせを畳んだことを、変更ごとに覚えるのに使う。
+  /// 一度決めたら変えない。変えると、畳んだ人の画面でまた広がる。
+  final String id;
 
   /// この日から新しい決まりになる。
   final DateTime effectiveFrom;
@@ -44,6 +49,7 @@ class SortingChange {
   /// （https://www.city.saitama.lg.jp/001/006/010/003/p127278.html）が
   /// 告知しているもの。条件は告知ページの「ポイント」の逐語要約。
   static final plastic2026 = SortingChange(
+    id: 'plastic2026',
     effectiveFrom: DateTime(2026, 10, 1),
     title: 'プラスチックの分別が変わりました',
     description:

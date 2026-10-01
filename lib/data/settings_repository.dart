@@ -42,7 +42,7 @@ class NotificationSettings {
   int get hashCode => Object.hash(enabled, timeOfDay);
 }
 
-/// 利用者が設定した地区・外観・通知の保存先。
+/// 利用者が設定した地区・外観・通知と、畳んだ知らせの保存先。
 ///
 /// 地区はプリセットを選んだあと曜日を調整できるので、IDだけでは復元できない。
 /// そのため地区オブジェクトをまるごとJSONで持つ。保存するのはこれらの設定だけで、
@@ -57,6 +57,8 @@ class SettingsRepository {
   // 地区とは別キーにしてある。地区を選び直しても通知設定は保たれるべきなので。
   static const _notificationEnabledKey = 'notification_enabled';
   static const _notificationMinutesKey = 'notification_minutes';
+  // 分別の変更ごとに分ける。次の変更の知らせまで畳んだままにしないため。
+  static const _sortingNoticeCollapsedKeyPrefix = 'sorting_notice_collapsed_';
 
   static Future<SettingsRepository> open() async =>
       SettingsRepository(await SharedPreferences.getInstance());
@@ -108,6 +110,17 @@ class SettingsRepository {
           : Duration(minutes: minutes),
     );
   }
+
+  /// 分別変更の知らせを、利用者が自分で畳んだか。未設定なら畳んでいない。
+  ///
+  /// [changeId] は `SortingChange.id`。
+  bool readSortingNoticeCollapsed(String changeId) =>
+      _prefs.getBool('$_sortingNoticeCollapsedKeyPrefix$changeId') ?? false;
+
+  Future<void> writeSortingNoticeCollapsed(
+    String changeId, {
+    required bool collapsed,
+  }) => _prefs.setBool('$_sortingNoticeCollapsedKeyPrefix$changeId', collapsed);
 
   Future<void> writeNotificationSettings(NotificationSettings settings) async {
     await _prefs.setBool(_notificationEnabledKey, settings.enabled);

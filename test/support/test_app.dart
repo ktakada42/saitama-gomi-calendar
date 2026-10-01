@@ -285,10 +285,14 @@ Future<void> pumpApp(
 
   /// 画面サイズ。下限の端末で溢れないかを見るときは [TestViewport.compact]。
   TestViewport viewport = TestViewport.standard,
+
+  /// 地区のほかに、前回までに保存されていた設定。キーは `flutter.` を付けて書く。
+  Map<String, Object> preferences = const {},
 }) async {
   _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
     if (area != null) 'flutter.selected_area': jsonEncode(area.toJson()),
+    ...preferences,
   });
   await tester.pumpWidget(
     ProviderScope(
