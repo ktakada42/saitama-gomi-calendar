@@ -120,6 +120,7 @@ SettingsRepository           shared_preferences 経由で利用者の設定を�
     IDだけでは復元できない（ユーザーがプリセットから曜日を調整できるため）
   readThemeMode() / writeThemeMode()        外観（ライト/ダーク/システム）
   readNotificationSettings() / write...()   通知のON/OFFと時刻
+  readSortingNoticeCollapsed(id) / write...()  分別変更の知らせを自分で畳んだか（変更ごと）
     地区とは別キーにしてある。地区を選び直しても外観・通知の設定は保たれるべきなので。
 
 NotificationRepository       OSの通知センターへの予約（abstract）

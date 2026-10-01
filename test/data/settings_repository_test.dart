@@ -101,6 +101,28 @@ void main() {
     });
   });
 
+  group('readSortingNoticeCollapsed', () {
+    test('未設定なら畳んでいない', () async {
+      final repo = await _openWith({});
+      expect(repo.readSortingNoticeCollapsed('plastic2026'), isFalse);
+    });
+
+    test('書いた値を読める', () async {
+      final repo = await _openWith({});
+      await repo.writeSortingNoticeCollapsed('plastic2026', collapsed: true);
+      expect(repo.readSortingNoticeCollapsed('plastic2026'), isTrue);
+      await repo.writeSortingNoticeCollapsed('plastic2026', collapsed: false);
+      expect(repo.readSortingNoticeCollapsed('plastic2026'), isFalse);
+    });
+
+    test('変更ごとに別々に覚える', () async {
+      // 前の変更の知らせを畳んだ人にも、次の変更は広げて出す。
+      final repo = await _openWith({});
+      await repo.writeSortingNoticeCollapsed('plastic2026', collapsed: true);
+      expect(repo.readSortingNoticeCollapsed('next'), isFalse);
+    });
+  });
+
   group('readNotificationSettings', () {
     test('未設定ならOFF・20:00', () async {
       final repo = await _openWith({});

@@ -6,6 +6,7 @@ import 'package:saitama_gomi/domain/sorting_change.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/ui/paren_wrap.dart';
 import 'package:saitama_gomi/ui/widgets/category_pill.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../support/test_app.dart';
 
@@ -501,6 +502,65 @@ void main() {
         await tester.tap(find.byType(TextField));
         await tester.pumpAndSettle();
         expectCollapsed();
+      });
+
+      group('覚える', () {
+        const key = 'flutter.sorting_notice_collapsed_plastic2026';
+
+        Future<bool?> saved() async => (await SharedPreferences.getInstance())
+            .getBool('sorting_notice_collapsed_plastic2026');
+
+        testWidgets('見出しを押して畳んだら、次に開いたときも畳んである', (tester) async {
+          await pumpPage(tester);
+          await tester.tap(find.text('プラスチックの分別が変わりました'));
+          await tester.pumpAndSettle();
+          expect(await saved(), isTrue);
+
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {key: true},
+          );
+          expectCollapsed();
+        });
+
+        testWidgets('一覧を送って畳まれただけなら、覚えない', (tester) async {
+          // 送っただけで次からずっと畳まれると、条件を一度も読まないままになる。
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            dictionary: long,
+          );
+          await tester.drag(find.text('あ0品目'), const Offset(0, -30));
+          await tester.pumpAndSettle();
+          expectCollapsed();
+          expect(await saved(), isNull);
+        });
+
+        testWidgets('畳んであるものを広げ直したら、次からは広げて出す', (tester) async {
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {key: true},
+          );
+          await tester.tap(find.text('プラスチックの分別が変わりました'));
+          await tester.pumpAndSettle();
+          expect(find.text(firstCondition), findsOneWidget);
+          expect(await saved(), isFalse);
+        });
+
+        testWidgets('別の変更を畳んだことは、この変更に持ち込まない', (tester) async {
+          await pumpApp(
+            tester,
+            const DictionaryPage(),
+            today: DateTime(2026, 10, 1),
+            preferences: {'flutter.sorting_notice_collapsed_other': true},
+          );
+          expect(find.text(firstCondition), findsOneWidget);
+        });
       });
 
       testWidgets('畳んだあとに広げたら、絞り込んでも広げたまま', (tester) async {

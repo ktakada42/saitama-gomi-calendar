@@ -37,15 +37,26 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   /// 計算だけでは正確な位置を出せない。
   final _headerKeys = <String, GlobalKey>{};
 
-  /// 分別が変わったことの知らせを広げているか。
+  /// 分別が変わったことの知らせを、この画面を開いてから開け閉めした結果。
+  /// まだ触っていなければ null で、保存してある状態に従う。
   ///
   /// 広げると条件とリンクまで出て、狭い画面では半分近くを占める。
   /// 最初は読めるように広げておき、一覧を使い始めたら畳む。
-  /// 覚えておくのは画面を開いている間だけ。保存はしない。
-  bool _noticeExpanded = true;
+  bool? _noticeExpanded;
 
+  /// 一覧を使い始めたので畳む。保存はしない。
+  ///
+  /// 送っただけで次からずっと畳まれると、条件を一度も読まないままになる。
+  /// 覚えるのは、見出しを押して自分で畳んだときだけ（[_toggleNotice]）。
   void _collapseNotice() {
-    if (_noticeExpanded) setState(() => _noticeExpanded = false);
+    if (_noticeExpanded != false) setState(() => _noticeExpanded = false);
+  }
+
+  /// 見出しを押して開け閉めする。こちらは次に開いたときのために覚える。
+  Future<void> _toggleNotice(SortingChange change, bool expanded) async {
+    setState(() => _noticeExpanded = !expanded);
+    final settings = await ref.read(settingsRepositoryProvider.future);
+    await settings.writeSortingNoticeCollapsed(change.id, collapsed: expanded);
   }
 
   @override
@@ -59,6 +70,11 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   Widget build(BuildContext context) {
     final dictionary = ref.watch(wasteDictionaryProvider);
     final change = SortingChange.current(ref.watch(todayProvider));
+    final settings = ref.watch(settingsRepositoryProvider);
+    final noticeExpanded =
+        _noticeExpanded ??
+        !(change != null &&
+            (settings.value?.readSortingNoticeCollapsed(change.id) ?? false));
 
     return Scaffold(
       appBar: AppBar(
@@ -83,12 +99,13 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
         AsyncData(:final value) => Column(
           children: [
             // 一覧を見る前に気づけるよう、検索欄より上に出す。
-            if (change != null)
+            // 畳んだかどうかを読み終えるまでは出さない。先に広げて出すと、
+            // 畳んでいた人の画面で一瞬広がってから縮む。
+            if (change != null && !settings.isLoading)
               _SortingChangeNotice(
                 change: change,
-                expanded: _noticeExpanded,
-                onToggle: () =>
-                    setState(() => _noticeExpanded = !_noticeExpanded),
+                expanded: noticeExpanded,
+                onToggle: () => _toggleNotice(change, noticeExpanded),
               ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
@@ -113,10 +130,11 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                 ),
                 // キーボードが出ると、知らせと合わせて一覧がほとんど見えなくなる。
                 onTap: _collapseNotice,
-                onChanged: (value) => setState(() {
-                  _query = value;
-                  if (value.isNotEmpty) _noticeExpanded = false;
-                }),
+                onChanged: (value) {
+                  setState(() => _query = value);
+                  // 外付けのキーボードなど、触れずに打ち始めた場合も畳む。
+                  if (value.isNotEmpty) _collapseNotice();
+                },
               ),
             ),
             Expanded(
