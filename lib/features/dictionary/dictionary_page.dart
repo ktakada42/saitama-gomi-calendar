@@ -7,6 +7,7 @@ import '../../domain/kana.dart';
 import '../../domain/sorting_change.dart';
 import '../../domain/waste_item.dart';
 import '../../providers.dart';
+import '../../ui/caution_style.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
@@ -358,15 +359,14 @@ class _SortingChangeNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // 区分色と紛れないよう、注意そのものの色（エラー色）は使わない。
-    final color = theme.colorScheme.tertiary;
+    final color = CautionStyle.colorOf(context);
     final radius = BorderRadius.circular(12);
 
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.10),
+        color: color.withValues(alpha: CautionStyle.backgroundAlpha),
         borderRadius: radius,
         border: Border.all(color: color.withValues(alpha: 0.35)),
       ),
@@ -788,12 +788,10 @@ class _ItemTile extends StatelessWidget {
               ),
             );
     }
-    // 分別の変更を伝える印は、画面の上の知らせと同じ色・同じ絵にする。
-    // ほかの印と同じ色だと、区分が変わりうることが補足に見えてしまう。
+    // 印は、画面の上の知らせと同じ注意の色で出す。どれも、一覧の区分だけを
+    // 見て出すと間違えることを伝えている。主色の緑では補足に見える。
     final mark = item.marks.first;
-    final markColor = mark.isSortingChange
-        ? theme.colorScheme.tertiary
-        : theme.colorScheme.primary;
+    final markColor = CautionStyle.color(theme.brightness);
     // 押せば続きがあることを、行の中で示す。注意点と同じ行に並べると
     // どちらも半端に切れるので、下に重ねる。
     return Column(
@@ -811,13 +809,7 @@ class _ItemTile extends StatelessWidget {
           ),
         Row(
           children: [
-            Icon(
-              mark.isSortingChange
-                  ? Icons.campaign_outlined
-                  : Icons.info_outline,
-              size: 13,
-              color: markColor,
-            ),
+            Icon(Icons.warning_amber_rounded, size: 13, color: markColor),
             const SizedBox(width: 3),
             Expanded(
               child: Text(
