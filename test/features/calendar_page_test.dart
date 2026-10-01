@@ -71,6 +71,41 @@ void main() {
     expect(find.textContaining('ダンボール'), findsOneWidget);
   });
 
+  group('プラスチックの分別変更の前後', () {
+    testWidgets('変更のあとの資源物1類には、プラスチック資源と出す', (tester) async {
+      await pumpApp(
+        tester,
+        const CalendarPage(),
+        today: DateTime(2026, 10, 15),
+      );
+
+      // 10月14日（水）は資源物1類。
+      await tester.tap(find.text('14'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('プラスチック資源'), findsWidgets);
+      expect(find.textContaining('容器包装プラスチック'), findsNothing);
+    });
+
+    testWidgets('変更の前の月まで戻ると、当時の決まりで出す', (tester) async {
+      await pumpApp(
+        tester,
+        const CalendarPage(),
+        today: DateTime(2026, 10, 15),
+      );
+      await tester.tap(find.byTooltip('前の月'));
+      await tester.pumpAndSettle();
+
+      // 9月16日（水）は資源物1類。このころはまだ容器包装プラスチックだけを
+      // 集めていた。いまの決まりで出すと、当時は出せなかったものを載せる。
+      await tester.tap(find.text('16'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('容器包装プラスチック'), findsOneWidget);
+      expect(find.textContaining('プラスチック資源'), findsNothing);
+    });
+  });
+
   testWidgets('収集の無い日をタップしたらそう伝える', (tester) async {
     await pumpApp(tester, const CalendarPage());
 

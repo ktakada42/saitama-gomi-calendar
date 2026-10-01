@@ -82,7 +82,7 @@ def main():
         if filtered:
             # 上書きではなく足す。既にある言い換え（#103 で目視確認した分や、
             # 手で入れた商品名）を消してしまうため。実際、商品名パスの
-            # 合流で「携帯電話・ＰＨＳ」の「けいたいでんわ」「ガラケー」が
+            # 合流で「携帯電話・PHS」の「けいたいでんわ」「ガラケー」が
             # iPhone だけに置き換わった。
             merged = list(dict.fromkeys(target["keywords"].get(name, []) + filtered))
             target["keywords"][name] = merged

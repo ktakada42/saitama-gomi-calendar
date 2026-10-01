@@ -70,7 +70,10 @@ class _WasteItemSheet extends StatelessWidget {
                   mark.title,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
+                    // 分別の変更は、知らせと同じ色で出す。
+                    color: mark.isSortingChange
+                        ? theme.colorScheme.tertiary
+                        : theme.colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 4),

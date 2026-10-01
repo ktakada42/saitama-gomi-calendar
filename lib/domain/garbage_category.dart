@@ -1,3 +1,5 @@
+import 'sorting_change.dart';
+
 /// さいたま市の家庭ごみの区分。
 ///
 /// 市の収集区分は5つで、収集曜日はこの区分ごとに決まっている。
@@ -21,6 +23,13 @@ enum GarbageCategory {
     label: 'もえるごみ',
     shortLabel: 'もえる',
     examples: ['生ごみ', '紙おむつ', '写真・レシート', '木の枝', '汚れの落ちないプラスチック'],
+    examplesBeforePlastic2026: [
+      '生ごみ',
+      '紙おむつ',
+      '写真・レシート',
+      '木の枝',
+      '容器包装以外のプラスチック製品',
+    ],
     howTo:
         '中身の見える袋（透明・半透明）に入れて出す。'
         '最大の一辺または直径が90cm以上のものは粗大ごみ。生ごみは水気をよく切ってから入れる。',
@@ -30,6 +39,7 @@ enum GarbageCategory {
     label: 'もえないごみ',
     shortLabel: 'もえない',
     examples: ['陶磁器', 'ガラス製品', '鍋・やかん', '電球', '傘', '30cm以上のプラスチック製品'],
+    examplesBeforePlastic2026: ['陶磁器', 'ガラス製品', '鍋・やかん', '電球', '傘'],
     howTo:
         '中身の見える袋に入れて出す。刃物は紙で包んで「包丁」等と表示する。'
         'ライター・スプレー缶は入れない（有害危険ごみへ）。',
@@ -49,10 +59,14 @@ enum GarbageCategory {
     label: '資源物1類',
     shortLabel: '資源1',
     examples: ['びん', 'かん', 'ペットボトル', 'プラスチック資源'],
+    examplesBeforePlastic2026: ['びん', 'かん', 'ペットボトル', '容器包装プラスチック'],
     howTo:
         'フタを外し、軽くすすいで種類ごとに透明袋へ。ペットボトルはラベルも外す。'
         '洗剤を使う必要はない。'
         'プラスチック資源は、プラスチック100％で30cm未満、すすいで汚れが落ちるもの。',
+    howToBeforePlastic2026:
+        'フタを外し、軽くすすいで種類ごとに透明袋へ。ペットボトルはラベルも外す。'
+        '洗剤を使う必要はない。',
   ),
   recyclable2(
     id: 'recyclable2',
@@ -70,6 +84,8 @@ enum GarbageCategory {
     required this.shortLabel,
     required this.examples,
     required this.howTo,
+    this.examplesBeforePlastic2026,
+    this.howToBeforePlastic2026,
   });
 
   /// JSON に書き出すときの識別子。列挙の name と一致させてあるが、
@@ -83,10 +99,40 @@ enum GarbageCategory {
   final String shortLabel;
 
   /// 代表的な品目。「これはどの区分か」を思い出すための手がかり。
+  ///
+  /// いまの決まりでのもの。画面に出すときは、その日の決まりを引く
+  /// [examplesOn] を使う。
   final List<String> examples;
 
   /// 出し方の要点。市のマニュアルの要約であって全文ではない。
+  ///
+  /// いまの決まりでのもの。画面に出すときは [howToOn] を使う。
   final String howTo;
+
+  /// 令和8年10月のプラスチックの分別変更より前の代表品目。
+  /// 変更で変わらなかった区分は null。
+  final List<String>? examplesBeforePlastic2026;
+
+  /// 同じく、変更より前の出し方。
+  final String? howToBeforePlastic2026;
+
+  /// [day] に出すときの代表品目。
+  ///
+  /// カレンダーは過去の月も見られる。9月以前の資源物1類に「プラスチック資源」
+  /// と出すと、当時は集めていなかったものを載せることになる。
+  /// 分別の一覧と違って日付で切り替えるのは、こちらは区分ごとの短い文で、
+  /// 変更の前後とも市のマニュアルに書いてあるから（一覧のほうは、品目ごとの
+  /// 新しい区分を市が一部しか示していない）。
+  List<String> examplesOn(DateTime day) => _isBeforePlastic2026(day)
+      ? examplesBeforePlastic2026 ?? examples
+      : examples;
+
+  /// [day] に出すときの出し方。
+  String howToOn(DateTime day) =>
+      _isBeforePlastic2026(day) ? howToBeforePlastic2026 ?? howTo : howTo;
+
+  static bool _isBeforePlastic2026(DateTime day) =>
+      !SortingChange.plastic2026.hasStarted(day);
 
   static GarbageCategory? fromId(String id) {
     for (final category in GarbageCategory.values) {

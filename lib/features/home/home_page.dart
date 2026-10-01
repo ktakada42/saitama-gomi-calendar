@@ -188,7 +188,7 @@ class _FeaturedCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  day.categories.first.howTo,
+                  day.categories.first.howToOn(day.date),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

@@ -10,6 +10,19 @@ void main() {
     expect(marks.first.description, contains('90cm以上2m未満'));
   });
 
+  test('分別の変更を伝える印は、ほかの印と見分けられる', () {
+    // 一覧の区分そのものが変わりうることを言っている印。見落とすと
+    // 出し先を間違えるので、画面では知らせと同じ色で出す。
+    final changes = NoteMark.resolve([
+      'box',
+      'star1',
+      'star2',
+      'star4',
+      'page9',
+    ]).where((m) => m.isSortingChange).map((m) => m.id);
+    expect(changes, ['box', 'star4']);
+  });
+
   test('知らない印は落とす', () {
     // 市が印を増やしても、古いアプリが空欄を出したり落ちたりしないように。
     expect(NoteMark.resolve(['star2', 'star99']).map((m) => m.id), ['star2']);
