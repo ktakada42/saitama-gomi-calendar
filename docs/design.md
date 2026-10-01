@@ -64,6 +64,8 @@ WasteItem
 NoteMark
   └ 早見表の「★2」「▶P9参照」を、冊子を持たない人にも通じる言葉にする
   └ 印は抽出時に注意点の本文から切り出してある（scripts/extract_waste_dictionary.py）
+  └ 品目の行を囲む赤い枠（box）も印にする。令和8年10月からプラスチック資源に
+    出せる品目に市が付けたもので、文字ではなく線なので位置から拾う
   └ 知らない印は黙って捨てる。市が印を増やしても古いアプリが壊れないように
 
 KanaRow
@@ -80,6 +82,8 @@ SortingChange
   └ 分別データは同梱なので、決まりが変わってもアプリを更新しない利用者には
     古い分類が出続ける。切り替え日を過ぎたら知らせを出すために使う
   └ データを日付で切り替えることはしない（requirements.md 4.5節）
+  └ 変更をデータに入れたあとも残す。市が品目を示したのは一部だけなので、
+    条件を渡して利用者が自分で判断できるようにする
 ```
 
 `CollectionCalendar`が「日付から区分を引く」ロジックの単一の入口になっており、画面側は
@@ -103,7 +107,11 @@ AreaCatalog.load()          assets/data/areas.json を読み込む（起動ご�
                              （AreaPickerPageが使う唯一の郵便番号関連API）
 
 WasteDictionary.load()       assets/data/dictionary.json を読み込む
-  items:  品目ごとの出し先（446件）。かな行と印（marks）も持つ
+  items:  品目ごとの出し先（448件）。かな行と印（marks）も持つ
+          図解ページからの補い（dictionary_extra.json）と、令和8年10月の
+          プラスチックの分別変更（dictionary_plastic2026.json）を合わせる。
+          後者は名指しした品目の区分・注意点を上書きし、無い品目を足す
+  changeSource / changeSourceUrl: 変更の反映に使った資料。出典に並べて出す
   search(query)  記号を無視して絞り込む。前方一致を先に出す
 
 SettingsRepository           shared_preferences 経由で利用者の設定を保存

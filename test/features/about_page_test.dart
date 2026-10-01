@@ -30,6 +30,9 @@ void main() {
       // 別々の資料から取っているので、片方だけを出典として見せない。
       expect(find.text('テスト用の出典'), findsOneWidget);
       expect(find.text('テスト用の分別早見表'), findsOneWidget);
+      // 早見表は4月に配られた時点のもの。10月の変更は別の資料から
+      // 反映しているので、そちらも出典として挙げる。
+      expect(find.text('テスト用の変更の資料'), findsOneWidget);
       // どう機械処理したか（disclaimer）は利用者の判断の役に立たないので出さない。
       expect(find.text('テスト用の但し書き'), findsNothing);
     });
@@ -38,7 +41,9 @@ void main() {
       await pumpApp(tester, const AboutPage());
 
       // 出典は表ごとに別なので、それぞれから資料へ出られるようにする。
-      for (final title in ['収集日・地区', '分別早見表', 'プライバシーポリシー']) {
+      for (final title in ['収集日・地区', '分別早見表', 'プラスチックの分別変更', 'プライバシーポリシー']) {
+        // 出典が増えて、下の項目は画面の外へ出た。
+        await tester.scrollUntilVisible(find.text(title), 300);
         // アプリの外へ出ることを右端のアイコンで示す。
         expect(
           find.descendant(

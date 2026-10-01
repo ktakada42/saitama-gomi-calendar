@@ -15,6 +15,8 @@ class WasteDictionary {
     required this.items,
     required this.source,
     required this.sourceUrl,
+    this.changeSource = '',
+    this.changeSourceUrl = '',
   });
 
   final List<WasteItem> items;
@@ -25,15 +27,28 @@ class WasteDictionary {
   /// 出典のURL。
   final String sourceUrl;
 
-  /// 早見表と、図解ページからの補いを合わせて読む。
+  /// 分別の変更を反映するのに使った資料の名前。反映していなければ空。
+  final String changeSource;
+
+  /// その資料のURL。
+  final String changeSourceUrl;
+
+  /// 早見表と、図解ページからの補い、分別の変更を合わせて読む。
   ///
   /// 早見表（`dictionary.json`）は抽出スクリプトの出力そのままにしておく。
   /// 補い（`dictionary_extra.json`）を混ぜて書き戻すと、市が資料を更新して
   /// 抽出をやり直したときに、手で足したぶんが消える。
+  ///
+  /// 令和8年10月のプラスチックの分別変更（`dictionary_plastic2026.json`）も
+  /// 同じ理由で分けてある。早見表は4月に配られた時点の区分のままで、
+  /// 市が後からリーフレットで名指しした品目だけを、読むときに上書きする。
   static Future<WasteDictionary> load() async {
     final raw = await rootBundle.loadString('assets/data/dictionary.json');
     final extra = await rootBundle.loadString(
       'assets/data/dictionary_extra.json',
+    );
+    final changes = await rootBundle.loadString(
+      'assets/data/dictionary_plastic2026.json',
     );
     final keywords = await rootBundle.loadString(
       'assets/data/dictionary_keywords.json',
@@ -44,6 +59,7 @@ class WasteDictionary {
     return WasteDictionary.fromJson(
       jsonDecode(raw) as Map<String, dynamic>,
       extra: jsonDecode(extra) as Map<String, dynamic>,
+      changes: jsonDecode(changes) as Map<String, dynamic>,
       keywords: jsonDecode(keywords) as Map<String, dynamic>,
       kana: jsonDecode(kana) as Map<String, dynamic>,
     );
@@ -52,13 +68,21 @@ class WasteDictionary {
   factory WasteDictionary.fromJson(
     Map<String, dynamic> json, {
     Map<String, dynamic>? extra,
+    Map<String, dynamic>? changes,
     Map<String, dynamic>? keywords,
     Map<String, dynamic>? kana,
   }) {
     final byName = (keywords?['keywords'] as Map<String, dynamic>?) ?? const {};
     final kanaByName = (kana?['kana'] as Map<String, dynamic>?) ?? const {};
+    // 名指しで上書きする品目。書いてある項目（区分・注意点）だけを差し替え、
+    // 書いていない項目は早見表のまま残す。
+    final overrides = {
+      for (final override
+          in (changes?['overrides'] as List<dynamic>? ?? const []))
+        (override as Map<String, dynamic>)['name']: override,
+    };
     final items = [
-      for (final source in [json['items'], extra?['items']])
+      for (final source in [json['items'], extra?['items'], changes?['items']])
         for (final item in (source as List<dynamic>? ?? const []))
           WasteItem.fromJson({
             // 早見表の品目の読みは別ファイルで持つ。dictionary.jsonは抽出
@@ -66,6 +90,7 @@ class WasteDictionary {
             // 書くと、市が資料を更新して抽出をやり直したときに消える。
             'kana': kanaByName[item['name']],
             ...item as Map<String, dynamic>,
+            ...?overrides[item['name']],
             // 言い換えは別ファイルで持つ。品目の出どころ（早見表／図解ページ）と
             // 分けておかないと、市の資料が変わったときに突き合わせられない。
             'keywords': byName[item['name']] ?? const <dynamic>[],
@@ -91,6 +116,8 @@ class WasteDictionary {
       items: [for (final (_, _, i) in order) items[i]],
       source: json['source'] as String? ?? '',
       sourceUrl: json['sourceUrl'] as String? ?? '',
+      changeSource: changes?['source'] as String? ?? '',
+      changeSourceUrl: changes?['sourceUrl'] as String? ?? '',
     );
   }
 

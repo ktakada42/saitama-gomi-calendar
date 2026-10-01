@@ -372,7 +372,8 @@ void main() {
         today: DateTime(2026, 10, 1),
       );
 
-      // 同梱の分別が古くなっているので、一覧を見る前に気づけるようにする。
+      // 一覧の区分だけでは決まらない品目が多いので、一覧を見る前に
+      // 気づけるようにする。
       expect(find.text('プラスチックの分別が変わりました'), findsOneWidget);
       expect(find.text('市の最新の案内を見る'), findsOneWidget);
     });
@@ -384,8 +385,8 @@ void main() {
         today: DateTime(2026, 10, 1),
       );
 
-      // 品目ごとの分別はまだ市から出ていない。条件が読めれば、
-      // 手元の品物については利用者が自分で判断できる。
+      // 市が品目を示したのは一部だけ。条件が読めれば、
+      // 一覧にない品物についても利用者が自分で判断できる。
       for (final condition in SortingChange.plastic2026.conditions) {
         expect(
           find.text(keepParenthesesTogether(condition)),

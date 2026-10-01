@@ -18,6 +18,7 @@ void main() {
 
   test('説明はどれも空でない', () {
     for (final id in [
+      'box',
       'star1',
       'star2',
       'star3',

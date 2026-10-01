@@ -122,6 +122,18 @@ class AboutPage extends ConsumerWidget {
               subtitle: dictionary.source,
               url: dictionary.sourceUrl,
             ),
+          // 早見表は4月に配られた時点のもので、10月の変更は別の資料から
+          // 反映している。早見表だけを出典に挙げると、どこにも載っていない
+          // 区分を出していることになる。
+          if (dictionary != null && dictionary.changeSource.isNotEmpty) ...[
+            const Divider(height: 1),
+            ExternalLinkTile(
+              icon: Icons.campaign_outlined,
+              title: 'プラスチックの分別変更',
+              subtitle: dictionary.changeSource,
+              url: dictionary.changeSourceUrl,
+            ),
+          ],
           const SectionHeader('このアプリ'),
           ListTile(
             leading: const Icon(Icons.info_outline),

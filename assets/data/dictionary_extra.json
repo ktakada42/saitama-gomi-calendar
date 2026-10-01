@@ -139,10 +139,8 @@
       "kanaHead": "へ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "容器包装プラスチックとして出す",
-      "marks": [
-        "star4"
-      ],
+      "note": "プラスチック資源として出す",
+      "marks": [],
       "page": "P6"
     },
     {
@@ -151,22 +149,18 @@
       "kanaHead": "ひ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "容器包装プラスチックとして出す",
-      "marks": [
-        "star4"
-      ],
+      "note": "プラスチック資源として出す",
+      "marks": [],
       "page": "P6"
     },
     {
       "name": "びん・かんのフタ（プラスチック製・プラマークなし）",
       "kana": "びんかんのふた",
       "kanaHead": "ひ",
-      "category": "burnable",
-      "categoryLabel": "もえるごみ",
-      "note": "",
-      "marks": [
-        "star4"
-      ],
+      "category": "recyclable1",
+      "categoryLabel": "資源物1類",
+      "note": "プラスチック資源として出す",
+      "marks": [],
       "page": "P6"
     },
     {
@@ -177,8 +171,7 @@
       "categoryLabel": "資源物1類",
       "note": "軽くすすいで汚れが落ちる程度のもの",
       "marks": [
-        "star1",
-        "star4"
+        "star1"
       ],
       "page": "P6"
     },
@@ -190,8 +183,7 @@
       "categoryLabel": "資源物1類",
       "note": "軽くすすいで汚れが落ちる程度のもの",
       "marks": [
-        "star1",
-        "star4"
+        "star1"
       ],
       "page": "P6"
     },
@@ -201,7 +193,7 @@
       "kanaHead": "こ",
       "category": "recyclable1",
       "categoryLabel": "資源物1類",
-      "note": "プラマークのついているもの",
+      "note": "気泡緩衝材・発泡スチロールなど",
       "marks": [
         "star4"
       ],

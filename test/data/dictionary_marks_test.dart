@@ -40,6 +40,37 @@ void main() {
     expect(carpet.markIds, ['star2']);
   });
 
+  test('区分の名前を含む注意点が落ちていない', () {
+    // 表の上の凡例（「もえるごみ」「もえないごみ」…）を落とすときに、
+    // 同じ言葉を含む注意点まで語ごと落としていた。水筒の「プラスチック製は
+    // もえるごみ」のように、区分が逆になる但し書きが90件ほど消えていた。
+    String noteOf(String name) =>
+        dictionary.items.firstWhere((i) => i.name == name).note;
+    expect(noteOf('ハンガー'), '金属製は、もえないごみ');
+    expect(noteOf('水筒'), 'プラスチック製はもえるごみ');
+    expect(noteOf('アイロン'), contains('もえないごみとしても出せます'));
+    expect(noteOf('てんぷら油'), contains('※液体のものは、排出禁止'));
+    expect(noteOf('扇風機'), '充電式のものは、小型家電回収ボックスへ');
+  });
+
+  test('表のいちばん下の行の注意点が落ちていない', () {
+    // 脚注の手前で切る位置がページによって違う。
+    final dishwasher = dictionary.items.firstWhere((i) => i.name == '食器洗浄器');
+    expect(dishwasher.note, 'ビルトインは許可業者（（有）太盛）へ');
+    expect(dishwasher.markIds, ['page11']);
+  });
+
+  test('品目名と区分がくっついて読まれる行も拾えている', () {
+    // 品目名が欄いっぱいまで伸びると、区分と1語に読まれる。
+    // 区分が無い行として捨てられ、品目ごと消えていた。
+    final can = dictionary.items.firstWhere((i) => i.name == 'じょうろ（プラスチック製）');
+    expect(can.categoryId, 'nonBurnable');
+    final jack = dictionary.items.firstWhere(
+      (i) => i.name == 'ジャッキ（車用パンタグラフ型）',
+    );
+    expect(jack.categoryId, 'oversized');
+  });
+
   test('印だけの品目は注意点が空になる', () {
     final chair = dictionary.items.firstWhere((i) => i.name == 'いす');
     expect(chair.note, isEmpty);
