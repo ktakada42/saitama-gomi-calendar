@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/waste_item.dart';
+import '../../ui/caution_style.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
@@ -70,10 +71,8 @@ class _WasteItemSheet extends StatelessWidget {
                   mark.title,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    // 分別の変更は、知らせと同じ色で出す。
-                    color: mark.isSortingChange
-                        ? theme.colorScheme.tertiary
-                        : theme.colorScheme.primary,
+                    // 一覧の行と同じ、注意の色。
+                    color: CautionStyle.colorOf(context),
                   ),
                 ),
                 const SizedBox(height: 4),
