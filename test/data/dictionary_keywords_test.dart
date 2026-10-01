@@ -81,7 +81,7 @@ void main() {
     test('AIの検証で外していた言い方', () {
       // scripts/ai_eval/cases.json で候補に入らず落ちていたもの。
       // AIに推測させる前に、決まっている言い換えは確実に当てる。
-      expect(found('けいたいでんわ'), contains('携帯電話・ＰＨＳ'));
+      expect(found('けいたいでんわ'), contains('携帯電話・PHS'));
       expect(found('こわれた傘'), contains('かさ'));
       expect(found('けいこうとう'), contains('蛍光管・蛍光ランプ'));
       expect(found('electric fan'), contains('扇風機'));
@@ -205,6 +205,14 @@ void main() {
     });
   });
 
+  test('英数字は全角で打っても半角で打っても引ける', () {
+    // 品目名の英数字は半角に揃えてある。日本語入力のままだと全角になる。
+    expect(found('ＣＤ'), contains('CD'));
+    expect(found('cd'), contains('CD'));
+    expect(found('Ｔシャツ'), contains('Tシャツ'));
+    expect(found('ＣＤケース'), contains('CDケース'));
+  });
+
   test('言い換えを足しても、元の名前で引ける', () {
     // 上書きしていないこと。
     expect(found('やかん'), contains('やかん'));
@@ -215,7 +223,15 @@ void main() {
 /// テストから正規化の結果を確かめるための写し。
 /// lib/domain/waste_item.dart の _normalize と同じ規則にしてある。
 String normalizeForTest(String value) {
-  final stripped = value
+  final halfWidth = String.fromCharCodes([
+    for (final code in value.runes)
+      (code >= 0xFF10 && code <= 0xFF19) ||
+              (code >= 0xFF21 && code <= 0xFF3A) ||
+              (code >= 0xFF41 && code <= 0xFF5A)
+          ? code - 0xFEE0
+          : code,
+  ]);
+  final stripped = halfWidth
       .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
       .replaceAll(RegExp(r'[〜~－―\-\s]'), '')
       .toLowerCase();

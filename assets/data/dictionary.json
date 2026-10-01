@@ -263,7 +263,7 @@
       "marks": []
     },
     {
-      "name": "ＭＤ",
+      "name": "MD",
       "kanaHead": "え",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
@@ -861,7 +861,7 @@
       "marks": []
     },
     {
-      "name": "携帯電話・ＰＨＳ",
+      "name": "携帯電話・PHS",
       "kanaHead": "け",
       "category": "smallAppliance",
       "categoryLabel": "小型家電",
@@ -1187,7 +1187,7 @@
       "marks": []
     },
     {
-      "name": "ＣＤ",
+      "name": "CD",
       "kanaHead": "し",
       "category": "burnable",
       "categoryLabel": "もえるごみ",
@@ -2145,7 +2145,7 @@
       "marks": []
     },
     {
-      "name": "Ｔシャツ",
+      "name": "Tシャツ",
       "kanaHead": "て",
       "category": "recyclable2",
       "categoryLabel": "資源物2類",
@@ -3006,7 +3006,7 @@
       "marks": []
     },
     {
-      "name": "ふとん（２枚以上の場合）",
+      "name": "ふとん（2枚以上の場合）",
       "kanaHead": "ふ",
       "category": "oversized",
       "categoryLabel": "粗大ごみ・適正処理困難物",

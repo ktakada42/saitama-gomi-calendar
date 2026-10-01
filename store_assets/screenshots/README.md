@@ -138,7 +138,7 @@ python3 scripts/make_store_screenshots.py
 | `00_home.png` | ホーム | 明日は何ごみ？ |
 | `01_widget.png` | ホーム画面ウィジェット（中・小） | ホーム画面から／確認可能 |
 | `02_calendar.png` | カレンダー | 今月の収集日が／ひと目で |
-| `03_dictionary.png` | 分別 | 507品目を／五十音で探せる |
+| `03_dictionary.png` | 分別 | 506品目を／五十音で探せる |
 | `04_settings.png` | 設定 | 前日の夜に／お知らせ |
 
 初回設定（地区選択）の画面は入れていない。地区を選ぶのは最初の一度きりで、

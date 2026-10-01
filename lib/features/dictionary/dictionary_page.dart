@@ -18,7 +18,7 @@ import 'waste_item_sheet.dart';
 /// 収集日を知りたいのがホーム・カレンダーなら、こちらは「これは何ごみか」を
 /// 調べるための画面。名前で絞り込めることが第一なので、検索欄を最上部に置く。
 ///
-/// 一覧は市の早見表と同じ五十音順で、右端に索引を出す。507件あるので、
+/// 一覧は市の早見表と同じ五十音順で、右端に索引を出す。506件あるので、
 /// 検索語を思いつかないときに「た行あたり」と当たりを付けて飛べる必要がある。
 class DictionaryPage extends ConsumerStatefulWidget {
   const DictionaryPage({super.key});
@@ -788,6 +788,12 @@ class _ItemTile extends StatelessWidget {
               ),
             );
     }
+    // 分別の変更を伝える印は、画面の上の知らせと同じ色・同じ絵にする。
+    // ほかの印と同じ色だと、区分が変わりうることが補足に見えてしまう。
+    final mark = item.marks.first;
+    final markColor = mark.isSortingChange
+        ? theme.colorScheme.tertiary
+        : theme.colorScheme.primary;
     // 押せば続きがあることを、行の中で示す。注意点と同じ行に並べると
     // どちらも半端に切れるので、下に重ねる。
     return Column(
@@ -806,19 +812,19 @@ class _ItemTile extends StatelessWidget {
         Row(
           children: [
             Icon(
-              Icons.info_outline,
+              mark.isSortingChange
+                  ? Icons.campaign_outlined
+                  : Icons.info_outline,
               size: 13,
-              color: theme.colorScheme.primary,
+              color: markColor,
             ),
             const SizedBox(width: 3),
             Expanded(
               child: Text(
-                item.marks.first.title,
+                mark.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: markColor),
               ),
             ),
           ],

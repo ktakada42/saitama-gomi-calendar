@@ -67,6 +67,7 @@ class _DayDetailSheet extends StatelessWidget {
               for (final category in day.categories) ...[
                 _CategoryDetail(
                   category: category,
+                  day: day.date,
                   deadline: area.depositDeadline(category),
                 ),
                 const SizedBox(height: 12),
@@ -79,9 +80,16 @@ class _DayDetailSheet extends StatelessWidget {
 }
 
 class _CategoryDetail extends StatelessWidget {
-  const _CategoryDetail({required this.category, required this.deadline});
+  const _CategoryDetail({
+    required this.category,
+    required this.day,
+    required this.deadline,
+  });
 
   final GarbageCategory category;
+
+  /// 収集日。代表品目と出し方は、その日の決まりで出す。
+  final DateTime day;
   final String deadline;
 
   @override
@@ -119,12 +127,12 @@ class _CategoryDetail extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            keepParenthesesTogether(category.examples.join('・')),
+            keepParenthesesTogether(category.examplesOn(day).join('・')),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 6),
           Text(
-            keepParenthesesTogether(category.howTo),
+            keepParenthesesTogether(category.howToOn(day)),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),

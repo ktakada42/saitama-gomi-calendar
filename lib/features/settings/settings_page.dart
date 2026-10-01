@@ -30,6 +30,8 @@ class SettingsPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final area = ref.watch(selectedAreaProvider).value;
     if (area == null) return const SizedBox.shrink();
+    // 区分の説明は、今日の時点の決まりで出す。
+    final today = ref.watch(todayProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('設定')),
@@ -106,10 +108,12 @@ class SettingsPage extends ConsumerWidget {
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               expandedCrossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(keepParenthesesTogether(category.examples.join('・'))),
+                Text(
+                  keepParenthesesTogether(category.examplesOn(today).join('・')),
+                ),
                 const SizedBox(height: 8),
                 Text(
-                  keepParenthesesTogether(category.howTo),
+                  keepParenthesesTogether(category.howToOn(today)),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

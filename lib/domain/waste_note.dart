@@ -9,9 +9,17 @@ class NoteMark {
     required this.id,
     required this.title,
     required this.description,
+    this.isSortingChange = false,
   });
 
   final String id;
+
+  /// 分別の決まりが変わったことを伝える印か。
+  ///
+  /// ほかの印は一覧の区分を補うものだが、これは区分そのものが変わりうる
+  /// ことを言っている。見落とすと出し先を間違えるので、画面では
+  /// 分別変更の知らせと同じ色で出して、ほかの印と見分けられるようにする。
+  final bool isSortingChange;
 
   /// 一覧やシートの見出しに出す短い言い方。
   final String title;
@@ -35,6 +43,7 @@ class NoteMark {
           '30cm未満のものは、資源物1類（プラスチック資源）に出します。'
           '水で軽くすすいでも汚れが落ちないものはもえるごみ、'
           '30cm以上90cm未満のものはもえないごみです。',
+      isSortingChange: true,
     ),
     'star1': NoteMark(
       id: 'star1',
@@ -61,6 +70,7 @@ class NoteMark {
       description:
           '令和8年（2026年）10月から、プラスチック製で30cm以上90cm未満のものは'
           'もえないごみです。',
+      isSortingChange: true,
     ),
     'star5': NoteMark(
       id: 'star5',

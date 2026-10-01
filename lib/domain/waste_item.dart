@@ -32,7 +32,7 @@ class WasteItem {
   /// 並べ替えに使う読み。
   ///
   /// 名前がかなだけの品目（「ペットボトル」）は名前から起こすので空のまま。
-  /// 漢字や英字を含む品目（「網戸」「ＭＤ」）だけ、資料に無い読みを
+  /// 漢字や英字を含む品目（「網戸」「MD」）だけ、資料に無い読みを
   /// dictionary_kana.json / dictionary_extra.json で与える。
   final String kana;
 
@@ -145,11 +145,27 @@ class WasteItem {
   /// 長音の有無のゆれ（「ダンボール」と「だんぼーる」）は、
   /// dictionary_keywords.json の言い換えで受ける。
   static String _normalize(String value) => _foldKatakana(
-    value
+    _foldFullWidth(value)
         .replaceAll(RegExp(r'[（）()【】\[\]・、。／/･]'), '')
         .replaceAll(RegExp(r'[〜~－―\-\s]'), '')
         .toLowerCase(),
   );
+
+  /// 全角の英数字を半角に寄せる。
+  ///
+  /// 品目名の英数字は半角に揃えてある（「CD」「Tシャツ」）。日本語入力の
+  /// ままで「ＣＤ」と打っても当たるようにする。
+  static String _foldFullWidth(String value) {
+    final buffer = StringBuffer();
+    for (final code in value.runes) {
+      final isFullWidthAlnum =
+          (code >= 0xFF10 && code <= 0xFF19) ||
+          (code >= 0xFF21 && code <= 0xFF3A) ||
+          (code >= 0xFF41 && code <= 0xFF5A);
+      buffer.writeCharCode(isFullWidthAlnum ? code - 0xFEE0 : code);
+    }
+    return buffer.toString();
+  }
 
   /// カタカナをひらがなに寄せる。
   ///

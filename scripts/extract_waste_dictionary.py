@@ -422,7 +422,7 @@ def extract_page(page):
                 item_tops[index + 1] if index + 1 < len(item_tops) else float("inf")
             )
 
-            name = join_row(row)
+            name = to_halfwidth_alnum(join_row(row))
             if not name:
                 continue
 
@@ -457,7 +457,7 @@ def extract_page(page):
                 if top - 4 <= w["top"] < min(next_top - 4, table_bottom)
             ]
             note, marks = split_marks(join_note(note_parts))
-            note = tidy_note_lines(note)
+            note = to_halfwidth_alnum(tidy_note_lines(note))
 
             # 枠はこのブロックの行をまるごと囲んでいる。品目名の高さが
             # 枠の中に入っていれば、その品目の枠。
@@ -503,6 +503,24 @@ def strip_marks(text: str) -> str:
     for pattern, _ in MARK_PATTERNS:
         text = pattern.sub("", text)
     return text
+
+
+# 全角の英数字を半角にする表。括弧や記号は全角のまま残す。
+HALFWIDTH_ALNUM = {
+    code: code - 0xFEE0
+    for start, end in ((0xFF10, 0xFF19), (0xFF21, 0xFF3A), (0xFF41, 0xFF5A))
+    for code in range(start, end + 1)
+}
+
+
+def to_halfwidth_alnum(text: str) -> str:
+    """全角の英数字を半角に揃える。
+
+    早見表は「ＣＤ」「ＭＤ」「Ｔシャツ」を全角で、「LED電球」「ACアダプタ」を
+    半角で書いている。そのまま持つと、手で足した品目（「CDケース」「DVD」）と
+    字の幅が揃わず、同じものが全角と半角で2つ並ぶ。
+    """
+    return text.translate(HALFWIDTH_ALNUM)
 
 
 def to_ascii_digits(text):
