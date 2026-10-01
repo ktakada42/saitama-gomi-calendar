@@ -20,6 +20,7 @@ void main() {
     dictionary = WasteDictionary.fromJson(
       read('assets/data/dictionary.json'),
       extra: read('assets/data/dictionary_extra.json'),
+      changes: read('assets/data/dictionary_plastic2026.json'),
       keywords: keywords,
     );
   });

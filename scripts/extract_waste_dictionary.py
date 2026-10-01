@@ -49,6 +49,7 @@ MIN_BODY_FONT_HEIGHT = 7.0
 
 # 表の下端。これより下はページ脚注（★の説明など）なので、
 # 最後の品目の注意点がそこまで巻き込まないように切る。
+# 脚注の位置が読み取れなかったときの値で、ふだんは find_table_bottom が決める。
 TABLE_BOTTOM = 800.0
 
 # 表の凡例にある分別区分。アプリの5区分に収まらないもの（粗大・小型家電・電池・
@@ -65,17 +66,9 @@ CATEGORIES = {
     "×": ("notAccepted", "収集できないもの"),
 }
 
-# 表以外の要素（ヘッダーの凡例・脚注・縦書きの帯）を落とすためのキーワード
+# 表以外の要素（ヘッダー・脚注・縦書きの帯）を落とすためのキーワード
 NOISE_SUBSTRINGS = (
     "ごみの分別早見表",
-    "もえるごみ",
-    "もえないごみ",
-    "資源物1類",
-    "資源物2類",
-    "有害危険ごみ",
-    "粗大ごみ・適正処理困難物",
-    "小型家電",
-    "排出禁止",
     "出し方の注意点等",
     "★1…",
     "★2…",
@@ -97,6 +90,32 @@ NOISE_SUBSTRINGS = (
     "検索",
 )
 
+# 表の上に置かれた凡例（区分の名前の一覧）。
+#
+# 区分の名前は注意点の本文にも出てくる（「金属製は、もえないごみ」
+# 「※液体のものは、排出禁止」）。語の中身だけで落とすと、そういう注意点が
+# 語ごと消える。凡例は表の見出しより上にしか無いので、位置と合わせて見る。
+LEGEND_SUBSTRINGS = (
+    "もえるごみ",
+    "もえないごみ",
+    "資源物1類",
+    "資源物2類",
+    "有害危険ごみ",
+    "粗大ごみ・適正処理困難物",
+    "小型家電",
+    "排出禁止",
+)
+
+# 凡例の下端。凡例はtop 10〜22、表の最初の行はtop 35以降にある。
+LEGEND_BOTTOM = 30.0
+
+# 品目の行を囲む赤い枠。市が早見表の上に「□で囲まれているもので、全て
+# プラスチック製で最長の辺が30㎝未満のものは、令和8年10月からプラスチック
+# 資源として回収します」と書いている、その枠。行（品目・区分・注意点）を
+# まるごと囲む、塗りのない線だけの四角として描かれている。
+BOX_WIDTH = 235.0
+BOX_MARK = "box"
+
 
 def fetch_pdf_bytes():
     req = urllib.request.Request(MANUAL_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -104,8 +123,42 @@ def fetch_pdf_bytes():
         return res.read()
 
 
-def is_noise(text: str) -> bool:
-    return any(s in text for s in NOISE_SUBSTRINGS)
+def is_noise(word) -> bool:
+    text = word["text"]
+    if any(s in text for s in NOISE_SUBSTRINGS):
+        return True
+    return word["top"] < LEGEND_BOTTOM and any(s in text for s in LEGEND_SUBSTRINGS)
+
+
+def find_boxes(page):
+    """品目の行を囲む赤い枠を拾う。"""
+    return [
+        r
+        for r in page.rects
+        if r.get("stroke")
+        and not r.get("fill")
+        and abs(r["width"] - BOX_WIDTH) < 2
+        and is_red(r.get("stroking_color"))
+    ]
+
+
+def is_red(color) -> bool:
+    if not color or len(color) != 3:
+        return False
+    red, green, blue = color
+    return red > 0.8 and green < 0.2 and blue < 0.2
+
+
+def find_table_bottom(words) -> float:
+    """表の下端。脚注（★の説明）が始まる手前まで。
+
+    脚注の位置はページによって違う（1ページ目はtop 818、2ページ目は804）。
+    固定の値で切ると、脚注の遅いページでは最後の行の注意点が落ちる。
+    """
+    footnotes = [
+        w["top"] for w in words if re.match(r"★[1-6１-６]…", w["text"])
+    ]
+    return min(footnotes) - 1 if footnotes else TABLE_BOTTOM
 
 
 def is_body_text(word) -> bool:
@@ -188,12 +241,42 @@ def split_joined_kana_head(words, item_x):
     return split
 
 
+def split_joined_category(words, item_x, cat_x):
+    """品目名と区分がくっついた語を分ける。
+
+    品目名が欄いっぱいまで伸びると、すぐ隣の区分とのあいだに隙間が無くなり、
+    pdfplumberは「じょうろ（プラスチック製）不燃」のように1語として読む。
+    そのままでは区分の列に何も無い行になり、品目ごと消える。
+    """
+    split = []
+    for w in words:
+        # 長いものから当てる。「不燃」を「燃」と読むと、名前に「不」が残る。
+        code = next(
+            (
+                c
+                for c in sorted(CATEGORIES, key=len, reverse=True)
+                if w["text"].endswith(c) and w["text"] != c
+            ),
+            None,
+        )
+        if code and item_x - 6 <= w["x0"] < cat_x - 3 and w["x1"] > cat_x + 3:
+            split.append({**w, "text": w["text"][: -len(code)], "x1": cat_x - 3})
+            # 区分は区分列の左端に置き直す。
+            split.append({**w, "text": code, "x0": cat_x})
+        else:
+            split.append(w)
+    return split
+
+
 def extract_page(page):
     all_words = page.extract_words(use_text_flow=False, keep_blank_chars=False)
+    table_bottom = find_table_bottom(all_words)
+    boxes = find_boxes(page)
     entries = []
 
     for item_x, cat_x, note_x, end_x in BLOCKS:
         words = split_joined_kana_head(all_words, item_x)
+        words = split_joined_category(words, item_x, cat_x)
         block = [
             w
             for w in words
@@ -202,7 +285,7 @@ def extract_page(page):
             # 「（パソコンの）マウス」のように括弧で始まる品目は、ブロックの
             # 基準位置より少し左（-3程度）から始まる。一方でかな行の列は
             # さらに左（-15程度）にあるので、-6 で切れば両方を取り違えない。
-            if item_x - 6 <= w["x0"] < end_x and not is_noise(w["text"])
+            if item_x - 6 <= w["x0"] < end_x and not is_noise(w)
         ]
         if not block:
             continue
@@ -277,13 +360,24 @@ def extract_page(page):
             note_parts = [
                 w
                 for w in note_words
-                if top - 4 <= w["top"] < min(next_top - 4, TABLE_BOTTOM)
+                if top - 4 <= w["top"] < min(next_top - 4, table_bottom)
             ]
             note = "".join(
                 w["text"]
                 for w in sorted(note_parts, key=lambda w: (round(w["top"], 1), w["x0"]))
             ).strip()
             note, marks = split_marks(note)
+
+            # 枠はこのブロックの行をまるごと囲んでいる。品目名の高さが
+            # 枠の中に入っていれば、その品目の枠。
+            if any(
+                box["x0"] - 2 <= item_x <= box["x1"]
+                and box["top"] - 2 <= top <= box["bottom"]
+                for box in boxes
+            ):
+                # 一覧の行には先頭の印だけが出る。10月からの変更は、いま
+                # いちばん伝えたいことなので前に置く。
+                marks.insert(0, BOX_MARK)
 
             entries.append(
                 {

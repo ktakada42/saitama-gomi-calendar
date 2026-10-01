@@ -281,10 +281,10 @@ class _Results extends StatelessWidget {
 
 /// 分別の決まりが変わったことの知らせ。
 ///
-/// 同梱の分別が古くなっているので、まず「当てにしないでほしい」と伝え、
-/// 市が挙げている条件を渡して、市の案内へ行けるようにする。
+/// 一覧の区分だけでは決まらない品目が多いので、市が挙げている条件を渡して、
+/// 市の案内へ行けるようにする。
 /// 閉じられるようにはしない。
-/// 消してしまうと、古い分類を正しいものとして読み続けることになる。
+/// 消してしまうと、条件を見ないまま一覧の区分だけを読み続けることになる。
 class _SortingChangeNotice extends StatelessWidget {
   const _SortingChangeNotice({required this.change});
 
@@ -328,8 +328,8 @@ class _SortingChangeNotice extends StatelessWidget {
             keepParenthesesTogether(change.description),
             style: theme.textTheme.bodySmall,
           ),
-          // 品目ごとの分別はまだ市から出ていない。条件だけでも渡しておけば、
-          // 手元の品物については利用者が自分で判断できる。
+          // 市が品目を示したのは一部だけ。条件を渡しておけば、
+          // 一覧にない品物についても利用者が自分で判断できる。
           for (final condition in change.conditions)
             Padding(
               padding: const EdgeInsets.only(top: 4),

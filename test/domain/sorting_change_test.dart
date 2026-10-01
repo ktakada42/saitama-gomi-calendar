@@ -20,8 +20,8 @@ void main() {
   test('表示に使う文言がそろっている', () {
     expect(change.title, isNotEmpty);
     expect(change.description, isNotEmpty);
-    // 古いと言われるだけでは行き先がない。品目ごとの分別はまだ市から
-    // 出ていないので、手元の品物を自分で判断できる条件を渡す。
+    // 変わったと言われるだけでは行き先がない。市が品目を示したのは
+    // 一部だけなので、手元の品物を自分で判断できる条件を渡す。
     expect(change.conditions, hasLength(3));
     expect(change.conditions.any((c) => c.isEmpty), isFalse);
   });

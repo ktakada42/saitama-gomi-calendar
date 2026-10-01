@@ -86,33 +86,36 @@ final testOversizedGuide = OversizedGuide.fromJson(
       as Map<String, dynamic>,
 );
 
-final testDictionary = WasteDictionary.fromJson({
-  'source': 'テスト用の分別早見表',
-  'sourceUrl': 'https://example.com/dictionary',
-  'items': [
-    {
-      'name': 'ペットボトル',
-      'kanaHead': 'へ',
-      'category': 'recyclable1',
-      'categoryLabel': '資源物1類',
-      'note': '中をすすいで',
-    },
-    {
-      'name': 'カーペット',
-      'kanaHead': 'か',
-      'category': 'burnable',
-      'categoryLabel': 'もえるごみ',
-      'note': '',
-    },
-    {
-      'name': 'たんす',
-      'kanaHead': 'た',
-      'category': 'oversized',
-      'categoryLabel': '粗大ごみ・適正処理困難物',
-      'note': '直接持込みまたは戸別収集',
-    },
-  ],
-});
+final testDictionary = WasteDictionary.fromJson(
+  {
+    'source': 'テスト用の分別早見表',
+    'sourceUrl': 'https://example.com/dictionary',
+    'items': [
+      {
+        'name': 'ペットボトル',
+        'kanaHead': 'へ',
+        'category': 'recyclable1',
+        'categoryLabel': '資源物1類',
+        'note': '中をすすいで',
+      },
+      {
+        'name': 'カーペット',
+        'kanaHead': 'か',
+        'category': 'burnable',
+        'categoryLabel': 'もえるごみ',
+        'note': '',
+      },
+      {
+        'name': 'たんす',
+        'kanaHead': 'た',
+        'category': 'oversized',
+        'categoryLabel': '粗大ごみ・適正処理困難物',
+        'note': '直接持込みまたは戸別収集',
+      },
+    ],
+  },
+  changes: {'source': 'テスト用の変更の資料', 'sourceUrl': 'https://example.com/change'},
+);
 
 final testCatalog = AreaCatalog.fromJson({
   'source': 'テスト用の出典',
