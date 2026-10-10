@@ -28,7 +28,7 @@ dependencies:
   # 出典（市の公式ページ）を外部ブラウザで開くため。
   url_launcher: ^6.3.2
   # 「このアプリについて」に出すバージョン番号のため。
-  package_info_plus: ^10.2.1
+  package_info_plus: ^10.2.2
 
 dev_dependencies:
   flutter_test:
