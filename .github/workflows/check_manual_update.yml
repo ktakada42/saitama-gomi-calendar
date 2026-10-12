@@ -1,0 +1,47 @@
+name: Check Manual Update
+
+on:
+  schedule:
+    # 毎週土曜日 午前9:00 (JST) = 土曜日 00:00 (UTC)（Dependabotの実行時刻に合わせる）
+    - cron: '0 0 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-manual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdfplumber
+
+      - name: Check manual waste dictionary update
+        id: check
+        run: |
+          python scripts/extract_waste_dictionary.py --check --summary-file summary.md
+
+      - name: Create issue on update
+        if: failure() && steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING_ISSUE=$(gh issue list --state open --search "家庭ごみの出し方マニュアルの早見表更新を検知しました" --json number -q '.[0].number')
+          if [ -n "$EXISTING_ISSUE" ]; then
+            echo "既存のオープンなIssue (#$EXISTING_ISSUE) が存在するため新規作成はスキップします"
+          else
+            gh issue create \
+              --title "家庭ごみの出し方マニュアルの早見表更新を検知しました" \
+              --body-file summary.md \
+              --label "documentation"
+          fi

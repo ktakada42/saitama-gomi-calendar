@@ -87,6 +87,21 @@ const CollectionRule.monthly(DateTime.thursday, {2, 4}); // 第2・第4木曜日
 分別区分と出し方の文言も市の案内の要約であり、全文ではない。
 アプリ内の「このアプリについて」から出典を示している。
 
+## 分別早見表データについて
+
+`assets/data/dictionary.json` は、市が配布している「家庭ごみの出し方マニュアル」の「ごみの分別早見表」から `scripts/extract_waste_dictionary.py` で抽出した確定データ。
+
+- **早見表の更新有無の確認**（差分があれば終了コード1）:
+  ```bash
+  python3 scripts/extract_waste_dictionary.py --check
+  ```
+- **早見表データの更新**:
+  ```bash
+  python3 scripts/extract_waste_dictionary.py
+  ```
+
+GitHub Actions（`.github/workflows/check_manual_update.yml`）により、毎週土曜日に市の最新マニュアルPDFから早見表が自動抽出され、リポジトリのデータと差分がないか定期監視されます。改訂が検知された場合はIssueが自動起票されます。
+
 ## ディレクトリ構成
 
 ```

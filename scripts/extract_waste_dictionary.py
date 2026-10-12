@@ -10,8 +10,13 @@
 使い方:
     python3 -m venv .venv && .venv/bin/pip install pdfplumber
     .venv/bin/python3 scripts/extract_waste_dictionary.py
+
+差分検査（更新の有無を確認、差分があれば終了コード1）:
+    .venv/bin/python3 scripts/extract_waste_dictionary.py --check
 """
+import argparse
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -572,11 +577,171 @@ def find_table_pages(pdf):
     return pages
 
 
+def diff_dictionary(current_items: list[dict], extracted_items: list[dict]) -> dict:
+    """現在の辞書データと抽出した辞書データを比較し、差分情報を返す。"""
+    current_map = {item["name"]: item for item in current_items}
+    extracted_map = {item["name"]: item for item in extracted_items}
+
+    current_names = set(current_map.keys())
+    extracted_names = set(extracted_map.keys())
+
+    added_names = sorted(extracted_names - current_names)
+    removed_names = sorted(current_names - extracted_names)
+    common_names = sorted(current_names & extracted_names)
+
+    modified = []
+    for name in common_names:
+        cur = current_map[name]
+        ext = extracted_map[name]
+        changes = {}
+
+        if cur.get("category") != ext.get("category"):
+            changes["category"] = {
+                "label": "区分",
+                "old": f"{cur.get('categoryLabel', '')} ({cur.get('category', '')})",
+                "new": f"{ext.get('categoryLabel', '')} ({ext.get('category', '')})",
+            }
+
+        for key, label in [("note", "注意点"), ("marks", "印"), ("kanaHead", "かな行")]:
+            if cur.get(key) != ext.get(key):
+                changes[key] = {
+                    "label": label,
+                    "old": cur.get(key),
+                    "new": ext.get(key),
+                }
+
+        if changes:
+            modified.append({
+                "name": name,
+                "changes": changes,
+            })
+
+    return {
+        "has_changes": bool(added_names or removed_names or modified),
+        "added": [extracted_map[name] for name in added_names],
+        "removed": [current_map[name] for name in removed_names],
+        "modified": modified,
+        "current_count": len(current_items),
+        "extracted_count": len(extracted_items),
+    }
+
+
+def format_diff_text(diff: dict) -> str:
+    if not diff["has_changes"]:
+        return (
+            f"現在の assets/data/dictionary.json と差分はありません"
+            f"（早見表の更新なし、全{diff['current_count']}件一致）。"
+        )
+
+    lines = [
+        "=" * 60,
+        "⚠️ 家庭ごみの出し方マニュアル「ごみの分別早見表」の更新を検知しました",
+        "=" * 60,
+        f"品目数: 現在 {diff['current_count']}件 -> 抽出 {diff['extracted_count']}件",
+    ]
+
+    if diff["added"]:
+        lines.append(f"\n【追加された品目】 ({len(diff['added'])}件)")
+        for item in diff["added"]:
+            lines.append(f"  + {item['name']} ({item['categoryLabel']})")
+
+    if diff["removed"]:
+        lines.append(f"\n【削除された品目】 ({len(diff['removed'])}件)")
+        for item in diff["removed"]:
+            lines.append(f"  - {item['name']} ({item['categoryLabel']})")
+
+    if diff["modified"]:
+        lines.append(f"\n【変更された品目】 ({len(diff['modified'])}件)")
+        for item in diff["modified"]:
+            lines.append(f"  * {item['name']}:")
+            for key, ch in item["changes"].items():
+                lines.append(f"      {ch['label']}: {ch['old']!r} -> {ch['new']!r}")
+
+    return "\n".join(lines)
+
+
+def format_diff_markdown(diff: dict) -> str:
+    if not diff["has_changes"]:
+        return (
+            "## ✅ ごみの分別早見表の更新はありません\n\n"
+            f"さいたま市公式サイトの「家庭ごみの出し方マニュアル」PDFから抽出したデータは、"
+            f"リポジトリの `assets/data/dictionary.json` と完全に一致しています（全{diff['current_count']}件）。\n"
+        )
+
+    lines = [
+        "## ⚠️ ごみの分別早見表の更新を検知しました\n",
+        "さいたま市公式サイトで配布されているマニュアルPDFを再抽出したところ、"
+        "リポジトリの `assets/data/dictionary.json` との間に差分が検出されました。\n",
+        f"- **現在の登録件数**: {diff['current_count']}件",
+        f"- **最新の抽出件数**: {diff['extracted_count']}件\n",
+    ]
+
+    if diff["added"]:
+        lines.append(f"### 追加された品目 ({len(diff['added'])}件)\n")
+        lines.append("| 品目名 | 区分 | 注意点 |")
+        lines.append("| :--- | :--- | :--- |")
+        for item in diff["added"]:
+            note = item.get("note", "").replace("\n", "<br>")
+            lines.append(f"| {item['name']} | {item['categoryLabel']} | {note} |")
+        lines.append("")
+
+    if diff["removed"]:
+        lines.append(f"### 削除された品目 ({len(diff['removed'])}件)\n")
+        lines.append("| 品目名 | 区分 | 注意点 |")
+        lines.append("| :--- | :--- | :--- |")
+        for item in diff["removed"]:
+            note = item.get("note", "").replace("\n", "<br>")
+            lines.append(f"| {item['name']} | {item['categoryLabel']} | {note} |")
+        lines.append("")
+
+    if diff["modified"]:
+        lines.append(f"### 変更された品目 ({len(diff['modified'])}件)\n")
+        lines.append("| 品目名 | 変更項目 | 現在 | 最新 |")
+        lines.append("| :--- | :--- | :--- | :--- |")
+        for item in diff["modified"]:
+            name = item["name"]
+            for key, ch in item["changes"].items():
+                old_val = str(ch["old"]).replace("\n", "<br>")
+                new_val = str(ch["new"]).replace("\n", "<br>")
+                lines.append(f"| {name} | {ch['label']} | {old_val} | {new_val} |")
+        lines.append("")
+
+    lines.append("---\n")
+    lines.append(
+        "> 💡 **次の対応手順**:\n"
+        "> 1. `python3 scripts/extract_waste_dictionary.py` を実行して `assets/data/dictionary.json` を更新します。\n"
+        "> 2. `flutter test` を実行し、`assets/data/dictionary_plastic2026.json` での上書きが不要になっていないか確認・整理します。\n"
+        "> 3. 動作確認を行い、変更をコミットしてPRを作成します。"
+    )
+    return "\n".join(lines)
+
+
 def main():
-    pdf_bytes = fetch_pdf_bytes()
-    tmp_path = "/tmp/gomimanual_dictionary.pdf"
-    with open(tmp_path, "wb") as f:
-        f.write(pdf_bytes)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="ファイルへの書き込みを行わず、現在のassets/data/dictionary.jsonとの差分を検査する。差分があれば終了コード1を返す。",
+    )
+    parser.add_argument(
+        "--summary-file",
+        type=Path,
+        help="差分結果のMarkdownサマリーを出力するファイルパス",
+    )
+    parser.add_argument(
+        "--pdf",
+        type=Path,
+        help="ダウンロードの代わりに使用するローカルPDFファイルのパス",
+    )
+    args = parser.parse_args()
+
+    if args.pdf:
+        tmp_path = str(args.pdf)
+    else:
+        pdf_bytes = fetch_pdf_bytes()
+        tmp_path = "/tmp/gomimanual_dictionary.pdf"
+        with open(tmp_path, "wb") as f:
+            f.write(pdf_bytes)
 
     all_entries = []
     with pdfplumber.open(tmp_path) as pdf:
@@ -643,6 +808,29 @@ def main():
             "PDFのレイアウトが変わり、列位置の再計測が必要かもしれません。",
             file=sys.stderr,
         )
+
+    if args.check:
+        if not OUTPUT.exists():
+            raise RuntimeError(f"比較先のファイルが存在しません: {OUTPUT}")
+        current_data = json.loads(OUTPUT.read_text(encoding="utf-8"))
+        current_items = current_data.get("items", [])
+
+        diff = diff_dictionary(current_items, items)
+        print(format_diff_text(diff))
+
+        md_summary = format_diff_markdown(diff)
+        if args.summary_file:
+            args.summary_file.write_text(md_summary, encoding="utf-8")
+
+        gh_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if gh_summary:
+            with open(gh_summary, "a", encoding="utf-8") as f:
+                f.write(md_summary)
+
+        if diff["has_changes"]:
+            sys.exit(1)
+        else:
+            sys.exit(0)
 
     payload = {
         "version": 1,
