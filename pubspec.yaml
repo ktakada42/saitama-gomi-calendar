@@ -26,7 +26,7 @@ dependencies:
   # 上記が日時指定の予約に要求する、タイムゾーン付きの日時（TZDateTime）のため。
   timezone: ^0.11.1
   # 出典（市の公式ページ）を外部ブラウザで開くため。
-  url_launcher: ^6.3.2
+  url_launcher: ^6.3.3
   # 「このアプリについて」に出すバージョン番号のため。
   package_info_plus: ^10.2.2
 
