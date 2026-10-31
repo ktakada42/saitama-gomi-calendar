@@ -8,6 +8,7 @@ class FakeInAppReview implements InAppReview {
   bool available = true;
   int requestReviewCallCount = 0;
   int openStoreListingCallCount = 0;
+  String? lastAppStoreId;
 
   @override
   Future<bool> isAvailable() async => available;
@@ -23,6 +24,7 @@ class FakeInAppReview implements InAppReview {
     String? microsoftStoreId,
   }) async {
     openStoreListingCallCount++;
+    lastAppStoreId = appStoreId;
   }
 }
 
@@ -94,11 +96,21 @@ void main() {
     });
 
     test(
-      'openStoreListing が呼ばれると、inAppReview の openStoreListing を実行する',
+      'openStoreListing が呼ばれると、既定の appStoreId を渡して inAppReview の openStoreListing を実行する',
       () async {
         await service.openStoreListing();
         expect(fakeInAppReview.openStoreListingCallCount, 1);
+        expect(
+          fakeInAppReview.lastAppStoreId,
+          ReviewPromptService.defaultAppStoreId,
+        );
       },
     );
+
+    test('openStoreListing に appStoreId を明示した場合、それが優先される', () async {
+      await service.openStoreListing(appStoreId: 'custom-id');
+      expect(fakeInAppReview.openStoreListingCallCount, 1);
+      expect(fakeInAppReview.lastAppStoreId, 'custom-id');
+    });
   });
 }

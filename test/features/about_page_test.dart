@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:saitama_gomi/app.dart';
+import 'package:saitama_gomi/data/review_prompt_service.dart';
 import 'package:saitama_gomi/features/about/about_page.dart';
 
 import '../support/test_app.dart';
+
+class _TrackingInAppReview implements InAppReview {
+  int openStoreListingCallCount = 0;
+  String? lastAppStoreId;
+
+  @override
+  Future<bool> isAvailable() async => true;
+
+  @override
+  Future<void> requestReview() async {}
+
+  @override
+  Future<void> openStoreListing({
+    String? appStoreId,
+    String? microsoftStoreId,
+  }) async {
+    openStoreListingCallCount++;
+    lastAppStoreId = appStoreId;
+  }
+}
 
 void main() {
   group('このアプリについて', () {
@@ -74,6 +96,21 @@ void main() {
       await tester.scrollUntilVisible(find.text('アプリを評価する'), 300);
       expect(find.text('アプリを評価する'), findsOneWidget);
       expect(find.text('ストアでレビューを書く'), findsOneWidget);
+    });
+
+    testWidgets('アプリの評価（ストア）項目を押すとストアを開く', (tester) async {
+      final mockInAppReview = _TrackingInAppReview();
+      await pumpApp(tester, const AboutPage(), inAppReview: mockInAppReview);
+
+      await tester.scrollUntilVisible(find.text('アプリを評価する'), 300);
+      await tester.tap(find.text('アプリを評価する'));
+      await tester.pumpAndSettle();
+
+      expect(mockInAppReview.openStoreListingCallCount, 1);
+      expect(
+        mockInAppReview.lastAppStoreId,
+        ReviewPromptService.defaultAppStoreId,
+      );
     });
   });
 }

@@ -10,10 +10,16 @@ import 'review_prompt_repository.dart';
 class ReviewPromptService {
   ReviewPromptService({
     required this.repository,
+    this.appStoreId = defaultAppStoreId,
     @visibleForTesting InAppReview? inAppReview,
   }) : _inAppReview = inAppReview ?? InAppReview.instance;
 
+  /// App Store でのアプリID。
+  /// iOS / macOS では openStoreListing 時にアプリIDが必須となる。
+  static const String defaultAppStoreId = '6798954011';
+
   final ReviewPromptRepository repository;
+  final String? appStoreId;
   final InAppReview _inAppReview;
 
   /// アプリ起動時に呼び出し、起動日を記録する。
@@ -56,5 +62,6 @@ class ReviewPromptService {
   /// ストア（App Store / Google Play）のアプリページを開く。
   ///
   /// 利用者が設定画面などから自発的に評価を行いたいときに使用する。
-  Future<void> openStoreListing() => _inAppReview.openStoreListing();
+  Future<void> openStoreListing({String? appStoreId}) =>
+      _inAppReview.openStoreListing(appStoreId: appStoreId ?? this.appStoreId);
 }
