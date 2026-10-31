@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers.dart';
 import '../calendar/calendar_page.dart';
 import '../dictionary/dictionary_page.dart';
 import '../home/home_page.dart';
 import '../settings/settings_page.dart';
 
 /// 地区設定が済んだあとの本体。ホーム・カレンダー・分別・設定の4タブ。
-class HomeShell extends StatefulWidget {
+class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
   @override
-  State<HomeShell> createState() => _HomeShellState();
+  ConsumerState<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell> {
+class _HomeShellState extends ConsumerState<HomeShell> {
   int _index = 0;
 
   static const _pages = [
@@ -23,6 +25,21 @@ class _HomeShellState extends State<HomeShell> {
     SettingsPage(),
   ];
 
+  void _onDestinationSelected(int index) {
+    if (_index == index) return;
+    setState(() => _index = index);
+
+    // タブ切り替え時（起動直後ではないタイミング）に、条件を満たしていれば
+    // OS標準のアプリ内レビューダイアログを要求する。
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final packageInfo = await ref.read(packageInfoProvider.future);
+      final service = await ref.read(reviewPromptServiceProvider.future);
+      await service.requestReviewIfEligible(
+        currentVersion: packageInfo.version,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +47,7 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (index) => setState(() => _index = index),
+        onDestinationSelected: _onDestinationSelected,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.today_outlined),

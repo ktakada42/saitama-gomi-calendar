@@ -67,5 +67,13 @@ void main() {
       expect(find.text(appNameWithDisclaimer), findsWidgets);
       expect(find.text('1.2.3 (45)'), findsOneWidget);
     });
+
+    testWidgets('アプリの評価（ストア）項目がある', (tester) async {
+      await pumpApp(tester, const AboutPage());
+
+      await tester.scrollUntilVisible(find.text('アプリを評価する'), 300);
+      expect(find.text('アプリを評価する'), findsOneWidget);
+      expect(find.text('ストアでレビューを書く'), findsOneWidget);
+    });
   });
 }

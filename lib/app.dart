@@ -182,6 +182,13 @@ class _Root extends ConsumerWidget {
           .sync(ref.watch(calendarProvider), DateTime.now()),
     );
 
+    // レビュー依頼の条件判定のため、起動日を記録する。
+    unawaited(
+      ref
+          .read(reviewPromptServiceProvider.future)
+          .then((service) => service.recordLaunch()),
+    );
+
     return switch (area) {
       AsyncData(:final value) =>
         value == null

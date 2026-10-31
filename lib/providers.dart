@@ -4,6 +4,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import 'data/area_catalog.dart';
 import 'data/notification_repository.dart';
+import 'data/review_prompt_repository.dart';
+import 'data/review_prompt_service.dart';
 import 'data/settings_repository.dart';
 import 'data/widget_bridge.dart';
 import 'data/waste_dictionary.dart';
@@ -18,6 +20,17 @@ import 'domain/widget_payload.dart';
 final settingsRepositoryProvider = FutureProvider<SettingsRepository>(
   (ref) => SettingsRepository.open(),
 );
+
+final reviewPromptRepositoryProvider = FutureProvider<ReviewPromptRepository>(
+  (ref) => ReviewPromptRepository.open(),
+);
+
+final reviewPromptServiceProvider = FutureProvider<ReviewPromptService>((
+  ref,
+) async {
+  final repository = await ref.watch(reviewPromptRepositoryProvider.future);
+  return ReviewPromptService(repository: repository);
+});
 
 final notificationRepositoryProvider = FutureProvider<NotificationRepository>(
   (ref) => NotificationRepository.open(),
