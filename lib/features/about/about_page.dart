@@ -159,6 +159,19 @@ class AboutPage extends ConsumerWidget {
           ),
           const Divider(height: 1),
           ListTile(
+            leading: const Icon(Icons.star_outline),
+            title: const Text('アプリを評価する'),
+            subtitle: const Text('ストアでレビューを書く'),
+            trailing: const Icon(Icons.open_in_new, size: 20),
+            onTap: () async {
+              final service = await ref.read(
+                reviewPromptServiceProvider.future,
+              );
+              await service.openStoreListing();
+            },
+          ),
+          const Divider(height: 1),
+          ListTile(
             leading: const Icon(Icons.description_outlined),
             title: const Text('ライセンス'),
             subtitle: const Text('このアプリが使っているソフトウェアとフォント'),

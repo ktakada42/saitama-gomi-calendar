@@ -6,8 +6,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/data/area_catalog.dart';
+import 'package:saitama_gomi/data/review_prompt_service.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/domain/collection_boxes.dart';
 import 'package:saitama_gomi/domain/not_accepted_guide.dart';
@@ -267,6 +269,23 @@ Future<void> pumpRootApp(
   await tester.pumpAndSettle();
 }
 
+/// テスト環境ではOS標準のレビューダイアログは表示できないので握りつぶす。
+class NoopInAppReview implements InAppReview {
+  const NoopInAppReview();
+
+  @override
+  Future<bool> isAvailable() async => false;
+
+  @override
+  Future<void> requestReview() async {}
+
+  @override
+  Future<void> openStoreListing({
+    String? appStoreId,
+    String? microsoftStoreId,
+  }) async {}
+}
+
 /// 保存済み地区を仕込んだ状態でアプリ画面を立ち上げる。
 ///
 /// `SharedPreferences` のモックを使うので、`SettingsRepository` を含めた
@@ -288,6 +307,9 @@ Future<void> pumpApp(
 
   /// 地区のほかに、前回までに保存されていた設定。キーは `flutter.` を付けて書く。
   Map<String, Object> preferences = const {},
+
+  /// アプリ内レビュー依頼のモック。
+  InAppReview? inAppReview,
 }) async {
   _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
@@ -323,6 +345,14 @@ Future<void> pumpApp(
           (ref) async => dictionary ?? testDictionary,
         ),
         packageInfoProvider.overrideWith((ref) async => testPackageInfo),
+        // OS標準のレビュー依頼プラグインはテスト環境では動かないので差し替える。
+        reviewPromptServiceProvider.overrideWith((ref) async {
+          final repo = await ref.watch(reviewPromptRepositoryProvider.future);
+          return ReviewPromptService(
+            repository: repo,
+            inAppReview: inAppReview ?? const NoopInAppReview(),
+          );
+        }),
       ],
       child: MaterialApp(
         // 色の見え方を確かめるテストがあるので、実際のテーマを当てる。
