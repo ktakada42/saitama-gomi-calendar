@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 区切り線と見出しの組。一覧の中の話題の変わり目に置く。
 ///

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/app.dart';
 import 'package:saitama_gomi/features/settings/settings_page.dart';

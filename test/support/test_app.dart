@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:saitama_gomi/app.dart';
@@ -359,11 +358,7 @@ Future<void> pumpApp(
         theme: SaitamaGomiApp.themeOf(Brightness.light),
         locale: const Locale('ja'),
         supportedLocales: const [Locale('ja')],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         home: child,
       ),
     ),
