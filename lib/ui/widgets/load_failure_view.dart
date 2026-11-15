@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 同梱データや設定の読み込みに失敗したときの表示。
 ///
