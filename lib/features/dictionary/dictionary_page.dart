@@ -1,8 +1,11 @@
+import 'dart:async' show unawaited;
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/waste_dictionary.dart';
 import '../../domain/kana.dart';
 import '../../domain/sorting_change.dart';
 import '../../domain/waste_item.dart';
@@ -30,6 +33,7 @@ class DictionaryPage extends ConsumerStatefulWidget {
 
 class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   final _controller = TextEditingController();
+  final _focusNode = FocusNode();
   final _scrollController = ScrollController();
   String _query = '';
 
@@ -61,10 +65,52 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  @override
   void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
+    _focusNode.dispose();
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _handleFocusChange() {
+    if (_focusNode.hasFocus) return;
+    final dictionary = ref.read(wasteDictionaryProvider).value;
+    if (dictionary == null) return;
+    _recordQueryIfMatched(dictionary, _query);
+  }
+
+  /// 該当する品目がある検索語だけを履歴に残す。
+  ///
+  /// 現在は入力と同時に一覧が絞り込まれるため、確定ボタンを押さずに
+  /// 見終わることが多い。確定・詳細表示・フォーカス解除・クリアの節目で拾い、
+  /// 打ち間違い（0件）は残さないことで上限10件の枠を無駄にしない。
+  void _recordQueryIfMatched(WasteDictionary dictionary, String rawQuery) {
+    final trimmed = rawQuery.trim();
+    if (trimmed.isEmpty) return;
+    if (dictionary.search(trimmed).isEmpty) return;
+    unawaited(ref.read(searchHistoryProvider.notifier).record(trimmed));
+  }
+
+  /// 履歴チップから再検索する。キーボードは開かず、1タップで結果をそのまま見せる。
+  void _applyHistoryQuery(String query) {
+    _focusNode.unfocus();
+    _controller.value = TextEditingValue(
+      text: query,
+      selection: TextSelection.collapsed(offset: query.length),
+    );
+    setState(() => _query = query);
+    _collapseNotice();
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+    unawaited(ref.read(searchHistoryProvider.notifier).record(query));
   }
 
   @override
@@ -72,6 +118,9 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
     final dictionary = ref.watch(wasteDictionaryProvider);
     final change = SortingChange.current(ref.watch(todayProvider));
     final settings = ref.watch(settingsRepositoryProvider);
+    final historyQueries =
+        ref.watch(searchHistoryProvider).value?.queries ?? const <String>[];
+    final showHistory = _query.isEmpty && historyQueries.isNotEmpty;
     final noticeExpanded =
         _noticeExpanded ??
         !(change != null &&
@@ -109,9 +158,10 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                 onToggle: () => _toggleNotice(change, noticeExpanded),
               ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, showHistory ? 8 : 12),
               child: TextField(
                 controller: _controller,
+                focusNode: _focusNode,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: '品目名で探す（例：ペットボトル）',
@@ -122,6 +172,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                           icon: const Icon(Icons.clear),
                           tooltip: '入力を消す',
                           onPressed: () {
+                            _recordQueryIfMatched(value, _query);
                             _controller.clear();
                             setState(() => _query = '');
                           },
@@ -136,8 +187,18 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                   // 外付けのキーボードなど、触れずに打ち始めた場合も畳む。
                   if (value.isNotEmpty) _collapseNotice();
                 },
+                onSubmitted: (submitted) =>
+                    _recordQueryIfMatched(value, submitted),
               ),
             ),
+            if (showHistory)
+              _SearchHistoryBar(
+                queries: historyQueries,
+                onSelected: _applyHistoryQuery,
+                onRemoved: (query) => unawaited(
+                  ref.read(searchHistoryProvider.notifier).remove(query),
+                ),
+              ),
             Expanded(
               // 一覧を指で送り始めたら畳む。索引から飛んだときの送りは
               // ここでは拾わない（指の情報を持たない）。索引は枠の高さを
@@ -155,6 +216,7 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
                   headerKeys: _headerKeys,
                   manualUrl: value.sourceUrl,
                   onIndexReleased: _collapseNotice,
+                  onItemOpened: () => _recordQueryIfMatched(value, _query),
                 ),
               ),
             ),
@@ -209,6 +271,7 @@ class _Results extends StatelessWidget {
     required this.headerKeys,
     required this.manualUrl,
     this.onIndexReleased,
+    this.onItemOpened,
   });
 
   final List<WasteItem> items;
@@ -217,6 +280,9 @@ class _Results extends StatelessWidget {
 
   /// 索引から指が離れたとき。
   final VoidCallback? onIndexReleased;
+
+  /// 詳細シートを開いたとき。
+  final VoidCallback? onItemOpened;
   final ScrollController scrollController;
   final Map<String, GlobalKey> headerKeys;
 
@@ -303,7 +369,11 @@ class _Results extends StatelessWidget {
         final row = rows[index];
         final header = row.header;
         if (header == null) {
-          return _ItemTile(row.item!, manualUrl: manualUrl);
+          return _ItemTile(
+            row.item!,
+            manualUrl: manualUrl,
+            onOpened: onItemOpened,
+          );
         }
         return _KanaHeader(
           header,
@@ -743,10 +813,11 @@ class _KanaIndexEntry extends StatelessWidget {
 /// 伝えきれないので、押すと詳しい出し方を出す。印を持たない品目は
 /// 行の文字がすべてなので押せるようにしない。
 class _ItemTile extends StatelessWidget {
-  const _ItemTile(this.item, {required this.manualUrl});
+  const _ItemTile(this.item, {required this.manualUrl, this.onOpened});
 
   final WasteItem item;
   final String manualUrl;
+  final VoidCallback? onOpened;
 
   @override
   Widget build(BuildContext context) {
@@ -771,7 +842,10 @@ class _ItemTile extends StatelessWidget {
       // 内側に引っ込んで、右のラインが揃わない。
       contentPadding: const EdgeInsets.only(left: 16),
       onTap: hasDetail
-          ? () => showWasteItemSheet(context, item: item, manualUrl: manualUrl)
+          ? () {
+              onOpened?.call();
+              showWasteItemSheet(context, item: item, manualUrl: manualUrl);
+            }
           : null,
     );
   }
@@ -822,6 +896,70 @@ class _ItemTile extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+/// 直近の検索語を1行で並べる帯。
+///
+/// 未入力のときにだけ検索欄のすぐ下に出し、1タップでキーボードを開かずに
+/// 同じ絞り込みを再現できるようにする。最大10件なので遅延ビルドは要らず、
+/// 横スクロールの [Row] にして文字サイズ拡大時も縦に溢れないようにする。
+class _SearchHistoryBar extends StatelessWidget {
+  const _SearchHistoryBar({
+    required this.queries,
+    required this.onSelected,
+    required this.onRemoved,
+  });
+
+  final List<String> queries;
+  final ValueChanged<String> onSelected;
+  final ValueChanged<String> onRemoved;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return SizedBox(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+        child: Row(
+          spacing: 8,
+          children: [
+            ExcludeSemantics(
+              child: Icon(
+                Icons.history,
+                size: 18,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            for (final query in queries)
+              InputChip(
+                label: Text(query),
+                labelStyle: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+                backgroundColor: colorScheme.surfaceContainerLow,
+                side: BorderSide(
+                  color: colorScheme.onSurface.withValues(alpha: 0.16),
+                ),
+                visualDensity: VisualDensity.compact,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                deleteIcon: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                deleteButtonTooltipMessage: '「$query」を履歴から消す',
+                onPressed: () => onSelected(query),
+                onDeleted: () => onRemoved(query),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

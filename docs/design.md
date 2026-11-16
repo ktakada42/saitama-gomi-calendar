@@ -84,6 +84,11 @@ SortingChange
   └ データを日付で切り替えることはしない（requirements.md 4.5節）
   └ 変更をデータに入れたあとも残す。市が品目を示したのは一部だけなので、
     条件を渡して利用者が自分で判断できるようにする
+
+SearchHistory
+  └ 分別早見表の直近の検索語。新しい順に並べ、重複は先頭へ移す
+  └ 端末内の保存量が膨らまないよう、件数（最大10件）と文字数（最大30文字）の
+    両方に上限を置く（長文の誤貼り付けが逆方向一致で残るのも防ぐ）
 ```
 
 `CollectionCalendar`が「日付から区分を引く」ロジックの単一の入口になっており、画面側は
@@ -121,7 +126,8 @@ SettingsRepository           shared_preferences 経由で利用者の設定を�
   readThemeMode() / writeThemeMode()        外観（ライト/ダーク/システム）
   readNotificationSettings() / write...()   通知のON/OFFと時刻
   readSortingNoticeCollapsed(id) / write...()  分別変更の知らせを自分で畳んだか（変更ごと）
-    地区とは別キーにしてある。地区を選び直しても外観・通知の設定は保たれるべきなので。
+  readSearchHistory() / writeSearchHistory()   分別早見表の検索履歴（空ならキーごと削除）
+    地区とは別キーにしてある。地区を選び直しても外観・通知・履歴は保たれるべきなので。
 
 NotificationRepository       OSの通知センターへの予約（abstract）
   requestPermission() / reschedule(reminders) / cancelAll()
@@ -169,6 +175,9 @@ calendarProvider             Provider<CollectionCalendar?>
 
 themeModeProvider            AsyncNotifierProvider<ThemeModeController, ThemeMode>
   外観設定。既定はライト（端末のダークモードに自動追従しない）
+
+searchHistoryProvider        AsyncNotifierProvider<SearchHistoryController, SearchHistory>
+  分別早見表の検索履歴。上限（10件・30文字）の整形は SearchHistory 側で行う
 
 notificationProvider         AsyncNotifierProvider<NotificationController, NotificationSettings>
   通知のON/OFFと時刻。設定が変わるたび、また地区が変わるたびに

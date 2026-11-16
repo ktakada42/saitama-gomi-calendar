@@ -4,6 +4,7 @@ import 'package:saitama_gomi/data/settings_repository.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
 import 'package:saitama_gomi/domain/garbage_category.dart';
+import 'package:saitama_gomi/domain/search_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _area = CollectionArea(
@@ -152,6 +153,46 @@ void main() {
       final settings = repo.readNotificationSettings();
       expect(settings.enabled, isTrue);
       expect(settings.timeOfDay, const Duration(hours: 20));
+    });
+  });
+
+  group('readSearchHistory / writeSearchHistory', () {
+    test('未設定なら空の履歴', () async {
+      final repo = await _openWith({});
+      expect(repo.readSearchHistory(), const SearchHistory.empty());
+    });
+
+    test('書いた履歴を読め、空にするとキーごと消える', () async {
+      final repo = await _openWith({});
+      final history = const SearchHistory.empty()
+          .record('ペットボトル')
+          .record('乾電池');
+      await repo.writeSearchHistory(history);
+      expect(repo.readSearchHistory().queries, ['乾電池', 'ペットボトル']);
+
+      await repo.writeSearchHistory(const SearchHistory.empty());
+      expect(repo.readSearchHistory(), const SearchHistory.empty());
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.containsKey('dictionary_search_history'), isFalse);
+    });
+
+    test('文字列リスト以外の壊れた値が入っていてもクラッシュせず空に戻る', () async {
+      final repo = await _openWith({
+        'flutter.dictionary_search_history': 'broken-string',
+      });
+      expect(repo.readSearchHistory(), const SearchHistory.empty());
+    });
+
+    test('地区を選び直しても検索履歴は保たれる', () async {
+      final repo = await _openWith({});
+      await repo.writeArea(_area);
+      await repo.writeSearchHistory(
+        const SearchHistory.empty().record('ペットボトル'),
+      );
+      await repo.clear();
+
+      expect(repo.readArea(), isNull);
+      expect(repo.readSearchHistory().queries, ['ペットボトル']);
     });
   });
 }
