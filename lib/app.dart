@@ -152,6 +152,46 @@ class SaitamaGomiApp extends ConsumerWidget {
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
       ),
+      // ボトムメニューの背景（surfaceContainer）とピルの面をともにクリーム階調へ
+      // 揃えたままだと、選択ピルとバー背景のコントラスト比がライトで1.06:1、
+      // ダークで1.12:1しかなく、WCAG 2.1 AA（非テキスト3:1）を満たせない。
+      // ピルの塗りはクリーム階調（surfaceContainerHighest）のまま保ち、
+      // カレンダーの「今日」と同じ primary の枠線およびアイコン・太字ラベルで
+      // 選択状態を示す（検証は`test/ui/navigation_bar_contrast_test.dart`）。
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: colorScheme.surfaceContainer,
+        indicatorColor: colorScheme.surfaceContainerHighest,
+        indicatorShape: StadiumBorder(
+          side: BorderSide(color: colorScheme.primary, width: 1.5),
+        ),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          final disabled = states.contains(WidgetState.disabled);
+          return IconThemeData(
+            size: 24,
+            color: disabled
+                ? colorScheme.onSurfaceVariant.withValues(alpha: 0.38)
+                : selected
+                ? colorScheme.primary
+                : colorScheme.onSurfaceVariant,
+          );
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          final disabled = states.contains(WidgetState.disabled);
+          return TextStyle(
+            fontSize: 12,
+            height: 16 / 12,
+            letterSpacing: 0.5,
+            fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+            color: disabled
+                ? colorScheme.onSurfaceVariant.withValues(alpha: 0.38)
+                : selected
+                ? colorScheme.primary
+                : colorScheme.onSurfaceVariant,
+          );
+        }),
+      ),
     );
   }
 }
