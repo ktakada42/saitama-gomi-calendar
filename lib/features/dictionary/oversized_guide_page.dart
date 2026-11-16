@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/oversized_guide.dart';
 import '../../providers.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/load_failure_view.dart';
@@ -25,13 +26,16 @@ class OversizedGuidePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final guide = ref.watch(oversizedGuideProvider);
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('粗大ごみの出し方')),
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: const AdaptiveAppBar(title: Text('粗大ごみの出し方')),
       body: switch (guide) {
         AsyncData(:final value) => _Body(
           guide: value,
           highlightedItem: highlightedItem,
+          liquidGlass: isLiquidGlass,
         ),
         AsyncError() => LoadFailureView(
           message: '粗大ごみの案内を読み込めませんでした。',
@@ -44,10 +48,15 @@ class OversizedGuidePage extends ConsumerWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.guide, required this.highlightedItem});
+  const _Body({
+    required this.guide,
+    required this.highlightedItem,
+    required this.liquidGlass,
+  });
 
   final OversizedGuide guide;
   final String? highlightedItem;
+  final bool liquidGlass;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +64,11 @@ class _Body extends StatelessWidget {
     final fee = highlightedItem == null ? null : guide.feeFor(highlightedItem!);
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 32),
+      padding: adaptiveScrollPadding(
+        context,
+        liquidGlass: liquidGlass,
+        base: const EdgeInsets.only(bottom: 32),
+      ),
       children: [
         _SizeCard(definition: guide.definition),
 

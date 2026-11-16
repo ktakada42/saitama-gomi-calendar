@@ -1,10 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../liquid_glass/liquid_glass_sheet.dart';
 import '../paren_wrap.dart';
 import '../../domain/collection_area.dart';
 import '../../domain/collection_calendar.dart';
 import '../../domain/date_label.dart';
 import '../../domain/garbage_category.dart';
+import '../../providers.dart';
 import '../category_style.dart';
 
 /// ある日の収集内容を出すボトムシート。カレンダーの日タップとホームから共用する。
@@ -14,9 +17,14 @@ Future<void> showDayDetailSheet(
   required CollectionArea area,
   required DateTime today,
 }) {
-  return showModalBottomSheet<void>(
+  final isLiquidGlass = ProviderScope.containerOf(
+    context,
+    listen: false,
+  ).read(liquidGlassProvider);
+
+  return showAdaptiveModalSheet<void>(
     context: context,
-    showDragHandle: true,
+    liquidGlass: isLiquidGlass,
     isScrollControlled: true,
     // 高さの上限を決めておく。決めないと、5区分が重なる日を狭い画面で開いた
     // ときにシートが画面いっぱいに広がり、外側を押して閉じることも

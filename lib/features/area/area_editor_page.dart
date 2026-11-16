@@ -7,6 +7,8 @@ import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
+import '../../ui/liquid_glass/liquid_glass_surface.dart';
 
 /// 区分ごとの入力状態。
 ///
@@ -126,134 +128,161 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final catalog = ref.watch(areaCatalogProvider).value;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(_isManualEntry ? '収集曜日を自分で設定' : '収集曜日')),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-        children: [
-          Text(
-            _isManualEntry
-                ? 'お住まいの区と、分別ごとの収集曜日を設定してください。'
-                      '曜日は市から配布される収集日カレンダーで確認できます。'
-                : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで修正できます。',
-            style: theme.textTheme.bodyMedium,
+      extendBodyBehindAppBar: isLiquidGlass,
+      extendBody: isLiquidGlass,
+      appBar: AdaptiveAppBar(
+        title: Text(_isManualEntry ? '収集曜日を自分で設定' : '収集曜日'),
+      ),
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: EdgeInsets.fromLTRB(16, 8, 16, isLiquidGlass ? 32 : 120),
           ),
-          const SizedBox(height: 20),
-          // 区を選べるのは、地区を特定できずに自分で設定する場合だけ。
-          // 市の一覧から選んだ地区で区だけ差し替えられると、
-          // 「岩槻区高砂三丁目」のような実在しない地区ができてしまう。
-          // 地区そのものを変えるのは設定の「お住まいの地区」の役目。
-          if (_isManualEntry) ...[
-            _SectionTitle('お住まいの区'),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final ward in saitamaWards)
-                  ChoiceChip(
-                    label: Text(ward),
-                    selected: _ward == ward,
-                    onSelected: (_) => setState(() => _ward = ward),
-                  ),
-              ],
-            ),
-          ] else ...[
-            _SectionTitle('お住まいの地区'),
-            const SizedBox(height: 8),
+          children: [
             Text(
-              keepParenthesesTogether(widget.initial!.label),
-              style: theme.textTheme.bodyLarge,
+              _isManualEntry
+                  ? 'お住まいの区と、分別ごとの収集曜日を設定してください。'
+                        '曜日は市から配布される収集日カレンダーで確認できます。'
+                  : '選んだ地区の収集曜日です。実際の収集日と違う場合はここで修正できます。',
+              style: theme.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 4),
-            Text(
-              '地区を変更したいときは、設定の「お住まいの地区」から。',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            const SizedBox(height: 20),
+            // 区を選べるのは、地区を特定できずに自分で設定する場合だけ。
+            // 市の一覧から選んだ地区で区だけ差し替えられると、
+            // 「岩槻区高砂三丁目」のような実在しない地区ができてしまう。
+            // 地区そのものを変えるのは設定の「お住まいの地区」の役目。
+            if (_isManualEntry) ...[
+              _SectionTitle('お住まいの区'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final ward in saitamaWards)
+                    ChoiceChip(
+                      label: Text(ward),
+                      selected: _ward == ward,
+                      onSelected: (_) => setState(() => _ward = ward),
+                    ),
+                ],
               ),
-            ),
-          ],
-          const SizedBox(height: 24),
-          if (_isManualEntry &&
-              catalog != null &&
-              catalog.presets.isNotEmpty) ...[
-            _SectionTitle('入力の出発点'),
-            const SizedBox(height: 4),
-            Text(
-              'もえるごみの曜日だけ入った雛形です。当てはまるものを選んでから、残りの分別を足してください。',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            ] else ...[
+              _SectionTitle('お住まいの地区'),
+              const SizedBox(height: 8),
+              Text(
+                keepParenthesesTogether(widget.initial!.label),
+                style: theme.textTheme.bodyLarge,
               ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final preset in catalog.presets)
-                  ActionChip(
-                    avatar: const Icon(Icons.auto_fix_high, size: 18),
-                    label: Text(keepParenthesesTogether(preset.name)),
-                    onPressed: () => _applyPreset(preset),
-                  ),
-              ],
-            ),
+              const SizedBox(height: 4),
+              Text(
+                '地区を変更したいときは、設定の「お住まいの地区」から。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
-          ],
-          _SectionTitle('収集曜日'),
-          const SizedBox(height: 8),
-          for (final category in GarbageCategory.values) ...[
-            _CategoryEditor(
-              category: category,
-              draft: _drafts[category]!,
-              onChanged: () => setState(() {}),
-            ),
-            const SizedBox(height: 12),
-          ],
-          const SizedBox(height: 12),
-          _SectionTitle('その他'),
-          // 早朝収集地区かどうかは地区データ側で確定している（★1マークの18地区）。
-          // 地区を選んで来た場合に切り替えられるようにすると、利用者が自分で
-          // 判断しなければならないように見えるので、手入力のときだけ操作させる。
-          if (_isManualEntry)
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              value: _earlyMorning,
-              onChanged: (value) => setState(() => _earlyMorning = value),
-              title: const Text('もえるごみの早朝収集地区'),
-              subtitle: const Text('大宮区・浦和区の一部が該当します。朝5時30分までに出す必要があります。'),
-            )
-          else if (_earlyMorning)
-            const ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.schedule),
-              title: Text('もえるごみの早朝収集地区'),
-              subtitle: Text('朝5時30分までに出す必要があります。'),
-            ),
-          if (_isManualEntry) ...[
-            const SizedBox(height: 8),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: '地区の名前（任意）',
-                hintText: _defaultName,
-                border: OutlineInputBorder(),
+            if (_isManualEntry &&
+                catalog != null &&
+                catalog.presets.isNotEmpty) ...[
+              _SectionTitle('入力の出発点'),
+              const SizedBox(height: 4),
+              Text(
+                'もえるごみの曜日だけ入った雛形です。当てはまるものを選んでから、残りの分別を足してください。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final preset in catalog.presets)
+                    ActionChip(
+                      avatar: const Icon(Icons.auto_fix_high, size: 18),
+                      label: Text(keepParenthesesTogether(preset.name)),
+                      onPressed: () => _applyPreset(preset),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
+            _SectionTitle('収集曜日'),
+            const SizedBox(height: 8),
+            for (final category in GarbageCategory.values) ...[
+              _CategoryEditor(
+                category: category,
+                draft: _drafts[category]!,
+                onChanged: () => setState(() {}),
+              ),
+              const SizedBox(height: 12),
+            ],
+            const SizedBox(height: 12),
+            _SectionTitle('その他'),
+            // 早朝収集地区かどうかは地区データ側で確定している（★1マークの18地区）。
+            // 地区を選んで来た場合に切り替えられるようにすると、利用者が自分で
+            // 判断しなければならないように見えるので、手入力のときだけ操作させる。
+            if (_isManualEntry)
+              if (isLiquidGlass)
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  value: _earlyMorning,
+                  onChanged: (value) => setState(() => _earlyMorning = value),
+                  title: const Text('もえるごみの早朝収集地区'),
+                  subtitle: const Text('大宮区・浦和区の一部が該当します。朝5時30分までに出す必要があります。'),
+                )
+              else
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: _earlyMorning,
+                  onChanged: (value) => setState(() => _earlyMorning = value),
+                  title: const Text('もえるごみの早朝収集地区'),
+                  subtitle: const Text('大宮区・浦和区の一部が該当します。朝5時30分までに出す必要があります。'),
+                )
+            else if (_earlyMorning)
+              const ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.schedule),
+                title: Text('もえるごみの早朝収集地区'),
+                subtitle: Text('朝5時30分までに出す必要があります。'),
+              ),
+            if (_isManualEntry) ...[
+              const SizedBox(height: 8),
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: '地区の名前（任意）',
+                  hintText: _defaultName,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+            // データの出典・但し書きはここには出さない。
+            // 曜日を確認・調整している最中に読ませる情報ではないので、
+            // 設定画面の「このアプリについて」にまとめてある。
           ],
-          // データの出典・但し書きはここには出さない。
-          // 曜日を確認・調整している最中に読ませる情報ではないので、
-          // 設定画面の「このアプリについて」にまとめてある。
-        ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: FilledButton(
-          onPressed: _hasAnyDay ? _save : null,
-          style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-          child: Text(widget.isOnboarding ? 'この設定ではじめる' : '保存する'),
-        ),
+        child: isLiquidGlass
+            ? LiquidGlassPrimaryBarButton(
+                label: widget.isOnboarding ? 'この設定ではじめる' : '保存する',
+                onPressed: _hasAnyDay ? _save : null,
+              )
+            : FilledButton(
+                onPressed: _hasAnyDay ? _save : null,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                ),
+                child: Text(widget.isOnboarding ? 'この設定ではじめる' : '保存する'),
+              ),
       ),
     );
   }

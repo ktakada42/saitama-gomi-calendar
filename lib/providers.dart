@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -10,6 +12,7 @@ import 'data/settings_repository.dart';
 import 'data/widget_bridge.dart';
 import 'data/waste_dictionary.dart';
 import 'domain/collection_boxes.dart';
+import 'domain/liquid_glass_support.dart';
 import 'domain/not_accepted_guide.dart';
 import 'domain/oversized_guide.dart';
 import 'domain/collection_area.dart';
@@ -17,6 +20,26 @@ import 'domain/collection_calendar.dart';
 import 'domain/collection_reminder.dart';
 import 'domain/search_history.dart';
 import 'domain/widget_payload.dart';
+
+/// iOS 26 以降の Liquid Glass 表示を有効にするか。
+///
+/// 非同期の MethodChannel で判定すると初回描画の数フレームだけ従来の表示が出て
+/// 画面が跳ねるため、`Platform` から同期的に判定する。テストからは
+/// `overrideWithValue(true)` で差し替えて Linux/macOS 上でも検証する。
+final liquidGlassProvider = Provider<bool>(
+  (ref) => LiquidGlassSupport.isSupported(
+    isIOS: Platform.isIOS,
+    operatingSystemVersion: Platform.operatingSystemVersion,
+  ),
+);
+
+/// ネイティブの `UiKitView`（`UIGlassEffect` / `UITabBar`）を描画に使うか。
+///
+/// 実機・iOS シミュレータでは true になり、UIKit 純正のガラス表現を使う。
+/// ヘッドレスの `flutter test`（macOS / Linux CI）で [liquidGlassProvider] を
+/// true に差し替えたときは false のままにして、Flutter 側のフォールバック描画で
+/// レイアウトやタップ操作を検証できるようにする。
+final nativeLiquidGlassViewProvider = Provider<bool>((ref) => Platform.isIOS);
 
 final settingsRepositoryProvider = FutureProvider<SettingsRepository>(
   (ref) => SettingsRepository.open(),
