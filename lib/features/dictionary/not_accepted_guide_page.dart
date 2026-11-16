@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/not_accepted_guide.dart';
 import '../../providers.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/load_failure_view.dart';
@@ -23,13 +24,16 @@ class NotAcceptedGuidePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final guide = ref.watch(notAcceptedGuideProvider);
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('市では収集できないもの')),
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: const AdaptiveAppBar(title: Text('市では収集できないもの')),
       body: switch (guide) {
         AsyncData(:final value) => _Body(
           guide: value,
           focusedItem: focusedItem,
+          liquidGlass: isLiquidGlass,
         ),
         AsyncError() => LoadFailureView(
           message: '持って行き先の案内を読み込めませんでした。',
@@ -42,10 +46,15 @@ class NotAcceptedGuidePage extends ConsumerWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.guide, required this.focusedItem});
+  const _Body({
+    required this.guide,
+    required this.focusedItem,
+    required this.liquidGlass,
+  });
 
   final NotAcceptedGuide guide;
   final String? focusedItem;
+  final bool liquidGlass;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +65,11 @@ class _Body extends StatelessWidget {
     final shown = focused == null ? guide.destinations : [focused];
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 32),
+      padding: adaptiveScrollPadding(
+        context,
+        liquidGlass: liquidGlass,
+        base: const EdgeInsets.only(bottom: 32),
+      ),
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -109,18 +122,27 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _SingleDestinationPage extends StatelessWidget {
+class _SingleDestinationPage extends ConsumerWidget {
   const _SingleDestinationPage({required this.destination});
 
   final Destination destination;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
+
     return Scaffold(
-      appBar: AppBar(title: Text(destination.title)),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 16, bottom: 32),
-        children: [_DestinationCard(destination: destination)],
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: AdaptiveAppBar(title: Text(destination.title)),
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: const EdgeInsets.only(top: 16, bottom: 32),
+          ),
+          children: [_DestinationCard(destination: destination)],
+        ),
       ),
     );
   }

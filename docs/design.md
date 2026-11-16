@@ -374,7 +374,34 @@ App Group自体（`group.io.github.ktakada42.saitamagomicalendar`）の作成と
 には`appGroups`のエンドポイントが無い。Bundle IDの登録と
 App Groups capabilityの有効化まではAPIでできる。
 
-## 10. 配布
+## 10. iOS 26 Liquid Glass 対応
+
+`IPHONEOS_DEPLOYMENT_TARGET` は 18.0 なので、iOS 26 以降でのみ Liquid Glass 表示を有効にし、
+iOS 18〜25 および Android では従来の Material 3 表示をそのまま保つ。
+
+```
+lib/domain/liquid_glass_support.dart   OSバージョン文字列から iOS 26 以降かを判定（純粋なDart）
+lib/providers.dart                     liquidGlassProvider / nativeLiquidGlassViewProvider
+lib/ui/liquid_glass/                   AdaptiveAppBar・LiquidGlassTabBar・ガラス面・検索欄・シート
+ios/Runner/AppDelegate.swift           UIVisualEffectView(UIGlassEffect) と UITabBarController の PlatformView
+ios/GomiWidget/GomiWidget.swift        widgetRenderingMode（クリア・色合い調整モード）対応
+ios/Runner/Assets.xcassets/AppIcon.*   Any / Dark / Tinted の3外観アプリアイコン
+```
+
+- **ガラスを敷く層と敷かない層を分ける**：Apple の Human Interface Guidelines に従い、
+  Liquid Glass にするのはナビゲーションバー・ボトムタブバー・検索欄・五十音索引・
+  画面下部の主ボタン・ボトムシート／ダイアログといった**操作・移動の層**だけに限定する。
+  収集日カードや分別バッジ・カレンダーの帯といった**情報の層**は紙色の地と区分の配色を保ち、
+  WCAG AA のコントラスト比を崩さない
+- **純正 UIKit 部品を `UiKitView` で使う**：シェーダーによる模倣ではなく、iOS 実機では
+  `UIVisualEffectView(effect: UIGlassEffect)` と純正 `UITabBarController` を描画する。
+  タブバーはカプセル外の余白タッチを `hitTest` で背面の Flutter リストへ透過させ、
+  モーダルシートや遷移先画面が重なっている間は `touchEnabled` を切って当たり判定を止める
+- **テスト環境と高コントラストへのフォールバック**：Linux 上の `flutter test` や端末の
+  「コントラストを上げる」設定時は Flutter 側のぼかし・半透明面で同じ輪郭を描き、
+  CI でも Liquid Glass モードの全画面レイアウト・操作を検証できるようにしてある
+
+## 11. 配布
 
 - **iPhone専用**（`TARGETED_DEVICE_FAMILY = 1`）。画面はすべて縦1カラムの前提で
   作っており、iPadの広い画面では余白ばかりが広がって使いやすくならない。
@@ -386,7 +413,7 @@ App Groups capabilityの有効化まではAPIでできる。
   キャッチコピーの帯を足した提出用の両方を置いてある。
   装飾版は`scripts/make_store_screenshots.py`で生成する
 
-## 11. 意図的にやっていないこと
+## 12. 意図的にやっていないこと
 
 - 状態管理をRiverpodの`Notifier`以上に複雑なもの（Bloc等）にしていない。画面数・状態の
   複雑さに対してRiverpodのAsyncNotifier + Providerで十分なため

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/collection_boxes.dart';
 import '../../providers.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/load_failure_view.dart';
@@ -24,14 +25,17 @@ class CollectionBoxesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final boxes = ref.watch(collectionBoxesProvider);
     final ward = ref.watch(selectedAreaProvider).value?.ward;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('回収ボックス')),
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: const AdaptiveAppBar(title: Text('回収ボックス')),
       body: switch (boxes) {
         AsyncData(:final value) => _Body(
           boxes: value,
           ward: ward,
           focusedBoxId: focusedBoxId,
+          liquidGlass: isLiquidGlass,
         ),
         AsyncError() => LoadFailureView(
           message: '回収ボックスの案内を読み込めませんでした。',
@@ -48,11 +52,13 @@ class _Body extends StatelessWidget {
     required this.boxes,
     required this.ward,
     required this.focusedBoxId,
+    required this.liquidGlass,
   });
 
   final CollectionBoxes boxes;
   final String? ward;
   final String? focusedBoxId;
+  final bool liquidGlass;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,11 @@ class _Body extends StatelessWidget {
       });
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 32),
+      padding: adaptiveScrollPadding(
+        context,
+        liquidGlass: liquidGlass,
+        base: const EdgeInsets.only(bottom: 32),
+      ),
       children: [
         // 設定済みの区があるなら、そこを最初に出す。
         // 55か所の一覧から自分の区を探させるのは、地区を知っている

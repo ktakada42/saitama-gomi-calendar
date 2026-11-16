@@ -1,8 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/waste_item.dart';
+import '../../providers.dart';
 import '../../ui/caution_style.dart';
+import '../../ui/liquid_glass/liquid_glass_sheet.dart';
 import '../../ui/note_format.dart';
 import '../../ui/paren_wrap.dart';
 import '../../ui/widgets/category_pill.dart';
@@ -20,9 +23,14 @@ Future<void> showWasteItemSheet(
   required WasteItem item,
   required String manualUrl,
 }) {
-  return showModalBottomSheet<void>(
+  final isLiquidGlass = ProviderScope.containerOf(
+    context,
+    listen: false,
+  ).read(liquidGlassProvider);
+
+  return showAdaptiveModalSheet<void>(
     context: context,
-    showDragHandle: true,
+    liquidGlass: isLiquidGlass,
     isScrollControlled: true,
     builder: (context) => _WasteItemSheet(item: item, manualUrl: manualUrl),
   );

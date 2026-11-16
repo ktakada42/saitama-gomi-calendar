@@ -5,6 +5,7 @@ import '../../ui/paren_wrap.dart';
 import '../../data/area_catalog.dart';
 import '../../domain/collection_area.dart';
 import '../../providers.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/widgets/load_failure_view.dart';
 import 'area_editor_page.dart';
 
@@ -48,163 +49,178 @@ class _AreaPickerPageState extends ConsumerState<AreaPickerPage> {
     final theme = Theme.of(context);
     final catalogState = ref.watch(areaCatalogProvider);
     final catalog = catalogState.value;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: AdaptiveAppBar(
         title: const Text('お住まいの地区を確認'),
         automaticallyImplyLeading: !widget.isOnboarding,
       ),
-      body: catalog == null
-          ? (catalogState.hasError
-                // 同梱アセットなので通常は失敗しないが、失敗したまま
-                // ローディングを回し続けると何も分からない。再試行に加えて、
-                // 地区データが無くても曜日を手入力すれば使えるので、
-                // その導線だけは残しておく。
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: Builder(
+        builder: (bodyContext) => catalog == null
+            ? (catalogState.hasError
+                  // 同梱アセットなので通常は失敗しないが、失敗したまま
+                  // ローディングを回し続けると何も分からない。再試行に加えて、
+                  // 地区データが無くても曜日を手入力すれば使えるので、
+                  // その導線だけは残しておく。
+                  ? Padding(
+                      padding: adaptiveScrollPadding(
+                        bodyContext,
+                        liquidGlass: isLiquidGlass,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: LoadFailureView(
+                              message: '地区データを読み込めませんでした。',
+                              onRetry: () =>
+                                  ref.invalidate(areaCatalogProvider),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 24),
+                            child: TextButton(
+                              onPressed: _selectManual,
+                              child: const Text('収集曜日を自分で設定する'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const Center(child: CircularProgressIndicator()))
+            : ListView(
+                padding: adaptiveScrollPadding(
+                  bodyContext,
+                  liquidGlass: isLiquidGlass,
+                  base: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                ),
+                children: [
+                  if (widget.isOnboarding) ...[
+                    Text(
+                      'ごみの収集曜日は地区ごとに市が決めています。郵便番号か一覧から、'
+                      'お住まいの地区を選んでください。',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  _SectionTitle('郵便番号で探す'),
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: LoadFailureView(
-                          message: '地区データを読み込めませんでした。',
-                          onRetry: () => ref.invalidate(areaCatalogProvider),
+                        child: TextField(
+                          controller: _postalController,
+                          keyboardType: TextInputType.number,
+                          maxLength: 7,
+                          decoration: const InputDecoration(
+                            labelText: '郵便番号（7桁）',
+                            hintText: '3300000',
+                            border: OutlineInputBorder(),
+                            counterText: '',
+                          ),
+                          // 桁がそろった時点でボタンの活性を切り替える。
+                          onChanged: (_) => setState(() {}),
+                          onSubmitted: (_) => _search(catalog),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        child: TextButton(
-                          onPressed: _selectManual,
-                          child: const Text('収集曜日を自分で設定する'),
+                      const SizedBox(width: 8),
+                      FilledButton(
+                        // 7桁そろうまでは押させない。途中の桁で押しても
+                        // 「該当なし」としか返せず、入力を間違えたのか
+                        // 対応する地区が無いのかが分からない。
+                        onPressed: _canSearch ? () => _search(catalog) : null,
+                        child: const Text('探す'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '郵便番号は地区を確認するためだけに使い、保存はされません。',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
                     ],
-                  )
-                : const Center(child: CircularProgressIndicator()))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-              children: [
-                if (widget.isOnboarding) ...[
-                  Text(
-                    'ごみの収集曜日は地区ごとに市が決めています。郵便番号か一覧から、'
-                    'お住まいの地区を選んでください。',
-                    style: theme.textTheme.bodyMedium,
                   ),
-                  const SizedBox(height: 20),
-                ],
-                _SectionTitle('郵便番号で探す'),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _postalController,
-                        keyboardType: TextInputType.number,
-                        maxLength: 7,
-                        decoration: const InputDecoration(
-                          labelText: '郵便番号（7桁）',
-                          hintText: '3300000',
-                          border: OutlineInputBorder(),
-                          counterText: '',
-                        ),
-                        // 桁がそろった時点でボタンの活性を切り替える。
-                        onChanged: (_) => setState(() {}),
-                        onSubmitted: (_) => _search(catalog),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    FilledButton(
-                      // 7桁そろうまでは押させない。途中の桁で押しても
-                      // 「該当なし」としか返せず、入力を間違えたのか
-                      // 対応する地区が無いのかが分からない。
-                      onPressed: _canSearch ? () => _search(catalog) : null,
-                      child: const Text('探す'),
+                  if (_postalResults != null) ...[
+                    const SizedBox(height: 16),
+                    _PostalResults(
+                      results: _postalResults!,
+                      onSelect: _selectArea,
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 16,
+                  const SizedBox(height: 28),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  _SectionTitle('一覧から選ぶ'),
+                  const SizedBox(height: 4),
+                  Text(
+                    '郵便番号を入力したくない場合は、区を選んで一覧から選べます。',
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        '郵便番号は地区を確認するためだけに使い、保存はされません。',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final ward in saitamaWards)
+                        ChoiceChip(
+                          label: Text(ward),
+                          selected: _listWard == ward,
+                          onSelected: (_) => setState(() => _listWard = ward),
                         ),
-                      ),
+                    ],
+                  ),
+                  if (_listWard != null) ...[
+                    const SizedBox(height: 12),
+                    Builder(
+                      builder: (context) {
+                        final wardAreas = catalog.areasInWard(_listWard!);
+                        if (wardAreas.isEmpty) {
+                          return Text(
+                            'この区の地区データはまだありません。'
+                            '「自分の地区が見つからない」から設定してください。',
+                            style: theme.textTheme.bodySmall,
+                          );
+                        }
+                        return Column(
+                          children: [
+                            for (final area in wardAreas)
+                              _AreaTile(
+                                area: area,
+                                onTap: () => _selectArea(area),
+                              ),
+                          ],
+                        );
+                      },
                     ),
                   ],
-                ),
-                if (_postalResults != null) ...[
-                  const SizedBox(height: 16),
-                  _PostalResults(
-                    results: _postalResults!,
-                    onSelect: _selectArea,
+                  const SizedBox(height: 28),
+                  Center(
+                    child: TextButton(
+                      onPressed: _selectManual,
+                      child: const Text('自分の地区が見つからない'),
+                    ),
                   ),
                 ],
-                const SizedBox(height: 28),
-                const Divider(),
-                const SizedBox(height: 20),
-                _SectionTitle('一覧から選ぶ'),
-                const SizedBox(height: 4),
-                Text(
-                  '郵便番号を入力したくない場合は、区を選んで一覧から選べます。',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final ward in saitamaWards)
-                      ChoiceChip(
-                        label: Text(ward),
-                        selected: _listWard == ward,
-                        onSelected: (_) => setState(() => _listWard = ward),
-                      ),
-                  ],
-                ),
-                if (_listWard != null) ...[
-                  const SizedBox(height: 12),
-                  Builder(
-                    builder: (context) {
-                      final wardAreas = catalog.areasInWard(_listWard!);
-                      if (wardAreas.isEmpty) {
-                        return Text(
-                          'この区の地区データはまだありません。'
-                          '「自分の地区が見つからない」から設定してください。',
-                          style: theme.textTheme.bodySmall,
-                        );
-                      }
-                      return Column(
-                        children: [
-                          for (final area in wardAreas)
-                            _AreaTile(
-                              area: area,
-                              onTap: () => _selectArea(area),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-                const SizedBox(height: 28),
-                Center(
-                  child: TextButton(
-                    onPressed: _selectManual,
-                    child: const Text('自分の地区が見つからない'),
-                  ),
-                ),
-              ],
-            ),
+              ),
+      ),
     );
   }
 

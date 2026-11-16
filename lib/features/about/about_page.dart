@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app.dart';
 import '../../providers.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/widgets/external_link.dart';
 import '../../ui/widgets/section_header.dart';
 import '../dictionary/collection_boxes_page.dart';
@@ -29,164 +30,172 @@ class AboutPage extends ConsumerWidget {
     final catalog = ref.watch(areaCatalogProvider).value;
     final dictionary = ref.watch(wasteDictionaryProvider).value;
     final packageInfo = ref.watch(packageInfoProvider).value;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('このアプリについて')),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 32),
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  appNameWithDisclaimer,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: const AdaptiveAppBar(title: Text('このアプリについて')),
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: const EdgeInsets.only(bottom: 32),
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    appNameWithDisclaimer,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'さいたま市の家庭ごみの収集日と分別を確認するアプリです。'
+                    'さいたま市が提供する公式のアプリではありません。',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            // 早見表から辿るのが主な道だが、品目が載っていないものを捨てたい
+            // ときに行き場がなくなる。ここからも開けるようにしておく。
+            const SectionHeader('ごみの出し方'),
+            ListTile(
+              leading: const Icon(Icons.chair_outlined),
+              title: const Text('粗大ごみの出し方'),
+              subtitle: const Text('90cm以上のもの。料金と申込み先'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const OversizedGuidePage(),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'さいたま市の家庭ごみの収集日と分別を確認するアプリです。'
-                  'さいたま市が提供する公式のアプリではありません。',
-                  style: theme.textTheme.bodyMedium,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.support_agent_outlined),
+              title: const Text('市では収集できないもの'),
+              subtitle: const Text('家電・パソコン・バイクなど。持って行き先'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const NotAcceptedGuidePage(),
                 ),
-              ],
-            ),
-          ),
-          // 早見表から辿るのが主な道だが、品目が載っていないものを捨てたい
-          // ときに行き場がなくなる。ここからも開けるようにしておく。
-          const SectionHeader('ごみの出し方'),
-          ListTile(
-            leading: const Icon(Icons.chair_outlined),
-            title: const Text('粗大ごみの出し方'),
-            subtitle: const Text('90cm以上のもの。料金と申込み先'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const OversizedGuidePage(),
               ),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.support_agent_outlined),
-            title: const Text('市では収集できないもの'),
-            subtitle: const Text('家電・パソコン・バイクなど。持って行き先'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const NotAcceptedGuidePage(),
+            ListTile(
+              leading: const Icon(Icons.place_outlined),
+              title: const Text('回収ボックス'),
+              subtitle: const Text('小型家電・電池。市内55か所'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const CollectionBoxesPage(),
+                ),
               ),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.place_outlined),
-            title: const Text('回収ボックス'),
-            subtitle: const Text('小型家電・電池。市内55か所'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const CollectionBoxesPage(),
+            const SectionHeader('データの出典'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Text(
+                '収集日も分別も、さいたま市が公開している資料をもとにした要約です。'
+                '町名地番や収集ルールの変更が反映されるまでにずれが生じることがあります。'
+                '判断に迷うものや最新の情報は市の公式ページで確認してください。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-          ),
-          const SectionHeader('データの出典'),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: Text(
-              '収集日も分別も、さいたま市が公開している資料をもとにした要約です。'
-              '町名地番や収集ルールの変更が反映されるまでにずれが生じることがあります。'
-              '判断に迷うものや最新の情報は市の公式ページで確認してください。',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            // 収集日と分別早見表は表が別なので、それぞれ出す。どちらか一方だけを
+            // 見て「出典はこれ」と受け取られないようにする。どちらも同じ
+            // 「家庭ごみの出し方マニュアル」の中の別の表なので、開く先は同じになる。
+            if (catalog != null && catalog.source.isNotEmpty) ...[
+              ExternalLinkTile(
+                icon: Icons.event_note_outlined,
+                title: '収集日・地区',
+                subtitle: catalog.source,
+                url: catalog.sourceUrl,
               ),
-            ),
-          ),
-          // 収集日と分別早見表は表が別なので、それぞれ出す。どちらか一方だけを
-          // 見て「出典はこれ」と受け取られないようにする。どちらも同じ
-          // 「家庭ごみの出し方マニュアル」の中の別の表なので、開く先は同じになる。
-          if (catalog != null && catalog.source.isNotEmpty) ...[
-            ExternalLinkTile(
-              icon: Icons.event_note_outlined,
-              title: '収集日・地区',
-              subtitle: catalog.source,
-              url: catalog.sourceUrl,
+              const Divider(height: 1),
+            ],
+            if (dictionary != null && dictionary.source.isNotEmpty)
+              ExternalLinkTile(
+                icon: Icons.menu_book_outlined,
+                title: '分別早見表',
+                subtitle: dictionary.source,
+                url: dictionary.sourceUrl,
+              ),
+            // 早見表は4月に配られた時点のもので、10月の変更は別の資料から
+            // 反映している。早見表だけを出典に挙げると、どこにも載っていない
+            // 区分を出していることになる。
+            if (dictionary != null && dictionary.changeSource.isNotEmpty) ...[
+              const Divider(height: 1),
+              ExternalLinkTile(
+                icon: Icons.campaign_outlined,
+                title: 'プラスチックの分別変更',
+                subtitle: dictionary.changeSource,
+                url: dictionary.changeSourceUrl,
+              ),
+            ],
+            const SectionHeader('このアプリ'),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('バージョン'),
+              // ビルド番号はTestFlightの配信管理のための内部的な値で、
+              // 利用者から見た版の識別には要らない。デバッグビルドでは、
+              // どのビルドを動かしているかを確かめたい場面（実機QAで
+              // 指摘への対応がどのビルドまで反映されたか等）があるので出す。
+              trailing: Text(
+                packageInfo == null
+                    ? '—'
+                    : kDebugMode
+                    ? '${packageInfo.version} (${packageInfo.buildNumber})'
+                    : packageInfo.version,
+                style: theme.textTheme.bodyMedium,
+              ),
             ),
             const Divider(height: 1),
-          ],
-          if (dictionary != null && dictionary.source.isNotEmpty)
-            ExternalLinkTile(
-              icon: Icons.menu_book_outlined,
-              title: '分別早見表',
-              subtitle: dictionary.source,
-              url: dictionary.sourceUrl,
+            const ExternalLinkTile(
+              icon: Icons.privacy_tip_outlined,
+              title: 'プライバシーポリシー',
+              url: privacyPolicyUrl,
             ),
-          // 早見表は4月に配られた時点のもので、10月の変更は別の資料から
-          // 反映している。早見表だけを出典に挙げると、どこにも載っていない
-          // 区分を出していることになる。
-          if (dictionary != null && dictionary.changeSource.isNotEmpty) ...[
             const Divider(height: 1),
-            ExternalLinkTile(
-              icon: Icons.campaign_outlined,
-              title: 'プラスチックの分別変更',
-              subtitle: dictionary.changeSource,
-              url: dictionary.changeSourceUrl,
+            ListTile(
+              leading: const Icon(Icons.star_outline),
+              title: const Text('アプリを評価する'),
+              subtitle: const Text('ストアでレビューを書く'),
+              trailing: const Icon(Icons.open_in_new, size: 20),
+              onTap: () async {
+                final service = await ref.read(
+                  reviewPromptServiceProvider.future,
+                );
+                await service.openStoreListing();
+              },
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.description_outlined),
+              title: const Text('ライセンス'),
+              subtitle: const Text('このアプリが使っているソフトウェアとフォント'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: appNameWithDisclaimer,
+                applicationVersion: packageInfo == null
+                    ? null
+                    : kDebugMode
+                    ? '${packageInfo.version} (${packageInfo.buildNumber})'
+                    : packageInfo.version,
+              ),
             ),
           ],
-          const SectionHeader('このアプリ'),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('バージョン'),
-            // ビルド番号はTestFlightの配信管理のための内部的な値で、
-            // 利用者から見た版の識別には要らない。デバッグビルドでは、
-            // どのビルドを動かしているかを確かめたい場面（実機QAで
-            // 指摘への対応がどのビルドまで反映されたか等）があるので出す。
-            trailing: Text(
-              packageInfo == null
-                  ? '—'
-                  : kDebugMode
-                  ? '${packageInfo.version} (${packageInfo.buildNumber})'
-                  : packageInfo.version,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
-          const Divider(height: 1),
-          const ExternalLinkTile(
-            icon: Icons.privacy_tip_outlined,
-            title: 'プライバシーポリシー',
-            url: privacyPolicyUrl,
-          ),
-          const Divider(height: 1),
-          ListTile(
-            leading: const Icon(Icons.star_outline),
-            title: const Text('アプリを評価する'),
-            subtitle: const Text('ストアでレビューを書く'),
-            trailing: const Icon(Icons.open_in_new, size: 20),
-            onTap: () async {
-              final service = await ref.read(
-                reviewPromptServiceProvider.future,
-              );
-              await service.openStoreListing();
-            },
-          ),
-          const Divider(height: 1),
-          ListTile(
-            leading: const Icon(Icons.description_outlined),
-            title: const Text('ライセンス'),
-            subtitle: const Text('このアプリが使っているソフトウェアとフォント'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => showLicensePage(
-              context: context,
-              applicationName: appNameWithDisclaimer,
-              applicationVersion: packageInfo == null
-                  ? null
-                  : kDebugMode
-                  ? '${packageInfo.version} (${packageInfo.buildNumber})'
-                  : packageInfo.version,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

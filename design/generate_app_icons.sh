@@ -27,30 +27,9 @@ render() {
 }
 
 echo "== iOS =="
-# Contents.json のfilenameとサイズの対応（$repo_root/ios/.../Contents.json 参照）
-declare -a ios_map=(
-  "20:Icon-App-20x20@1x.png"
-  "40:Icon-App-20x20@2x.png"
-  "60:Icon-App-20x20@3x.png"
-  "29:Icon-App-29x29@1x.png"
-  "58:Icon-App-29x29@2x.png"
-  "87:Icon-App-29x29@3x.png"
-  "40:Icon-App-40x40@1x.png"
-  "80:Icon-App-40x40@2x.png"
-  "120:Icon-App-40x40@3x.png"
-  "120:Icon-App-60x60@2x.png"
-  "180:Icon-App-60x60@3x.png"
-  "76:Icon-App-76x76@1x.png"
-  "152:Icon-App-76x76@2x.png"
-  "167:Icon-App-83.5x83.5@2x.png"
-  "1024:Icon-App-1024x1024@1x.png"
-)
-for entry in "${ios_map[@]}"; do
-  size="${entry%%:*}"
-  name="${entry#*:}"
-  render "$size" "$name"
-  echo "  $name (${size}x${size})"
-done
+# Xcode 15 以降の Single Size (1024x1024) 方式。各サイズはビルド時に actool が生成する。
+render 1024 "Icon-App-1024x1024@1x.png"
+echo "  Icon-App-1024x1024@1x.png (1024x1024)"
 
 echo "== Android =="
 declare -a android_map=(
@@ -75,14 +54,7 @@ from PIL import Image
 
 tmp, ios_dir, android_res = (Path(p) for p in sys.argv[1:4])
 
-ios_names = [
-    "Icon-App-20x20@1x.png", "Icon-App-20x20@2x.png", "Icon-App-20x20@3x.png",
-    "Icon-App-29x29@1x.png", "Icon-App-29x29@2x.png", "Icon-App-29x29@3x.png",
-    "Icon-App-40x40@1x.png", "Icon-App-40x40@2x.png", "Icon-App-40x40@3x.png",
-    "Icon-App-60x60@2x.png", "Icon-App-60x60@3x.png",
-    "Icon-App-76x76@1x.png", "Icon-App-76x76@2x.png",
-    "Icon-App-83.5x83.5@2x.png", "Icon-App-1024x1024@1x.png",
-]
+ios_names = ["Icon-App-1024x1024@1x.png"]
 for name in ios_names:
     im = Image.open(tmp / name).convert("RGB")
     im.save(ios_dir / name)
@@ -96,5 +68,8 @@ for d in android_dirs:
 
 print("done")
 PYEOF
+
+echo "== iOS Dark / Tinted バリアントを生成 =="
+swift "$repo_root/design/generate_ios_appearances.swift"
 
 echo "完了。ios/ と android/ 配下のアイコンを更新しました。"

@@ -227,6 +227,9 @@ Future<void> pumpRootApp(
 
   /// 画面サイズ。下限の端末で溢れないかを見るときは [TestViewport.compact]。
   TestViewport viewport = TestViewport.standard,
+
+  /// iOS 26 以降の Liquid Glass 表示を有効にして立ち上げるか。
+  bool liquidGlass = false,
 }) async {
   _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
@@ -235,6 +238,8 @@ Future<void> pumpRootApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        liquidGlassProvider.overrideWithValue(liquidGlass),
+        nativeLiquidGlassViewProvider.overrideWithValue(false),
         nowProvider.overrideWithValue(
           now ?? (today ?? testToday).add(const Duration(hours: 12)),
         ),
@@ -309,6 +314,9 @@ Future<void> pumpApp(
 
   /// アプリ内レビュー依頼のモック。
   InAppReview? inAppReview,
+
+  /// iOS 26 以降の Liquid Glass 表示を有効にして立ち上げるか。
+  bool liquidGlass = false,
 }) async {
   _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
@@ -318,6 +326,8 @@ Future<void> pumpApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        liquidGlassProvider.overrideWithValue(liquidGlass),
+        nativeLiquidGlassViewProvider.overrideWithValue(false),
         nowProvider.overrideWithValue(
           now ?? (today ?? testToday).add(const Duration(hours: 12)),
         ),

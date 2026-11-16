@@ -17,6 +17,9 @@ import '../../domain/collection_rule.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
+import '../../ui/liquid_glass/liquid_glass_sheet.dart';
+import '../../ui/liquid_glass/liquid_glass_surface.dart';
 import '../../ui/widgets/section_header.dart';
 import '../about/about_page.dart';
 import '../area/area_editor_page.dart';
@@ -29,111 +32,121 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final area = ref.watch(selectedAreaProvider).value;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
     if (area == null) return const SizedBox.shrink();
     // 区分の説明は、今日の時点の決まりで出す。
     final today = ref.watch(todayProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('設定')),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 32),
-        children: [
-          // 「地区」は選び直すもの、「収集曜日」は確認・調整するもの、と
-          // 役割で分ける。地区を選べば曜日は自動で決まるので、地区の項目から
-          // 曜日の編集画面に入ると「地区を選んでも曜日が決まらない」ように見えてしまう。
-          ListTile(
-            leading: const Icon(Icons.place_outlined),
-            title: const Text('お住まいの地区'),
-            subtitle: Text(keepParenthesesTogether(area.label)),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
-            ),
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: const AdaptiveAppBar(title: Text('設定')),
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: const EdgeInsets.only(bottom: 32),
           ),
-          const Divider(height: 1),
-          const _NotificationTiles(),
-          const Divider(height: 1),
-          const _ThemeModeTile(),
-          const SectionHeader('設定中の収集曜日'),
-          for (final category in GarbageCategory.values)
+          children: [
+            // 「地区」は選び直すもの、「収集曜日」は確認・調整するもの、と
+            // 役割で分ける。地区を選べば曜日は自動で決まるので、地区の項目から
+            // 曜日の編集画面に入ると「地区を選んでも曜日が決まらない」ように見えてしまう。
             ListTile(
-              dense: true,
-              leading: Icon(
-                CategoryStyle.iconOf(category),
-                color: CategoryStyle.colorOf(category, context),
-              ),
-              title: Text(category.label),
-              trailing: Text(
-                _rulesLabel(area.rulesFor(category)),
-                style: theme.textTheme.bodyMedium,
+              leading: const Icon(Icons.place_outlined),
+              title: const Text('お住まいの地区'),
+              subtitle: Text(keepParenthesesTogether(area.label)),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
               ),
             ),
-          if (area.earlyMorning)
-            const ListTile(
-              dense: true,
-              leading: Icon(Icons.schedule),
-              title: Text('もえるごみの早朝収集地区'),
-              trailing: Text('朝5:30まで'),
-            ),
-          ListTile(
-            leading: const Icon(Icons.edit_calendar_outlined),
-            title: const Text('収集曜日を修正する'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => AreaEditorPage(initial: area),
-              ),
-            ),
-          ),
-          const SectionHeader('分別と出し方'),
-          for (final category in GarbageCategory.values) ...[
-            if (category != GarbageCategory.values.first)
-              const Divider(height: 1),
-            ExpansionTile(
-              // 開いたときに自分で上下へ線を引くのをやめさせ、区切りは
-              // 上のDividerだけにする。既定のままだと、開いた項目の下線と
-              // 隣の項目の上線が重なって線が二重三重に見える。
-              shape: const Border(),
-              collapsedShape: const Border(),
-              // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
-              // スクロールで見えなくなった時点で開いた状態が失われてしまう。
-              // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
-              // 保持され、戻ってきても開いたままになる。
-              key: PageStorageKey('category-${category.id}'),
-              leading: Icon(
-                CategoryStyle.iconOf(category),
-                color: CategoryStyle.colorOf(category, context),
-              ),
-              title: Text(category.label),
-              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              expandedCrossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  keepParenthesesTogether(category.examplesOn(today).join('・')),
+            const Divider(height: 1),
+            const _NotificationTiles(),
+            const Divider(height: 1),
+            const _ThemeModeTile(),
+            const SectionHeader('設定中の収集曜日'),
+            for (final category in GarbageCategory.values)
+              ListTile(
+                dense: true,
+                leading: Icon(
+                  CategoryStyle.iconOf(category),
+                  color: CategoryStyle.colorOf(category, context),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  keepParenthesesTogether(category.howToOn(today)),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                title: Text(category.label),
+                trailing: Text(
+                  _rulesLabel(area.rulesFor(category)),
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            if (area.earlyMorning)
+              const ListTile(
+                dense: true,
+                leading: Icon(Icons.schedule),
+                title: Text('もえるごみの早朝収集地区'),
+                trailing: Text('朝5:30まで'),
+              ),
+            ListTile(
+              leading: const Icon(Icons.edit_calendar_outlined),
+              title: const Text('収集曜日を修正する'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => AreaEditorPage(initial: area),
+                ),
+              ),
+            ),
+            const SectionHeader('分別と出し方'),
+            for (final category in GarbageCategory.values) ...[
+              if (category != GarbageCategory.values.first)
+                const Divider(height: 1),
+              ExpansionTile(
+                // 開いたときに自分で上下へ線を引くのをやめさせ、区切りは
+                // 上のDividerだけにする。既定のままだと、開いた項目の下線と
+                // 隣の項目の上線が重なって線が二重三重に見える。
+                shape: const Border(),
+                collapsedShape: const Border(),
+                // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
+                // スクロールで見えなくなった時点で開いた状態が失われてしまう。
+                // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
+                // 保持され、戻ってきても開いたままになる。
+                key: PageStorageKey('category-${category.id}'),
+                leading: Icon(
+                  CategoryStyle.iconOf(category),
+                  color: CategoryStyle.colorOf(category, context),
+                ),
+                title: Text(category.label),
+                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    keepParenthesesTogether(
+                      category.examplesOn(today).join('・'),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    keepParenthesesTogether(category.howToOn(today)),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SectionHeader('このアプリについて'),
+            // 出典・プライバシーポリシー・ライセンスは、ここで畳んで見せるには
+            // 量が多い。設定の一項目に押し込めず、専用の画面に分ける。
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('バージョンと出典'),
+              subtitle: const Text('プライバシーポリシー・ライセンス'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const AboutPage()),
+              ),
             ),
           ],
-          const SectionHeader('このアプリについて'),
-          // 出典・プライバシーポリシー・ライセンスは、ここで畳んで見せるには
-          // 量が多い。設定の一項目に押し込めず、専用の画面に分ける。
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('バージョンと出典'),
-            subtitle: const Text('プライバシーポリシー・ライセンス'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute<void>(builder: (_) => const AboutPage())),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -174,23 +187,34 @@ class _NotificationTiles extends ConsumerWidget {
     final settings =
         ref.watch(notificationProvider).value ??
         const NotificationSettings.defaults();
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return Column(
       children: [
-        SwitchListTile(
-          secondary: const Icon(Icons.notifications_outlined),
-          title: const Text('通知'),
-          subtitle: const Text('ごみ収集日の前日にお知らせします'),
-          value: settings.enabled,
-          onChanged: (value) => _toggle(context, ref, value),
-        ),
+        if (isLiquidGlass)
+          SwitchListTile.adaptive(
+            secondary: const Icon(Icons.notifications_outlined),
+            title: const Text('通知'),
+            subtitle: const Text('ごみ収集日の前日にお知らせします'),
+            value: settings.enabled,
+            onChanged: (value) => _toggle(context, ref, value),
+          )
+        else
+          SwitchListTile(
+            secondary: const Icon(Icons.notifications_outlined),
+            title: const Text('通知'),
+            subtitle: const Text('ごみ収集日の前日にお知らせします'),
+            value: settings.enabled,
+            onChanged: (value) => _toggle(context, ref, value),
+          ),
         if (settings.enabled)
           ListTile(
             leading: const Icon(Icons.schedule_outlined),
             title: const Text('お知らせの時刻'),
             subtitle: Text(settings.label),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => _pickTime(context, ref, settings),
+            onTap: () =>
+                _pickTime(context, ref, settings, liquidGlass: isLiquidGlass),
           ),
       ],
     );
@@ -229,8 +253,9 @@ class _NotificationTiles extends ConsumerWidget {
   Future<void> _pickTime(
     BuildContext context,
     WidgetRef ref,
-    NotificationSettings settings,
-  ) async {
+    NotificationSettings settings, {
+    required bool liquidGlass,
+  }) async {
     var selected = settings.timeOfDay;
 
     // ホイールを回すときのクリック感はCupertinoPickerが自分で出すが、
@@ -239,8 +264,9 @@ class _NotificationTiles extends ConsumerWidget {
     // 起こしておくと、最初のひと転がりから手応えが出る。
     unawaited(HapticFeedback.selectionClick());
 
-    final decided = await showModalBottomSheet<Duration>(
+    final decided = await showAdaptiveModalSheet<Duration>(
       context: context,
+      liquidGlass: liquidGlass,
       builder: (context) {
         final theme = Theme.of(context);
         return SafeArea(
@@ -268,26 +294,42 @@ class _NotificationTiles extends ConsumerWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: liquidGlass ? 16 : 4,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            style: _pickerButtonStyle,
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('キャンセル'),
-                          ),
+                          child: liquidGlass
+                              ? LiquidGlassPillButton(
+                                  label: 'キャンセル',
+                                  onPressed: () => Navigator.of(context).pop(),
+                                )
+                              : TextButton(
+                                  style: _pickerButtonStyle,
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('キャンセル'),
+                                ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: liquidGlass ? 16 : 4,
+                        ),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: TextButton(
-                            style: _pickerButtonStyle,
-                            onPressed: () =>
-                                Navigator.of(context).pop(selected),
-                            child: const Text('決定'),
-                          ),
+                          child: liquidGlass
+                              ? LiquidGlassPillButton(
+                                  label: '決定',
+                                  prominent: true,
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(selected),
+                                )
+                              : TextButton(
+                                  style: _pickerButtonStyle,
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(selected),
+                                  child: const Text('決定'),
+                                ),
                         ),
                       ),
                     ],
@@ -350,23 +392,26 @@ class _ThemeModeTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(themeModeProvider).value ?? ThemeMode.light;
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
 
     return ListTile(
       leading: const Icon(Icons.dark_mode_outlined),
       title: const Text('外観'),
       subtitle: Text(_labels[mode]!),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => _showPicker(context, ref, mode),
+      onTap: () => _showPicker(context, ref, mode, liquidGlass: isLiquidGlass),
     );
   }
 
   Future<void> _showPicker(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode current,
-  ) async {
-    final selected = await showModalBottomSheet<ThemeMode>(
+    ThemeMode current, {
+    required bool liquidGlass,
+  }) async {
+    final selected = await showAdaptiveModalSheet<ThemeMode>(
       context: context,
+      liquidGlass: liquidGlass,
       builder: (context) => SafeArea(
         child: RadioGroup<ThemeMode>(
           groupValue: current,

@@ -8,6 +8,7 @@ import '../../domain/date_label.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
 import '../../ui/widgets/category_badge.dart';
 import '../../ui/widgets/day_detail_sheet.dart';
 
@@ -21,6 +22,7 @@ class HomePage extends ConsumerWidget {
     final calendar = ref.watch(calendarProvider);
     final today = ref.watch(todayProvider);
     final now = ref.watch(nowProvider);
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
     if (calendar == null) return const SizedBox.shrink();
 
     final area = calendar.area;
@@ -42,43 +44,50 @@ class HomePage extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: AdaptiveAppBar(
         title: Text(keepParenthesesTogether(area.label)),
         titleTextStyle: Theme.of(context).textTheme.titleMedium,
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-        children: [
-          _FeaturedCard(
-            day: featured,
-            area: area,
-            today: today,
-            label: isFeaturingToday ? '今日' : '明日',
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           ),
-          const SizedBox(height: 12),
-          _SecondaryRow(
-            day: secondary,
-            area: area,
-            today: today,
-            label: isFeaturingToday ? '明日' : '今日',
-          ),
-          const SizedBox(height: 24),
-          if (area.isEmpty)
-            const _EmptyAreaNotice()
-          else ...[
-            _SectionTitle('この先の収集'),
-            const SizedBox(height: 8),
-            if (upcoming.isEmpty)
-              const Text('この先しばらく収集の予定がありません。')
-            else
-              for (final day in upcoming)
-                _UpcomingTile(day: day, area: area, today: today),
+          children: [
+            _FeaturedCard(
+              day: featured,
+              area: area,
+              today: today,
+              label: isFeaturingToday ? '今日' : '明日',
+            ),
+            const SizedBox(height: 12),
+            _SecondaryRow(
+              day: secondary,
+              area: area,
+              today: today,
+              label: isFeaturingToday ? '明日' : '今日',
+            ),
             const SizedBox(height: 24),
-            _SectionTitle('分別ごとの次の収集'),
-            const SizedBox(height: 8),
-            _NextByCategory(calendar: calendar, today: today),
+            if (area.isEmpty)
+              const _EmptyAreaNotice()
+            else ...[
+              _SectionTitle('この先の収集'),
+              const SizedBox(height: 8),
+              if (upcoming.isEmpty)
+                const Text('この先しばらく収集の予定がありません。')
+              else
+                for (final day in upcoming)
+                  _UpcomingTile(day: day, area: area, today: today),
+              const SizedBox(height: 24),
+              _SectionTitle('分別ごとの次の収集'),
+              const SizedBox(height: 8),
+              _NextByCategory(calendar: calendar, today: today),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

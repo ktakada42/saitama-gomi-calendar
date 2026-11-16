@@ -6,6 +6,8 @@ import '../../domain/date_label.dart';
 import '../../domain/garbage_category.dart';
 import '../../providers.dart';
 import '../../ui/category_style.dart';
+import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
+import '../../ui/liquid_glass/liquid_glass_surface.dart';
 import '../../ui/widgets/day_detail_sheet.dart';
 
 /// 当月のごみ出し日を一覧するカレンダー。
@@ -60,6 +62,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
   Widget build(BuildContext context) {
     final calendar = ref.watch(calendarProvider);
     final today = ref.watch(todayProvider);
+    final isLiquidGlass = ref.watch(liquidGlassProvider);
     if (calendar == null) return const SizedBox.shrink();
 
     final month = _month ??= DateTime(today.year, today.month);
@@ -69,62 +72,82 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final isThisMonth = month.year == today.year && month.month == today.month;
 
     return Scaffold(
-      appBar: AppBar(
+      extendBodyBehindAppBar: isLiquidGlass,
+      appBar: AdaptiveAppBar(
         title: const Text('カレンダー'),
         actions: [
           // 月送りとは別のボタンにする。年月の並びに混ぜると、
           // 出たり消えたりするたびに年月が中央からずれてしまう。
           if (!isThisMonth)
-            TextButton(
-              onPressed: () => _goTo(DateTime(today.year, today.month)),
-              child: const Text('今月に戻る'),
-            ),
+            if (isLiquidGlass)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Center(
+                  child: LiquidGlassPillButton(
+                    label: '今月に戻る',
+                    onPressed: () => _goTo(DateTime(today.year, today.month)),
+                  ),
+                ),
+              )
+            else
+              TextButton(
+                onPressed: () => _goTo(DateTime(today.year, today.month)),
+                child: const Text('今月に戻る'),
+              ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 32),
-        children: [
-          _MonthHeader(
-            month: month,
-            // 送れる端では押せなくする。押しても動かないボタンを
-            // 出したままにすると、効かないのか壊れたのか分からない。
-            onPrevious: _pageOfMonth(month) > 0 ? () => _shiftMonth(-1) : null,
-            onNext: _pageOfMonth(month) < _pageCount - 1
-                ? () => _shiftMonth(1)
-                : null,
+      body: Builder(
+        builder: (bodyContext) => ListView(
+          padding: adaptiveScrollPadding(
+            bodyContext,
+            liquidGlass: isLiquidGlass,
+            base: const EdgeInsets.fromLTRB(12, 4, 12, 32),
           ),
-          const SizedBox(height: 8),
-          const _WeekdayHeader(),
-          const SizedBox(height: 4),
-          // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
-          // 今の月が横へ抜け、隣の月が入ってくる。
-          //
-          // 高さは6週ぶんで固定する。月によって5週と6週があり、
-          // そのままだと送るたびに表の高さが変わってしまう。
-          SizedBox(
-            height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _pageCount,
-              onPageChanged: (page) =>
-                  setState(() => _month = _monthOfPage(page)),
-              itemBuilder: (context, page) {
-                final pageMonth = _monthOfPage(page);
-                return _MonthGrid(
-                  month: pageMonth,
-                  days: calendar.month(pageMonth.year, pageMonth.month),
-                  today: today,
-                  onTapDay: (day) => showDayDetailSheet(
-                    context,
-                    day: day,
-                    area: calendar.area,
-                    today: today,
-                  ),
-                );
-              },
+          children: [
+            _MonthHeader(
+              month: month,
+              // 送れる端では押せなくする。押しても動かないボタンを
+              // 出したままにすると、効かないのか壊れたのか分からない。
+              onPrevious: _pageOfMonth(month) > 0
+                  ? () => _shiftMonth(-1)
+                  : null,
+              onNext: _pageOfMonth(month) < _pageCount - 1
+                  ? () => _shiftMonth(1)
+                  : null,
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            const _WeekdayHeader(),
+            const SizedBox(height: 4),
+            // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
+            // 今の月が横へ抜け、隣の月が入ってくる。
+            //
+            // 高さは6週ぶんで固定する。月によって5週と6週があり、
+            // そのままだと送るたびに表の高さが変わってしまう。
+            SizedBox(
+              height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: _pageCount,
+                onPageChanged: (page) =>
+                    setState(() => _month = _monthOfPage(page)),
+                itemBuilder: (context, page) {
+                  final pageMonth = _monthOfPage(page);
+                  return _MonthGrid(
+                    month: pageMonth,
+                    days: calendar.month(pageMonth.year, pageMonth.month),
+                    today: today,
+                    onTapDay: (day) => showDayDetailSheet(
+                      context,
+                      day: day,
+                      area: calendar.area,
+                      today: today,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -315,10 +338,19 @@ class _DayCell extends StatelessWidget {
           color: isToday
               ? theme.colorScheme.primary.withValues(alpha: 0.12)
               : null,
-          border: isToday
-              ? Border.all(color: theme.colorScheme.primary, width: 1.5)
-              : null,
         ),
+        // border を decoration に入れると、今日だけ枠線の厚み（上下3px）ぶん内側の
+        // 高さが縮み、3区分以上重なる日に帯が1.6px溢れる。foregroundDecoration に
+        // 描けば他の日と内寸が揃い、数字の位置もずれない。
+        foregroundDecoration: isToday
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: theme.colorScheme.primary,
+                  width: 1.5,
+                ),
+              )
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

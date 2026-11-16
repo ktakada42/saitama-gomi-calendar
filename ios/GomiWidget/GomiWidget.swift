@@ -54,14 +54,17 @@ struct GomiProvider: TimelineProvider {
 
 // MARK: - 表示
 
-/// 案A：分別の色で全面を塗る。
+/// 案A：通常表示（fullColor）では分別の色で全面を塗り、クリア／ティント表示
+/// （Liquid Glass ホーム画面など）ではシステムのガラス層に委ねる。
 ///
 /// ホーム画面に並んだアイコンの中で、色だけで「今日は何の日か」が分かるようにする。
-/// アプリの中は情報を読ませる場所なのでクリーム地にしているが、ウィジェットは
-/// 読ませる前に気づかせる場所なので、性格が違う。
+/// 一方、iOS 26 のクリア表示などではシステムが `containerBackground` を自動で剥がして
+/// ガラス面に置き換えるため、`widgetRenderingMode` に応じて文字色と
+/// `widgetAccentable()` を切り替え、明るい壁紙の上でも読めるようにする。
 struct GomiWidgetView: View {
     var entry: GomiEntry
     @Environment(\.widgetFamily) private var family
+    @Environment(\.widgetRenderingMode) private var renderingMode
 
     private var featured: (day: GomiDay, isToday: Bool)? {
         entry.payload?.featured(at: entry.date)
@@ -71,6 +74,18 @@ struct GomiWidgetView: View {
         featured?.day.resolvedCategories.first?.color ?? Color(white: 0.42)
     }
 
+    private var isFullColor: Bool {
+        renderingMode == .fullColor
+    }
+
+    private var primaryForeground: AnyShapeStyle {
+        isFullColor ? AnyShapeStyle(Color.white) : AnyShapeStyle(.primary)
+    }
+
+    private var secondaryForeground: AnyShapeStyle {
+        isFullColor ? AnyShapeStyle(Color.white.opacity(0.82)) : AnyShapeStyle(.secondary)
+    }
+
     var body: some View {
         Group {
             switch family {
@@ -78,7 +93,9 @@ struct GomiWidgetView: View {
             default: smallBody
             }
         }
-        .containerBackground(accent, for: .widget)
+        .containerBackground(for: .widget) {
+            accent
+        }
     }
 
     // MARK: 小 2×2
@@ -90,7 +107,8 @@ struct GomiWidgetView: View {
             if let featured {
                 Image(systemName: featured.day.resolvedCategories.first?.symbol ?? "trash")
                     .font(.system(size: 30, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(primaryForeground)
+                    .widgetAccentable()
                 categoryNames(featured.day, size: 19)
                 deadlineText(featured.day)
             } else {
@@ -120,7 +138,8 @@ struct GomiWidgetView: View {
                     HStack(spacing: 9) {
                         Image(systemName: featured.day.resolvedCategories.first?.symbol ?? "trash")
                             .font(.system(size: 26, weight: .semibold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(primaryForeground)
+                            .widgetAccentable()
                         categoryNames(featured.day, size: 20)
                     }
                     deadlineText(featured.day)
@@ -133,7 +152,7 @@ struct GomiWidgetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 
             if let payload = entry.payload, !upcoming(payload).isEmpty {
-                Divider().overlay(Color.white.opacity(0.28))
+                Divider().overlay(isFullColor ? Color.white.opacity(0.28) : Color.primary.opacity(0.2))
                 VStack(alignment: .leading, spacing: 9) {
                     ForEach(upcoming(payload), id: \.date) { day in
                         upcomingRow(day)
@@ -151,11 +170,11 @@ struct GomiWidgetView: View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
             Text(featured?.isToday == true ? "今日" : "明日")
                 .font(.system(size: 15, weight: .heavy))
-                .foregroundStyle(.white)
+                .foregroundStyle(primaryForeground)
             if let featured {
                 Text(dateLabel(featured.day))
                     .font(.system(size: 11.5, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.82))
+                    .foregroundStyle(secondaryForeground)
             }
         }
     }
@@ -166,9 +185,10 @@ struct GomiWidgetView: View {
             ForEach(day.resolvedCategories, id: \.id) { category in
                 Text(category.name)
                     .font(.system(size: size, weight: .heavy))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(primaryForeground)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
+                    .widgetAccentable()
             }
         }
         .padding(.top, 5)
@@ -177,14 +197,14 @@ struct GomiWidgetView: View {
     private func deadlineText(_ day: GomiDay) -> some View {
         Text("朝\(day.deadlineHour):\(String(format: "%02d", day.deadlineMinute))までに出す")
             .font(.system(size: 11, weight: .semibold))
-            .foregroundStyle(.white.opacity(0.82))
+            .foregroundStyle(secondaryForeground)
             .padding(.top, 2)
     }
 
     private var emptyText: some View {
         Text("収集は\nありません")
             .font(.system(size: 16, weight: .heavy))
-            .foregroundStyle(.white.opacity(0.82))
+            .foregroundStyle(secondaryForeground)
     }
 
     private func upcoming(_ payload: GomiPayload) -> [GomiDay] {
@@ -199,20 +219,35 @@ struct GomiWidgetView: View {
         HStack(spacing: 8) {
             Text(shortDateLabel(day))
                 .font(.system(size: 11.5, weight: .bold))
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(secondaryForeground)
                 .frame(width: 46, alignment: .leading)
             if let category = day.resolvedCategories.first {
-                HStack(spacing: 4) {
-                    Image(systemName: category.symbol).font(.system(size: 9))
-                    Text(shortName(category))
-                        .font(.system(size: 10.5, weight: .heavy))
-                        .lineLimit(1)
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 7)
-                .padding(.vertical, 2)
-                .background(Capsule().fill(Color.white.opacity(0.2)))
+                upcomingPill(category)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func upcomingPill(_ category: GomiCategory) -> some View {
+        let label = HStack(spacing: 4) {
+            Image(systemName: category.symbol).font(.system(size: 9))
+            Text(shortName(category))
+                .font(.system(size: 10.5, weight: .heavy))
+                .lineLimit(1)
+        }
+        .foregroundStyle(primaryForeground)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 2)
+        .widgetAccentable()
+
+        if #available(iOS 26.0, *), isFullColor {
+            label.glassEffect(.clear, in: Capsule())
+        } else {
+            label.background(
+                Capsule().fill(
+                    isFullColor ? Color.white.opacity(0.2) : Color.primary.opacity(0.14)
+                )
+            )
         }
     }
 
