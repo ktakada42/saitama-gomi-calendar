@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/app.dart';
+import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/features/settings/settings_page.dart';
 
 import '../support/test_app.dart';
@@ -37,6 +38,27 @@ void main() {
       lessThanOrEqualTo(r),
       reason:
           'シートの背景 (#${(argb & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}) が薄緑に見える',
+    );
+  });
+
+  testWidgets('検索履歴チップの背景も緑に寄っていない', (tester) async {
+    await pumpApp(
+      tester,
+      const DictionaryPage(),
+      preferences: {
+        'flutter.dictionary_search_history': <String>['ペットボトル'],
+      },
+    );
+
+    final chip = tester.widget<InputChip>(find.byType(InputChip));
+    final argb = chip.backgroundColor!.toARGB32();
+    final r = (argb >> 16) & 0xFF;
+    final g = (argb >> 8) & 0xFF;
+    expect(
+      g,
+      lessThanOrEqualTo(r),
+      reason:
+          '検索履歴チップの背景 (#${(argb & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}) が薄緑に見える',
     );
   });
 

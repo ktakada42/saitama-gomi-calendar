@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:saitama_gomi/data/waste_dictionary.dart';
 import 'package:saitama_gomi/domain/collection_area.dart';
 import 'package:saitama_gomi/domain/collection_rule.dart';
 import 'package:saitama_gomi/domain/garbage_category.dart';
@@ -7,6 +8,7 @@ import 'package:saitama_gomi/features/calendar/calendar_page.dart';
 import 'package:saitama_gomi/features/dictionary/dictionary_page.dart';
 import 'package:saitama_gomi/features/home/home_page.dart';
 import 'package:saitama_gomi/features/settings/settings_page.dart';
+import 'package:saitama_gomi/features/shell/home_shell.dart';
 
 import '../support/test_app.dart';
 
@@ -40,6 +42,38 @@ void main() {
         const DictionaryPage(),
         viewport: TestViewport.compact,
       );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('分別で変更の知らせ・検索履歴・十行の索引・ボトムバーが揃っても崩れない', (tester) async {
+      final fullRowDictionary = WasteDictionary.fromJson({
+        'source': 'テスト用の分別早見表',
+        'sourceUrl': '',
+        'items': [
+          for (final head in ['あ', 'か', 'さ', 'た', 'な', 'は', 'ま', 'や', 'ら', 'わ'])
+            {
+              'name': '$head品目',
+              'kanaHead': head,
+              'category': 'burnable',
+              'categoryLabel': 'もえるごみ',
+              'note': '',
+            },
+        ],
+      });
+      await pumpApp(
+        tester,
+        const HomeShell(),
+        today: DateTime(2026, 10, 1),
+        dictionary: fullRowDictionary,
+        viewport: TestViewport.compact,
+        preferences: {
+          'flutter.dictionary_search_history': [
+            for (var i = 1; i <= 10; i++) '検索履歴$i',
+          ],
+        },
+      );
+      await tester.tap(find.text('分別'));
+      await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
 

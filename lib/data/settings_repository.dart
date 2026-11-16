@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/collection_area.dart';
+import '../domain/search_history.dart';
 
 /// 収集日前夜の通知の設定。
 class NotificationSettings {
@@ -42,11 +43,11 @@ class NotificationSettings {
   int get hashCode => Object.hash(enabled, timeOfDay);
 }
 
-/// 利用者が設定した地区・外観・通知と、畳んだ知らせの保存先。
+/// 利用者が設定した地区・外観・通知と、畳んだ知らせ・分別の検索履歴の保存先。
 ///
 /// 地区はプリセットを選んだあと曜日を調整できるので、IDだけでは復元できない。
-/// そのため地区オブジェクトをまるごとJSONで持つ。保存するのはこれらの設定だけで、
-/// 個人を特定する情報は含まれない。
+/// そのため地区オブジェクトをまるごとJSONで持つ。保存するのはこれらの設定と
+/// 端末内だけの検索履歴（件数・文字数上限あり）で、個人を特定する情報は含まれない。
 class SettingsRepository {
   const SettingsRepository(this._prefs);
 
@@ -59,6 +60,7 @@ class SettingsRepository {
   static const _notificationMinutesKey = 'notification_minutes';
   // 分別の変更ごとに分ける。次の変更の知らせまで畳んだままにしないため。
   static const _sortingNoticeCollapsedKeyPrefix = 'sorting_notice_collapsed_';
+  static const _searchHistoryKey = 'dictionary_search_history';
 
   static Future<SettingsRepository> open() async =>
       SettingsRepository(await SharedPreferences.getInstance());
@@ -126,4 +128,20 @@ class SettingsRepository {
     await _prefs.setBool(_notificationEnabledKey, settings.enabled);
     await _prefs.setInt(_notificationMinutesKey, settings.timeOfDay.inMinutes);
   }
+
+  /// 分別早見表の検索履歴。未設定または壊れている場合は空の履歴。
+  SearchHistory readSearchHistory() {
+    try {
+      final raw = _prefs.getStringList(_searchHistoryKey);
+      if (raw == null) return const SearchHistory.empty();
+      return SearchHistory.fromList(raw);
+    } on TypeError {
+      // 文字列リスト以外の型が入っていた場合も、クラッシュさせず空に戻す。
+      return const SearchHistory.empty();
+    }
+  }
+
+  Future<void> writeSearchHistory(SearchHistory history) => history.isEmpty
+      ? _prefs.remove(_searchHistoryKey)
+      : _prefs.setStringList(_searchHistoryKey, history.queries);
 }

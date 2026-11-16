@@ -575,4 +575,211 @@ void main() {
       });
     });
   });
+
+  group('検索履歴', () {
+    const historyKey = 'flutter.dictionary_search_history';
+
+    Future<List<String>?> savedHistory() async =>
+        (await SharedPreferences.getInstance()).getStringList(
+          'dictionary_search_history',
+        );
+
+    List<String> visibleChips(WidgetTester tester) => tester
+        .widgetList<InputChip>(find.byType(InputChip))
+        .map((chip) => (chip.label as Text).data!)
+        .toList();
+
+    testWidgets('履歴が0件のときは何も出さない', (tester) async {
+      await pumpApp(tester, const DictionaryPage());
+
+      expect(find.byType(InputChip), findsNothing);
+      expect(find.byIcon(Icons.history), findsNothing);
+    });
+
+    testWidgets('検索語を消したときに履歴へ残り、未入力の検索欄の下に並ぶ', (tester) async {
+      await pumpApp(tester, const DictionaryPage());
+
+      await tester.enterText(find.byType(TextField), 'ペット');
+      await tester.pumpAndSettle();
+      // 入力中はチップを出さず、一覧を広く見せる。
+      expect(find.byType(InputChip), findsNothing);
+
+      await tester.tap(find.byTooltip('入力を消す'));
+      await tester.pumpAndSettle();
+
+      expect(visibleChips(tester), ['ペット']);
+      expect(await savedHistory(), ['ペット']);
+    });
+
+    testWidgets('キーボードの検索確定で保存される', (tester) async {
+      await pumpApp(tester, const DictionaryPage());
+
+      await tester.enterText(find.byType(TextField), 'たんす');
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      await tester.pumpAndSettle();
+
+      expect(await savedHistory(), ['たんす']);
+    });
+
+    testWidgets('検索欄からフォーカスが外れたときに保存される', (tester) async {
+      await pumpApp(tester, const DictionaryPage());
+
+      await tester.tap(find.byType(TextField));
+      await tester.enterText(find.byType(TextField), 'カーペット');
+      await tester.pump();
+
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+
+      expect(await savedHistory(), ['カーペット']);
+    });
+
+    testWidgets('検索して詳細シートを開いたときに保存され、未入力での閲覧は保存しない', (tester) async {
+      final dictionary = WasteDictionary.fromJson({
+        'source': 'テスト用の分別早見表',
+        'sourceUrl': 'https://example.com/manual',
+        'items': [
+          {
+            'name': 'いす',
+            'kanaHead': 'い',
+            'category': 'nonBurnable',
+            'categoryLabel': 'もえないごみ',
+            'note': '',
+            'marks': ['star2'],
+          },
+        ],
+      });
+
+      await pumpApp(tester, const DictionaryPage(), dictionary: dictionary);
+
+      // 未入力のまま詳細を開いても履歴には残さない。
+      await tester.tap(find.text('いす'));
+      await tester.pumpAndSettle();
+      expect(await savedHistory(), isNull);
+      Navigator.of(tester.element(find.byType(BottomSheet))).pop();
+      await tester.pumpAndSettle();
+
+      // 絞り込んでから詳細を開いたときは検索語を残す。
+      await tester.enterText(find.byType(TextField), 'いす');
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ListTile, 'いす'));
+      await tester.pumpAndSettle();
+
+      expect(await savedHistory(), ['いす']);
+    });
+
+    testWidgets('該当する品目が無い語や長すぎる貼り付けは履歴に残さない', (tester) async {
+      await pumpApp(tester, const DictionaryPage());
+
+      await tester.enterText(find.byType(TextField), 'あるはずのない品目');
+      await tester.pump();
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      await tester.tap(find.byTooltip('入力を消す'));
+      await tester.pumpAndSettle();
+
+      // 「ペット」を含んでいて該当はするが、30文字を超える誤貼り付けのような長文。
+      await tester.enterText(
+        find.byType(TextField),
+        'ペットボトルの出し方についての長いメモ書きを誤って貼り付けた文字列',
+      );
+      await tester.pump();
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      await tester.tap(find.byTooltip('入力を消す'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(InputChip), findsNothing);
+      expect(await savedHistory(), isNull);
+    });
+
+    testWidgets('チップを押すとキーボードを開かずに再検索でき、履歴の先頭へ移る', (tester) async {
+      final firstCondition = keepParenthesesTogether(
+        SortingChange.plastic2026.conditions.first,
+      );
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        today: DateTime(2026, 10, 1),
+        preferences: {
+          historyKey: <String>['ペット', 'たんす'],
+        },
+      );
+
+      expect(visibleChips(tester), ['ペット', 'たんす']);
+      expect(find.text(firstCondition), findsOneWidget);
+
+      // チップの「たんす」を押す（一覧にも「たんす」があるので InputChip 側を狙う）。
+      await tester.tap(find.widgetWithText(InputChip, 'たんす'));
+      await tester.pumpAndSettle();
+
+      // 絞り込まれ、知らせは畳まれ、検索欄にフォーカスは当たらない（キーボード不要）。
+      expect(find.text('たんす'), findsWidgets);
+      expect(find.text('ペットボトル'), findsNothing);
+      expect(find.text(firstCondition), findsNothing);
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.focusNode?.hasFocus, isFalse);
+
+      // 入力を消すと、使った「たんす」が先頭に来ている。
+      await tester.tap(find.byTooltip('入力を消す'));
+      await tester.pumpAndSettle();
+      expect(visibleChips(tester), ['たんす', 'ペット']);
+    });
+
+    testWidgets('個別削除ボタンでその履歴だけを消せ、すべて消すと帯も消える', (tester) async {
+      await pumpApp(
+        tester,
+        const DictionaryPage(),
+        preferences: {
+          historyKey: <String>['ペット', 'たんす'],
+        },
+      );
+
+      await tester.tap(find.byTooltip('「ペット」を履歴から消す'));
+      await tester.pumpAndSettle();
+
+      // 再検索は発火せず、一覧は全件のまま「ペット」だけが履歴から消える。
+      expect(visibleChips(tester), ['たんす']);
+      expect(find.text('ペットボトル'), findsOneWidget);
+      expect(await savedHistory(), ['たんす']);
+
+      await tester.tap(find.byTooltip('「たんす」を履歴から消す'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(InputChip), findsNothing);
+      expect(find.byIcon(Icons.history), findsNothing);
+      expect(await savedHistory(), isNull);
+    });
+
+    testWidgets('10件を超えると古い履歴から自動で消える', (tester) async {
+      final manyItems = WasteDictionary.fromJson({
+        'source': 'テスト用の分別早見表',
+        'sourceUrl': '',
+        'items': [
+          for (var i = 1; i <= 12; i++)
+            {
+              'name': 'テスト品目$i',
+              'kanaHead': 'て',
+              'category': 'burnable',
+              'categoryLabel': 'もえるごみ',
+              'note': '',
+            },
+        ],
+      });
+
+      await pumpApp(tester, const DictionaryPage(), dictionary: manyItems);
+
+      for (var i = 1; i <= 12; i++) {
+        await tester.enterText(find.byType(TextField), 'テスト品目$i');
+        await tester.pump();
+        await tester.tap(find.byTooltip('入力を消す'));
+        await tester.pumpAndSettle();
+      }
+
+      final chips = visibleChips(tester);
+      expect(chips, hasLength(10));
+      expect(chips.first, 'テスト品目12');
+      expect(chips.last, 'テスト品目3');
+      expect(chips, isNot(contains('テスト品目1')));
+      expect(chips, isNot(contains('テスト品目2')));
+    });
+  });
 }

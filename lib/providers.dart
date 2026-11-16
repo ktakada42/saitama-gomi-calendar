@@ -15,6 +15,7 @@ import 'domain/oversized_guide.dart';
 import 'domain/collection_area.dart';
 import 'domain/collection_calendar.dart';
 import 'domain/collection_reminder.dart';
+import 'domain/search_history.dart';
 import 'domain/widget_payload.dart';
 
 final settingsRepositoryProvider = FutureProvider<SettingsRepository>(
@@ -111,6 +112,38 @@ class ThemeModeController extends AsyncNotifier<ThemeMode> {
 final themeModeProvider = AsyncNotifierProvider<ThemeModeController, ThemeMode>(
   ThemeModeController.new,
 );
+
+/// 分別早見表の検索履歴。
+class SearchHistoryController extends AsyncNotifier<SearchHistory> {
+  @override
+  Future<SearchHistory> build() async {
+    final repository = await ref.watch(settingsRepositoryProvider.future);
+    return repository.readSearchHistory();
+  }
+
+  Future<void> record(String query) async {
+    final current = state.value ?? await future;
+    final updated = current.record(query);
+    if (updated == current) return;
+    final repository = await ref.read(settingsRepositoryProvider.future);
+    await repository.writeSearchHistory(updated);
+    state = AsyncData(updated);
+  }
+
+  Future<void> remove(String query) async {
+    final current = state.value ?? await future;
+    final updated = current.remove(query);
+    if (updated == current) return;
+    final repository = await ref.read(settingsRepositoryProvider.future);
+    await repository.writeSearchHistory(updated);
+    state = AsyncData(updated);
+  }
+}
+
+final searchHistoryProvider =
+    AsyncNotifierProvider<SearchHistoryController, SearchHistory>(
+      SearchHistoryController.new,
+    );
 
 /// 今日の日付（時刻は落としてある）。
 ///
