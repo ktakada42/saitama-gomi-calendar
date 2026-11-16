@@ -352,8 +352,8 @@ class _ThemeModeTile extends ConsumerWidget {
     final mode = ref.watch(themeModeProvider).value ?? ThemeMode.light;
 
     return ListTile(
-      leading: const Icon(Icons.brightness_6_outlined),
-      title: const Text('画面の明るさ'),
+      leading: const Icon(Icons.dark_mode_outlined),
+      title: const Text('外観'),
       subtitle: Text(_labels[mode]!),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => _showPicker(context, ref, mode),

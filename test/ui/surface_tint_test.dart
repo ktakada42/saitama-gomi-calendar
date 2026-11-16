@@ -16,10 +16,10 @@ import '../support/test_app.dart';
 void main() {
   // 実際に画面へ出るシートでも確かめる。M3のシートは背景に
   // surfaceContainerLowを使うので、そこが緑のままだと
-  // 画面の明るさやお知らせの時刻を開いたときに薄緑に見える。
+  // 外観やお知らせの時刻を開いたときに薄緑に見える。
   testWidgets('シートの背景も緑に寄っていない', (tester) async {
     await pumpApp(tester, const SettingsPage());
-    await tester.tap(find.text('画面の明るさ'));
+    await tester.tap(find.text('外観'));
     await tester.pumpAndSettle();
 
     final material = tester

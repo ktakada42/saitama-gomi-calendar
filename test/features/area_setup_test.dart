@@ -274,7 +274,7 @@ void main() {
       expect(find.byType(SwitchListTile), findsNothing);
     });
 
-    testWidgets('画面の明るさは既定でライト、設定から切り替えられる', (tester) async {
+    testWidgets('外観は既定でライト、設定から切り替えられる', (tester) async {
       await pumpRootApp(tester);
 
       await tester.tap(find.byIcon(Icons.settings_outlined));
@@ -283,7 +283,7 @@ void main() {
       // 端末がダークモードでも、既定はライト固定。
       expect(find.text('ライト'), findsOneWidget);
 
-      await tester.tap(find.text('画面の明るさ'));
+      await tester.tap(find.text('外観'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('端末の設定に合わせる').last);
       await tester.pumpAndSettle();
