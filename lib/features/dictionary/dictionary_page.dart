@@ -1,4 +1,5 @@
 import 'dart:async' show unawaited;
+import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
@@ -809,6 +810,8 @@ class _KanaIndexState extends State<_KanaIndex> {
         // 端から端まで途切れずに送れるよう、隙間を空けずに敷き詰める。
         final itemHeight = constraints.maxHeight / heads.length;
         final active = _dragging || _pressing;
+        final currentIndex = _current == null ? -1 : heads.indexOf(_current!);
+        final lensSize = math.min(22.0, itemHeight);
         final column = Column(
           children: [
             for (final head in heads)
@@ -821,12 +824,38 @@ class _KanaIndexState extends State<_KanaIndex> {
                       head: head,
                       isCurrent: head == _current,
                       isDragging: active,
+                      liquidGlass: widget.liquidGlass,
                     ),
                   ),
                 ),
               ),
           ],
         );
+
+        final content = widget.liquidGlass && currentIndex >= 0
+            ? Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  AnimatedPositioned(
+                    duration: active
+                        ? Duration.zero
+                        : const Duration(milliseconds: 140),
+                    curve: Curves.easeOutCubic,
+                    top:
+                        currentIndex * itemHeight + (itemHeight - lensSize) / 2,
+                    width: lensSize,
+                    height: lensSize,
+                    child: const LiquidGlassSurface(
+                      key: ValueKey('kana_index_focus_lens'),
+                      shape: LiquidGlassShape.capsule,
+                      interactive: true,
+                      child: SizedBox.expand(),
+                    ),
+                  ),
+                  column,
+                ],
+              )
+            : column;
 
         // TapGestureRecognizer は縦ドラッグと競合すると kPressTimeout（100ms）の
         // 遅延が入るため、生のポインタイベント（Listener）で触れた瞬間にピルを出す。
@@ -860,12 +889,13 @@ class _KanaIndexState extends State<_KanaIndex> {
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: LiquidGlassSurface(
+                        key: const ValueKey('kana_index_track_pill'),
                         shape: LiquidGlassShape.capsule,
                         interactive: true,
-                        child: column,
+                        child: content,
                       ),
                     )
-                  : column,
+                  : content,
             ),
           ),
         );
@@ -879,11 +909,13 @@ class _KanaIndexEntry extends StatelessWidget {
     required this.head,
     required this.isCurrent,
     required this.isDragging,
+    this.liquidGlass = false,
   });
 
   final String head;
   final bool isCurrent;
   final bool isDragging;
+  final bool liquidGlass;
 
   @override
   Widget build(BuildContext context) {
@@ -892,7 +924,7 @@ class _KanaIndexEntry extends StatelessWidget {
       width: 22,
       height: 22,
       alignment: Alignment.center,
-      decoration: isCurrent
+      decoration: isCurrent && !liquidGlass
           ? BoxDecoration(
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
@@ -904,7 +936,9 @@ class _KanaIndexEntry extends StatelessWidget {
           height: 1.0,
           fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
           color: isCurrent
-              ? theme.colorScheme.onPrimary
+              ? (liquidGlass
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onPrimary)
               // なぞっている間は触っていない行も少し濃くして、
               // 索引そのものが今の操作対象であることを示す。
               : isDragging
