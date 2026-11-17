@@ -132,145 +132,155 @@ class _DictionaryPageState extends ConsumerState<DictionaryPage> {
             (settings.value?.readSortingNoticeCollapsed(change.id) ?? false));
 
     return Scaffold(
-      appBar: AdaptiveAppBar(
-        title: const Text('分別'),
-        actions: [
-          // 出典は一覧の下に出しっぱなしにせず、ここから開く。
-          // 品目を探している間ずっと見えている必要はないが、
-          // 「この情報はどこから来たのか」を確かめたいときには要る。
-          if (dictionary.hasValue)
-            if (isLiquidGlass)
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Center(
-                  child: LiquidGlassIconButton(
-                    icon: Icons.info_outline,
+      appBar: isLiquidGlass
+          ? null
+          : AppBar(
+              title: const Text('分別'),
+              actions: [
+                // 出典は一覧の下に出しっぱなしにせず、ここから開く。
+                // 品目を探している間ずっと見えている必要はないが、
+                // 「この情報はどこから来たのか」を確かめたいときには要る。
+                if (dictionary.hasValue)
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
                     tooltip: '出典',
                     onPressed: () => _showSource(
                       context,
-                      liquidGlass: true,
+                      liquidGlass: false,
                       source: dictionary.requireValue.source,
                       sourceUrl: dictionary.requireValue.sourceUrl,
                     ),
                   ),
-                ),
-              )
-            else
-              IconButton(
-                icon: const Icon(Icons.info_outline),
-                tooltip: '出典',
-                onPressed: () => _showSource(
-                  context,
-                  liquidGlass: false,
-                  source: dictionary.requireValue.source,
-                  sourceUrl: dictionary.requireValue.sourceUrl,
-                ),
-              ),
-        ],
-      ),
-      body: switch (dictionary) {
-        AsyncData(:final value) => Column(
-          children: [
-            // 一覧を見る前に気づけるよう、検索欄より上に出す。
-            // 畳んだかどうかを読み終えるまでは出さない。先に広げて出すと、
-            // 畳んでいた人の画面で一瞬広がってから縮む。
-            if (change != null && !settings.isLoading)
-              _SortingChangeNotice(
-                change: change,
-                expanded: noticeExpanded,
-                onToggle: () => _toggleNotice(change, noticeExpanded),
-              ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, showHistory ? 8 : 12),
-              child: isLiquidGlass
-                  ? LiquidGlassSearchBar(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      hintText: '品目名で探す（例：ペットボトル）',
-                      showClear: _query.isNotEmpty,
-                      onClear: () {
-                        _recordQueryIfMatched(value, _query);
-                        _controller.clear();
-                        setState(() => _query = '');
-                      },
-                      onTap: _collapseNotice,
-                      onChanged: (next) {
-                        setState(() => _query = next);
-                        if (next.isNotEmpty) _collapseNotice();
-                      },
-                      onSubmitted: (submitted) =>
-                          _recordQueryIfMatched(value, submitted),
-                    )
-                  : TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        hintText: '品目名で探す（例：ペットボトル）',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _query.isEmpty
-                            ? null
-                            : IconButton(
-                                icon: const Icon(Icons.clear),
-                                tooltip: '入力を消す',
-                                onPressed: () {
+              ],
+            ),
+      body: LiquidGlassTopEdge(
+        liquidGlass: isLiquidGlass,
+        child: SafeArea(
+          bottom: false,
+          top: isLiquidGlass,
+          child: switch (dictionary) {
+            AsyncData(:final value) => Column(
+              children: [
+                // 一覧を見る前に気づけるよう、検索欄より上に出す。
+                // 畳んだかどうかを読み終えるまでは出さない。先に広げて出すと、
+                // 畳んでいた人の画面で一瞬広がってから縮む。
+                if (change != null && !settings.isLoading)
+                  _SortingChangeNotice(
+                    change: change,
+                    expanded: noticeExpanded,
+                    onToggle: () => _toggleNotice(change, noticeExpanded),
+                  ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16, 8, 16, showHistory ? 8 : 12),
+                  child: isLiquidGlass
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: LiquidGlassSearchBar(
+                                controller: _controller,
+                                focusNode: _focusNode,
+                                hintText: '品目名で探す（例：ペットボトル）',
+                                showClear: _query.isNotEmpty,
+                                onClear: () {
                                   _recordQueryIfMatched(value, _query);
                                   _controller.clear();
                                   setState(() => _query = '');
                                 },
+                                onTap: _collapseNotice,
+                                onChanged: (next) {
+                                  setState(() => _query = next);
+                                  if (next.isNotEmpty) _collapseNotice();
+                                },
+                                onSubmitted: (submitted) =>
+                                    _recordQueryIfMatched(value, submitted),
                               ),
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      // キーボードが出ると、知らせと合わせて一覧がほとんど見えなくなる。
-                      onTap: _collapseNotice,
-                      onChanged: (next) {
-                        setState(() => _query = next);
-                        // 外付けのキーボードなど、触れずに打ち始めた場合も畳む。
-                        if (next.isNotEmpty) _collapseNotice();
-                      },
-                      onSubmitted: (submitted) =>
-                          _recordQueryIfMatched(value, submitted),
+                            ),
+                            const SizedBox(width: 8),
+                            LiquidGlassIconButton(
+                              icon: Icons.info_outline,
+                              tooltip: '出典',
+                              size: 44,
+                              onPressed: () => _showSource(
+                                context,
+                                liquidGlass: true,
+                                source: value.source,
+                                sourceUrl: value.sourceUrl,
+                              ),
+                            ),
+                          ],
+                        )
+                      : TextField(
+                          controller: _controller,
+                          focusNode: _focusNode,
+                          textInputAction: TextInputAction.search,
+                          decoration: InputDecoration(
+                            hintText: '品目名で探す（例：ペットボトル）',
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _query.isEmpty
+                                ? null
+                                : IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    tooltip: '入力を消す',
+                                    onPressed: () {
+                                      _recordQueryIfMatched(value, _query);
+                                      _controller.clear();
+                                      setState(() => _query = '');
+                                    },
+                                  ),
+                            border: const OutlineInputBorder(),
+                            isDense: true,
+                          ),
+                          // キーボードが出ると、知らせと合わせて一覧がほとんど見えなくなる。
+                          onTap: _collapseNotice,
+                          onChanged: (next) {
+                            setState(() => _query = next);
+                            // 外付けのキーボードなど、触れずに打ち始めた場合も畳む。
+                            if (next.isNotEmpty) _collapseNotice();
+                          },
+                          onSubmitted: (submitted) =>
+                              _recordQueryIfMatched(value, submitted),
+                        ),
+                ),
+                if (showHistory)
+                  _SearchHistoryBar(
+                    queries: historyQueries,
+                    onSelected: _applyHistoryQuery,
+                    onRemoved: (query) => unawaited(
+                      ref.read(searchHistoryProvider.notifier).remove(query),
                     ),
-            ),
-            if (showHistory)
-              _SearchHistoryBar(
-                queries: historyQueries,
-                onSelected: _applyHistoryQuery,
-                onRemoved: (query) => unawaited(
-                  ref.read(searchHistoryProvider.notifier).remove(query),
+                  ),
+                Expanded(
+                  // 一覧を指で送り始めたら畳む。索引から飛んだときの送りは
+                  // ここでは拾わない（指の情報を持たない）。索引は枠の高さを
+                  // 行数で割って指の位置を読むので、なぞっている最中に枠の
+                  // 高さが変わると、指の下の行がずれる。離したときに畳む。
+                  child: NotificationListener<ScrollStartNotification>(
+                    onNotification: (notification) {
+                      if (notification.dragDetails != null) _collapseNotice();
+                      return false;
+                    },
+                    child: _Results(
+                      items: value.search(_query),
+                      query: _query,
+                      scrollController: _scrollController,
+                      headerKeys: _headerKeys,
+                      manualUrl: value.sourceUrl,
+                      liquidGlass: isLiquidGlass,
+                      onIndexReleased: _collapseNotice,
+                      onItemOpened: () => _recordQueryIfMatched(value, _query),
+                    ),
+                  ),
                 ),
-              ),
-            Expanded(
-              // 一覧を指で送り始めたら畳む。索引から飛んだときの送りは
-              // ここでは拾わない（指の情報を持たない）。索引は枠の高さを
-              // 行数で割って指の位置を読むので、なぞっている最中に枠の
-              // 高さが変わると、指の下の行がずれる。離したときに畳む。
-              child: NotificationListener<ScrollStartNotification>(
-                onNotification: (notification) {
-                  if (notification.dragDetails != null) _collapseNotice();
-                  return false;
-                },
-                child: _Results(
-                  items: value.search(_query),
-                  query: _query,
-                  scrollController: _scrollController,
-                  headerKeys: _headerKeys,
-                  manualUrl: value.sourceUrl,
-                  liquidGlass: isLiquidGlass,
-                  onIndexReleased: _collapseNotice,
-                  onItemOpened: () => _recordQueryIfMatched(value, _query),
-                ),
-              ),
+              ],
             ),
-          ],
+            AsyncError() => LoadFailureView(
+              message: '分別の一覧を読み込めませんでした。',
+              onRetry: () => ref.invalidate(wasteDictionaryProvider),
+            ),
+            _ => const Center(child: CircularProgressIndicator()),
+          },
         ),
-        AsyncError() => LoadFailureView(
-          message: '分別の一覧を読み込めませんでした。',
-          onRetry: () => ref.invalidate(wasteDictionaryProvider),
-        ),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
+      ),
     );
   }
 
@@ -668,6 +678,9 @@ class _KanaIndexState extends State<_KanaIndex> {
   /// なぞっている最中かどうか。触れている間は丸を濃くする。
   bool _dragging = false;
 
+  /// タップで押さえている最中かどうか。ドラッグへ移るまでの間もガラスピルを出す。
+  bool _pressing = false;
+
   /// 索引を操作している間は、現在地をスクロール位置から拾い直さない。
   ///
   /// 一覧の終わりに近い行は、送ってもその見出しが画面の上端まで来ない。
@@ -795,6 +808,7 @@ class _KanaIndexState extends State<_KanaIndex> {
         // 枠の高さを行数で割って、1行ぶんの高さにする。指を滑らせたときに
         // 端から端まで途切れずに送れるよう、隙間を空けずに敷き詰める。
         final itemHeight = constraints.maxHeight / heads.length;
+        final active = _dragging || _pressing;
         final column = Column(
           children: [
             for (final head in heads)
@@ -806,7 +820,7 @@ class _KanaIndexState extends State<_KanaIndex> {
                     child: _KanaIndexEntry(
                       head: head,
                       isCurrent: head == _current,
-                      isDragging: _dragging,
+                      isDragging: active,
                     ),
                   ),
                 ),
@@ -814,30 +828,45 @@ class _KanaIndexState extends State<_KanaIndex> {
           ],
         );
 
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onVerticalDragStart: (d) {
-            setState(() => _dragging = true);
-            _handleTouch(d.localPosition, itemHeight);
+        // TapGestureRecognizer は縦ドラッグと競合すると kPressTimeout（100ms）の
+        // 遅延が入るため、生のポインタイベント（Listener）で触れた瞬間にピルを出す。
+        return Listener(
+          onPointerDown: (_) {
+            if (!_pressing) setState(() => _pressing = true);
           },
-          onVerticalDragUpdate: (d) =>
-              _handleTouch(d.localPosition, itemHeight),
-          onVerticalDragEnd: (_) => _endDrag(),
-          onVerticalDragCancel: _endDrag,
-          onTapDown: (d) => _handleTouch(d.localPosition, itemHeight),
-          onTapUp: (_) => widget.onReleased?.call(),
-          child: SizedBox(
-            width: 30,
-            child: widget.liquidGlass
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: LiquidGlassSurface(
-                      shape: LiquidGlassShape.capsule,
-                      interactive: true,
-                      child: column,
-                    ),
-                  )
-                : column,
+          onPointerUp: (_) {
+            if (_pressing) setState(() => _pressing = false);
+          },
+          onPointerCancel: (_) {
+            if (_pressing) setState(() => _pressing = false);
+          },
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onVerticalDragStart: (d) {
+              setState(() => _dragging = true);
+              _handleTouch(d.localPosition, itemHeight);
+            },
+            onVerticalDragUpdate: (d) =>
+                _handleTouch(d.localPosition, itemHeight),
+            onVerticalDragEnd: (_) => _endDrag(),
+            onVerticalDragCancel: _endDrag,
+            onTapDown: (d) => _handleTouch(d.localPosition, itemHeight),
+            onTapUp: (_) => widget.onReleased?.call(),
+            child: SizedBox(
+              width: 30,
+              // iOS 純正のセクションインデックスにならい、通常時は枠を出さず文字だけを並べ、
+              // 指で触れて操作している間だけガラスピルを浮かせる。
+              child: widget.liquidGlass && active
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: LiquidGlassSurface(
+                        shape: LiquidGlassShape.capsule,
+                        interactive: true,
+                        child: column,
+                      ),
+                    )
+                  : column,
+            ),
           ),
         );
       },

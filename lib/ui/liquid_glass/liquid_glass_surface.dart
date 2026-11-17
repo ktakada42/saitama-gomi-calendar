@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
 import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoIcons;
@@ -366,7 +367,21 @@ class LiquidGlassPillButton extends StatelessWidget {
   }
 }
 
+/// iOS 26 純正 `UITabBar` の浮遊カプセルと下端位置・左右インセットを揃える余白。
+///
+/// Home Indicator がある端末（`bottomInset == 34pt`）では純正タブバーの底辺が
+/// 画面下端から約 21pt の位置に置かれるため、`SafeArea`（34pt）のままよりも
+/// 13pt 低く沈めて高さを一致させる。
+EdgeInsets liquidGlassBottomBarMargin(BuildContext context) {
+  final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
+  final bottom = bottomInset > 0 ? math.max(12.0, bottomInset - 13.0) : 12.0;
+  return EdgeInsets.fromLTRB(21, 0, 21, bottom);
+}
+
 /// 画面下部に浮かぶ主アクションボタン（「保存する」「この設定ではじめる」など）。
+///
+/// Apple HIG に従い、全幅のベタ塗りバーではなく無彩色の透明ガラス＋主色（緑）の
+/// 太字ラベルを持つ中央寄せカプセルとし、高さ（60pt）もボトムタブバーと揃える。
 class LiquidGlassPrimaryBarButton extends StatelessWidget {
   const LiquidGlassPrimaryBarButton({
     super.key,
@@ -377,38 +392,53 @@ class LiquidGlassPrimaryBarButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
+  /// 純正 `UITabBar` のカプセル高さ（約 61pt）に揃えた高さ。
+  static const double height = 60;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final enabled = onPressed != null;
-    final tint = enabled
-        ? theme.colorScheme.primary.withValues(alpha: 0.88)
-        : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.65);
     final fg = enabled
-        ? theme.colorScheme.onPrimary
+        ? theme.colorScheme.primary
         : theme.colorScheme.onSurface.withValues(alpha: 0.38);
 
-    return _PressableScale(
-      onPressed: onPressed,
-      child: SizedBox(
-        height: 52,
-        width: double.infinity,
-        child: LiquidGlassSurface(
-          shape: LiquidGlassShape.capsule,
-          interactive: enabled,
-          tintColor: tint,
-          child: Center(
-            child: Text(
-              label,
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: fg,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Flexible(
+          child: _PressableScale(
+            onPressed: onPressed,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 200,
+                minHeight: height,
+                maxHeight: height,
+              ),
+              child: LiquidGlassSurface(
+                shape: LiquidGlassShape.capsule,
+                interactive: enabled,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Center(
+                    widthFactor: 1.0,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: fg,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
