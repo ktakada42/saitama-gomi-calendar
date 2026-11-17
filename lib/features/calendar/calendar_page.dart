@@ -72,81 +72,78 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final isThisMonth = month.year == today.year && month.month == today.month;
 
     return Scaffold(
-      extendBodyBehindAppBar: isLiquidGlass,
-      appBar: AdaptiveAppBar(
-        title: const Text('カレンダー'),
-        actions: [
-          // 月送りとは別のボタンにする。年月の並びに混ぜると、
-          // 出たり消えたりするたびに年月が中央からずれてしまう。
-          if (!isThisMonth)
-            if (isLiquidGlass)
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Center(
-                  child: LiquidGlassPillButton(
-                    label: '今月に戻る',
+      appBar: isLiquidGlass
+          ? null
+          : AppBar(
+              title: const Text('カレンダー'),
+              actions: [
+                // 月送りとは別のボタンにする。年月の並びに混ぜると、
+                // 出たり消えたりするたびに年月が中央からずれてしまう。
+                if (!isThisMonth)
+                  TextButton(
                     onPressed: () => _goTo(DateTime(today.year, today.month)),
+                    child: const Text('今月に戻る'),
                   ),
-                ),
-              )
-            else
-              TextButton(
-                onPressed: () => _goTo(DateTime(today.year, today.month)),
-                child: const Text('今月に戻る'),
-              ),
-        ],
-      ),
-      body: Builder(
-        builder: (bodyContext) => ListView(
-          padding: adaptiveScrollPadding(
-            bodyContext,
-            liquidGlass: isLiquidGlass,
-            base: const EdgeInsets.fromLTRB(12, 4, 12, 32),
-          ),
-          children: [
-            _MonthHeader(
-              month: month,
-              // 送れる端では押せなくする。押しても動かないボタンを
-              // 出したままにすると、効かないのか壊れたのか分からない。
-              onPrevious: _pageOfMonth(month) > 0
-                  ? () => _shiftMonth(-1)
-                  : null,
-              onNext: _pageOfMonth(month) < _pageCount - 1
-                  ? () => _shiftMonth(1)
-                  : null,
+              ],
             ),
-            const SizedBox(height: 8),
-            const _WeekdayHeader(),
-            const SizedBox(height: 4),
-            // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
-            // 今の月が横へ抜け、隣の月が入ってくる。
-            //
-            // 高さは6週ぶんで固定する。月によって5週と6週があり、
-            // そのままだと送るたびに表の高さが変わってしまう。
-            SizedBox(
-              height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _pageCount,
-                onPageChanged: (page) =>
-                    setState(() => _month = _monthOfPage(page)),
-                itemBuilder: (context, page) {
-                  final pageMonth = _monthOfPage(page);
-                  return _MonthGrid(
-                    month: pageMonth,
-                    days: calendar.month(pageMonth.year, pageMonth.month),
-                    today: today,
-                    onTapDay: (day) => showDayDetailSheet(
-                      context,
-                      day: day,
-                      area: calendar.area,
+      body: LiquidGlassTopEdge(
+        liquidGlass: isLiquidGlass,
+        child: Builder(
+          builder: (bodyContext) => ListView(
+            padding: adaptiveScrollPadding(
+              bodyContext,
+              liquidGlass: isLiquidGlass,
+              base: EdgeInsets.fromLTRB(12, isLiquidGlass ? 8 : 4, 12, 32),
+            ),
+            children: [
+              _MonthHeader(
+                month: month,
+                liquidGlass: isLiquidGlass,
+                onGoToday: isThisMonth
+                    ? null
+                    : () => _goTo(DateTime(today.year, today.month)),
+                // 送れる端では押せなくする。押しても動かないボタンを
+                // 出したままにすると、効かないのか壊れたのか分からない。
+                onPrevious: _pageOfMonth(month) > 0
+                    ? () => _shiftMonth(-1)
+                    : null,
+                onNext: _pageOfMonth(month) < _pageCount - 1
+                    ? () => _shiftMonth(1)
+                    : null,
+              ),
+              const SizedBox(height: 8),
+              const _WeekdayHeader(),
+              const SizedBox(height: 4),
+              // 左右になぞって月を送る。紙送りにしてあるので、指の動きに合わせて
+              // 今の月が横へ抜け、隣の月が入ってくる。
+              //
+              // 高さは6週ぶんで固定する。月によって5週と6週があり、
+              // そのままだと送るたびに表の高さが変わってしまう。
+              SizedBox(
+                height: _MonthGrid.rowHeight * _MonthGrid.maxRows,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _pageCount,
+                  onPageChanged: (page) =>
+                      setState(() => _month = _monthOfPage(page)),
+                  itemBuilder: (context, page) {
+                    final pageMonth = _monthOfPage(page);
+                    return _MonthGrid(
+                      month: pageMonth,
+                      days: calendar.month(pageMonth.year, pageMonth.month),
                       today: today,
-                    ),
-                  );
-                },
+                      onTapDay: (day) => showDayDetailSheet(
+                        context,
+                        day: day,
+                        area: calendar.area,
+                        today: today,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -170,11 +167,15 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 class _MonthHeader extends StatelessWidget {
   const _MonthHeader({
     required this.month,
+    required this.liquidGlass,
+    required this.onGoToday,
     required this.onPrevious,
     required this.onNext,
   });
 
   final DateTime month;
+  final bool liquidGlass;
+  final VoidCallback? onGoToday;
 
   /// 送れる端では null。ボタンは出したまま押せなくする。
   final VoidCallback? onPrevious;
@@ -182,6 +183,46 @@ class _MonthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final title = Text(
+      DateLabel.yearMonth(month.year, month.month),
+      style: Theme.of(
+        context,
+      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    );
+
+    if (liquidGlass) {
+      // 年月を左端・月送り矢印を右端に固定することで、「今月に戻る」ピルが
+      // 出入りしても年月と矢印の位置が1pxもぶれないようにする。
+      return Row(
+        children: [
+          const SizedBox(width: 4),
+          Expanded(child: title),
+          if (onGoToday != null) ...[
+            LiquidGlassPillButton(
+              label: '今月に戻る',
+              height: 36,
+              horizontalPadding: 12,
+              onPressed: onGoToday,
+            ),
+            const SizedBox(width: 8),
+          ],
+          LiquidGlassIconButton(
+            icon: Icons.chevron_left,
+            tooltip: '前の月',
+            size: 38,
+            onPressed: onPrevious,
+          ),
+          const SizedBox(width: 6),
+          LiquidGlassIconButton(
+            icon: Icons.chevron_right,
+            tooltip: '次の月',
+            size: 38,
+            onPressed: onNext,
+          ),
+        ],
+      );
+    }
+
     return Row(
       children: [
         IconButton(
@@ -189,16 +230,7 @@ class _MonthHeader extends StatelessWidget {
           icon: const Icon(Icons.chevron_left),
           tooltip: '前の月',
         ),
-        Expanded(
-          child: Center(
-            child: Text(
-              DateLabel.yearMonth(month.year, month.month),
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
+        Expanded(child: Center(child: title)),
         IconButton(
           onPressed: onNext,
           icon: const Icon(Icons.chevron_right),

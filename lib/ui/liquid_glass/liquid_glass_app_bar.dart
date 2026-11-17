@@ -116,3 +116,61 @@ EdgeInsets adaptiveScrollPadding(
   final safe = MediaQuery.paddingOf(bodyContext);
   return base + EdgeInsets.only(top: safe.top, bottom: safe.bottom);
 }
+
+/// トップ4画面のように iOS 26 で上部 `AppBar` を持たない画面で、
+/// ステータスバーの文字色（黒／白）と上端スクロール時の薄いぼかしグラデーションを補う。
+class LiquidGlassTopEdge extends StatelessWidget {
+  const LiquidGlassTopEdge({
+    super.key,
+    required this.liquidGlass,
+    required this.child,
+  });
+
+  final bool liquidGlass;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!liquidGlass) return child;
+
+    final theme = Theme.of(context);
+    final bg = theme.scaffoldBackgroundColor;
+    final topSafe = MediaQuery.viewPaddingOf(context).top;
+    final overlayStyle = theme.brightness == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlayStyle,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          child,
+          if (topSafe > 0)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: topSafe + 10,
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [0.0, 0.72, 1.0],
+                      colors: [
+                        bg.withValues(alpha: 0.94),
+                        bg.withValues(alpha: 0.76),
+                        bg.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

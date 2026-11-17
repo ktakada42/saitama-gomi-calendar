@@ -38,114 +38,118 @@ class SettingsPage extends ConsumerWidget {
     final today = ref.watch(todayProvider);
 
     return Scaffold(
-      extendBodyBehindAppBar: isLiquidGlass,
-      appBar: const AdaptiveAppBar(title: Text('設定')),
-      body: Builder(
-        builder: (bodyContext) => ListView(
-          padding: adaptiveScrollPadding(
-            bodyContext,
-            liquidGlass: isLiquidGlass,
-            base: const EdgeInsets.only(bottom: 32),
-          ),
-          children: [
-            // 「地区」は選び直すもの、「収集曜日」は確認・調整するもの、と
-            // 役割で分ける。地区を選べば曜日は自動で決まるので、地区の項目から
-            // 曜日の編集画面に入ると「地区を選んでも曜日が決まらない」ように見えてしまう。
-            ListTile(
-              leading: const Icon(Icons.place_outlined),
-              title: const Text('お住まいの地区'),
-              subtitle: Text(keepParenthesesTogether(area.label)),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const AreaPickerPage()),
-              ),
+      appBar: isLiquidGlass ? null : AppBar(title: const Text('設定')),
+      body: LiquidGlassTopEdge(
+        liquidGlass: isLiquidGlass,
+        child: Builder(
+          builder: (bodyContext) => ListView(
+            padding: adaptiveScrollPadding(
+              bodyContext,
+              liquidGlass: isLiquidGlass,
+              base: EdgeInsets.only(top: isLiquidGlass ? 8 : 0, bottom: 32),
             ),
-            const Divider(height: 1),
-            const _NotificationTiles(),
-            const Divider(height: 1),
-            const _ThemeModeTile(),
-            const SectionHeader('設定中の収集曜日'),
-            for (final category in GarbageCategory.values)
+            children: [
+              // 「地区」は選び直すもの、「収集曜日」は確認・調整するもの、と
+              // 役割で分ける。地区を選べば曜日は自動で決まるので、地区の項目から
+              // 曜日の編集画面に入ると「地区を選んでも曜日が決まらない」ように見えてしまう。
               ListTile(
-                dense: true,
-                leading: Icon(
-                  CategoryStyle.iconOf(category),
-                  color: CategoryStyle.colorOf(category, context),
-                ),
-                title: Text(category.label),
-                trailing: Text(
-                  _rulesLabel(area.rulesFor(category)),
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-            if (area.earlyMorning)
-              const ListTile(
-                dense: true,
-                leading: Icon(Icons.schedule),
-                title: Text('もえるごみの早朝収集地区'),
-                trailing: Text('朝5:30まで'),
-              ),
-            ListTile(
-              leading: const Icon(Icons.edit_calendar_outlined),
-              title: const Text('収集曜日を修正する'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => AreaEditorPage(initial: area),
-                ),
-              ),
-            ),
-            const SectionHeader('分別と出し方'),
-            for (final category in GarbageCategory.values) ...[
-              if (category != GarbageCategory.values.first)
-                const Divider(height: 1),
-              ExpansionTile(
-                // 開いたときに自分で上下へ線を引くのをやめさせ、区切りは
-                // 上のDividerだけにする。既定のままだと、開いた項目の下線と
-                // 隣の項目の上線が重なって線が二重三重に見える。
-                shape: const Border(),
-                collapsedShape: const Border(),
-                // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
-                // スクロールで見えなくなった時点で開いた状態が失われてしまう。
-                // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
-                // 保持され、戻ってきても開いたままになる。
-                key: PageStorageKey('category-${category.id}'),
-                leading: Icon(
-                  CategoryStyle.iconOf(category),
-                  color: CategoryStyle.colorOf(category, context),
-                ),
-                title: Text(category.label),
-                childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    keepParenthesesTogether(
-                      category.examplesOn(today).join('・'),
-                    ),
+                leading: const Icon(Icons.place_outlined),
+                title: const Text('お住まいの地区'),
+                subtitle: Text(keepParenthesesTogether(area.label)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const AreaPickerPage(),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    keepParenthesesTogether(category.howToOn(today)),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                ),
+              ),
+              const Divider(height: 1),
+              const _NotificationTiles(),
+              const Divider(height: 1),
+              const _ThemeModeTile(),
+              const SectionHeader('設定中の収集曜日'),
+              for (final category in GarbageCategory.values)
+                ListTile(
+                  dense: true,
+                  leading: Icon(
+                    CategoryStyle.iconOf(category),
+                    color: CategoryStyle.colorOf(category, context),
                   ),
-                ],
+                  title: Text(category.label),
+                  trailing: Text(
+                    _rulesLabel(area.rulesFor(category)),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              if (area.earlyMorning)
+                const ListTile(
+                  dense: true,
+                  leading: Icon(Icons.schedule),
+                  title: Text('もえるごみの早朝収集地区'),
+                  trailing: Text('朝5:30まで'),
+                ),
+              ListTile(
+                leading: const Icon(Icons.edit_calendar_outlined),
+                title: const Text('収集曜日を修正する'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => AreaEditorPage(initial: area),
+                  ),
+                ),
+              ),
+              const SectionHeader('分別と出し方'),
+              for (final category in GarbageCategory.values) ...[
+                if (category != GarbageCategory.values.first)
+                  const Divider(height: 1),
+                ExpansionTile(
+                  // 開いたときに自分で上下へ線を引くのをやめさせ、区切りは
+                  // 上のDividerだけにする。既定のままだと、開いた項目の下線と
+                  // 隣の項目の上線が重なって線が二重三重に見える。
+                  shape: const Border(),
+                  collapsedShape: const Border(),
+                  // ListViewは画面外に出たウィジェットを捨てるので、キーが無いと
+                  // スクロールで見えなくなった時点で開いた状態が失われてしまう。
+                  // PageStorageKeyを与えると、開閉の状態がスクロール位置と一緒に
+                  // 保持され、戻ってきても開いたままになる。
+                  key: PageStorageKey('category-${category.id}'),
+                  leading: Icon(
+                    CategoryStyle.iconOf(category),
+                    color: CategoryStyle.colorOf(category, context),
+                  ),
+                  title: Text(category.label),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      keepParenthesesTogether(
+                        category.examplesOn(today).join('・'),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      keepParenthesesTogether(category.howToOn(today)),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              const SectionHeader('このアプリについて'),
+              // 出典・プライバシーポリシー・ライセンスは、ここで畳んで見せるには
+              // 量が多い。設定の一項目に押し込めず、専用の画面に分ける。
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: const Text('バージョンと出典'),
+                subtitle: const Text('プライバシーポリシー・ライセンス'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const AboutPage()),
+                ),
               ),
             ],
-            const SectionHeader('このアプリについて'),
-            // 出典・プライバシーポリシー・ライセンスは、ここで畳んで見せるには
-            // 量が多い。設定の一項目に押し込めず、専用の画面に分ける。
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('バージョンと出典'),
-              subtitle: const Text('プライバシーポリシー・ライセンス'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const AboutPage()),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

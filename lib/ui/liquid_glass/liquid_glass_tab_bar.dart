@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoIcons;
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -68,6 +70,7 @@ class _LiquidGlassTabBarState extends ConsumerState<LiquidGlassTabBar> {
 
   MethodChannel? _channel;
   Map<String, Object?>? _lastSentParams;
+  Rect? _nativeHitRect;
 
   Map<String, Object?> _buildParams({
     required Brightness brightness,
@@ -89,6 +92,20 @@ class _LiquidGlassTabBarState extends ConsumerState<LiquidGlassTabBar> {
         final index = call.arguments;
         if (index is int && mounted) {
           widget.onDestinationSelected(index);
+        }
+      } else if (call.method == 'onHitRect') {
+        final args = call.arguments;
+        if (args is Map && mounted) {
+          final left = (args['left'] as num?)?.toDouble();
+          final top = (args['top'] as num?)?.toDouble();
+          final right = (args['right'] as num?)?.toDouble();
+          final bottom = (args['bottom'] as num?)?.toDouble();
+          if (left != null && top != null && right != null && bottom != null) {
+            final next = Rect.fromLTRB(left, top, right, bottom);
+            if (_nativeHitRect != next) {
+              setState(() => _nativeHitRect = next);
+            }
+          }
         }
       }
     });
@@ -137,21 +154,25 @@ class _LiquidGlassTabBarState extends ConsumerState<LiquidGlassTabBar> {
 
       return SizedBox(
         height: 64 + bottomInset,
-        child: UiKitView(
-          viewType: _viewType,
-          layoutDirection: TextDirection.ltr,
-          creationParams: params,
-          creationParamsCodec: const StandardMessageCodec(),
-          onPlatformViewCreated: (id) => _attachChannel(id, params),
+        child: _TabBarHitRectFilter(
+          enabled: isCurrentRoute,
+          hitRect: _nativeHitRect,
+          bottomInset: bottomInset,
+          child: UiKitView(
+            viewType: _viewType,
+            layoutDirection: TextDirection.ltr,
+            creationParams: params,
+            creationParamsCodec: const StandardMessageCodec(),
+            onPlatformViewCreated: (id) => _attachChannel(id, params),
+          ),
         ),
       );
     }
 
-    return SafeArea(
-      top: false,
-      minimum: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+    return Padding(
+      padding: liquidGlassBottomBarMargin(context),
       child: SizedBox(
-        height: 60,
+        height: LiquidGlassPrimaryBarButton.height,
         child: LiquidGlassSurface(
           shape: LiquidGlassShape.capsule,
           child: Padding(
@@ -172,6 +193,80 @@ class _LiquidGlassTabBarState extends ConsumerState<LiquidGlassTabBar> {
         ),
       ),
     );
+  }
+}
+
+/// `UiKitView` は既定で矩形全体（横幅100%）のヒットテストを奪うため、
+/// 実際のガラスカプセル矩形の内側だけをヒット対象にし、左右・上下の余白タッチは
+/// 背面の `Scaffold.body`（`ListView` の縦スクロール等）へそのまま通す。
+class _TabBarHitRectFilter extends SingleChildRenderObjectWidget {
+  const _TabBarHitRectFilter({
+    required this.enabled,
+    required this.hitRect,
+    required this.bottomInset,
+    required super.child,
+  });
+
+  final bool enabled;
+  final Rect? hitRect;
+  final double bottomInset;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _RenderTabBarHitRectFilter(enabled, hitRect, bottomInset);
+  }
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant _RenderTabBarHitRectFilter renderObject,
+  ) {
+    renderObject
+      ..enabled = enabled
+      ..hitRect = hitRect
+      ..bottomInset = bottomInset;
+  }
+}
+
+class _RenderTabBarHitRectFilter extends RenderProxyBox {
+  _RenderTabBarHitRectFilter(this._enabled, this._hitRect, this._bottomInset);
+
+  bool _enabled;
+  set enabled(bool value) {
+    _enabled = value;
+  }
+
+  Rect? _hitRect;
+  set hitRect(Rect? value) {
+    _hitRect = value;
+  }
+
+  double _bottomInset;
+  set bottomInset(double value) {
+    _bottomInset = value;
+  }
+
+  Rect _effectiveRect(Size size) {
+    if (_hitRect != null) return _hitRect!;
+    final bottomMargin = _bottomInset > 0
+        ? math.max(12.0, _bottomInset - 13.0)
+        : 12.0;
+    const capsuleHeight = 62.0;
+    final top = math.max(0.0, size.height - bottomMargin - capsuleHeight);
+    return Rect.fromLTRB(
+      20.0,
+      top,
+      math.max(20.0, size.width - 20.0),
+      math.max(top, size.height - bottomMargin),
+    );
+  }
+
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    if (!_enabled || !_effectiveRect(size).contains(position)) {
+      return false;
+    }
+    return super.hitTest(result, position: position);
   }
 }
 

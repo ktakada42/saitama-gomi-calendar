@@ -389,13 +389,18 @@ ios/Runner/Assets.xcassets/AppIcon.*   Any / Dark / Tinted の3外観アプリ�
 ```
 
 - **ガラスを敷く層と敷かない層を分ける**：Apple の Human Interface Guidelines に従い、
-  Liquid Glass にするのはナビゲーションバー・ボトムタブバー・検索欄・五十音索引・
-  画面下部の主ボタン・ボトムシート／ダイアログといった**操作・移動の層**だけに限定する。
+  Liquid Glass にするのはサブ画面のナビゲーションバー・ボトムタブバー・検索欄・
+  ドラッグ中の五十音索引・画面下部の主ボタン・ボトムシート／ダイアログといった
+  **操作・移動の層**だけに限定し、ガラス自体は色フィルター（`tintColor`）を掛けない
+  無彩色の `.regular` ガラスに統一する（`UIGlassEffect.tintColor` は彩度を増幅するため、
+  クリーム色等を渡すと薄緑に転ぶ）。トップ4画面はタブバーで現在地が分かるため上部の
+  固定 `AppBar` を置かず、地区名・月送り・検索欄＋出典ボタンを本文側に配置する。
   収集日カードや分別バッジ・カレンダーの帯といった**情報の層**は紙色の地と区分の配色を保ち、
   WCAG AA のコントラスト比を崩さない
 - **純正 UIKit 部品を `UiKitView` で使う**：シェーダーによる模倣ではなく、iOS 実機では
   `UIVisualEffectView(effect: UIGlassEffect)` と純正 `UITabBarController` を描画する。
-  タブバーはカプセル外の余白タッチを `hitTest` で背面の Flutter リストへ透過させ、
+  タブバーは UIKit 側・Flutter 側（`RenderProxyBox`）の双方でカプセル矩形の内側だけを
+  当たり判定の対象にし、左右・上下の余白タッチを背面の Flutter リストへ透過させる。
   モーダルシートや遷移先画面が重なっている間は `touchEnabled` を切って当たり判定を止める
 - **テスト環境と高コントラストへのフォールバック**：Linux 上の `flutter test` や端末の
   「コントラストを上げる」設定時は Flutter 側のぼかし・半透明面で同じ輪郭を描き、

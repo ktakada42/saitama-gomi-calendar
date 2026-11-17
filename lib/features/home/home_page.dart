@@ -43,50 +43,78 @@ class HomePage extends ConsumerWidget {
       limit: 6,
     );
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      extendBodyBehindAppBar: isLiquidGlass,
-      appBar: AdaptiveAppBar(
-        title: Text(keepParenthesesTogether(area.label)),
-        titleTextStyle: Theme.of(context).textTheme.titleMedium,
-      ),
-      body: Builder(
-        builder: (bodyContext) => ListView(
-          padding: adaptiveScrollPadding(
-            bodyContext,
-            liquidGlass: isLiquidGlass,
-            base: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-          ),
-          children: [
-            _FeaturedCard(
-              day: featured,
-              area: area,
-              today: today,
-              label: isFeaturingToday ? '今日' : '明日',
+      appBar: isLiquidGlass
+          ? null
+          : AppBar(
+              title: Text(keepParenthesesTogether(area.label)),
+              titleTextStyle: theme.textTheme.titleMedium,
             ),
-            const SizedBox(height: 12),
-            _SecondaryRow(
-              day: secondary,
-              area: area,
-              today: today,
-              label: isFeaturingToday ? '明日' : '今日',
+      body: LiquidGlassTopEdge(
+        liquidGlass: isLiquidGlass,
+        child: Builder(
+          builder: (bodyContext) => ListView(
+            padding: adaptiveScrollPadding(
+              bodyContext,
+              liquidGlass: isLiquidGlass,
+              base: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             ),
-            const SizedBox(height: 24),
-            if (area.isEmpty)
-              const _EmptyAreaNotice()
-            else ...[
-              _SectionTitle('この先の収集'),
-              const SizedBox(height: 8),
-              if (upcoming.isEmpty)
-                const Text('この先しばらく収集の予定がありません。')
-              else
-                for (final day in upcoming)
-                  _UpcomingTile(day: day, area: area, today: today),
+            children: [
+              if (isLiquidGlass)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.place_outlined,
+                        size: 18,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          keepParenthesesTogether(area.label),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              _FeaturedCard(
+                day: featured,
+                area: area,
+                today: today,
+                label: isFeaturingToday ? '今日' : '明日',
+              ),
+              const SizedBox(height: 12),
+              _SecondaryRow(
+                day: secondary,
+                area: area,
+                today: today,
+                label: isFeaturingToday ? '明日' : '今日',
+              ),
               const SizedBox(height: 24),
-              _SectionTitle('分別ごとの次の収集'),
-              const SizedBox(height: 8),
-              _NextByCategory(calendar: calendar, today: today),
+              if (area.isEmpty)
+                const _EmptyAreaNotice()
+              else ...[
+                _SectionTitle('この先の収集'),
+                const SizedBox(height: 8),
+                if (upcoming.isEmpty)
+                  const Text('この先しばらく収集の予定がありません。')
+                else
+                  for (final day in upcoming)
+                    _UpcomingTile(day: day, area: area, today: today),
+                const SizedBox(height: 24),
+                _SectionTitle('分別ごとの次の収集'),
+                const SizedBox(height: 8),
+                _NextByCategory(calendar: calendar, today: today),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

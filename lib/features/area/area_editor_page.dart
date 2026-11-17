@@ -269,21 +269,24 @@ class _AreaEditorPageState extends ConsumerState<AreaEditorPage> {
           ],
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: isLiquidGlass
-            ? LiquidGlassPrimaryBarButton(
+      bottomNavigationBar: isLiquidGlass
+          ? Padding(
+              padding: liquidGlassBottomBarMargin(context),
+              child: LiquidGlassPrimaryBarButton(
                 label: widget.isOnboarding ? 'この設定ではじめる' : '保存する',
                 onPressed: _hasAnyDay ? _save : null,
-              )
-            : FilledButton(
+              ),
+            )
+          : SafeArea(
+              minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: FilledButton(
                 onPressed: _hasAnyDay ? _save : null,
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(52),
                 ),
                 child: Text(widget.isOnboarding ? 'この設定ではじめる' : '保存する'),
               ),
-      ),
+            ),
     );
   }
 

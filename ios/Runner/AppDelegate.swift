@@ -253,12 +253,60 @@ private final class LiquidGlassSurfaceFactory: NSObject, FlutterPlatformViewFact
 private final class TabBarPassthroughContainerView: UIView {
   weak var managedTabBar: UITabBar?
   var isTouchEnabled: Bool = true
+  var onCapsuleRectChanged: ((CGRect) -> Void)?
+  private var lastReportedRect: CGRect = .zero
+
+  /// iOS 26 の浮遊カプセル部分の矩形（このビュー座標系）を返す。
+  ///
+  /// `UITabBar` 自身の `bounds` は画面横幅いっぱい（左右余白込み）を持つため、
+  /// `tabBar.hitTest` だけだと左右の余白でも `tabBar` 自身が返ってしまう。
+  /// 実際のガラスカプセル部分だけを当たり判定の対象にする。
+  func capsuleRect() -> CGRect {
+    guard bounds.width > 0, bounds.height > 0 else { return .zero }
+    if let tabBar = managedTabBar {
+      // iOS 26 の UITabBar 内部にある左右インセット済みのカプセル背景ビューを探す。
+      for sub in tabBar.subviews {
+        let w = sub.frame.width
+        let h = sub.frame.height
+        if w > tabBar.bounds.width * 0.5,
+           w < tabBar.bounds.width - 16,
+           h >= 44,
+           h <= 76 {
+          return convert(sub.frame, from: tabBar)
+        }
+      }
+    }
+    let bottomSafe = safeAreaInsets.bottom
+    let bottomMargin = bottomSafe > 0 ? max(12.0, bottomSafe - 13.0) : 12.0
+    let capsuleHeight: CGFloat = 62.0
+    let y = max(0.0, bounds.height - bottomMargin - capsuleHeight)
+    return CGRect(
+      x: 20.0,
+      y: y,
+      width: max(0.0, bounds.width - 40.0),
+      height: min(capsuleHeight, bounds.height - y)
+    )
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+      self.managedTabBar?.layoutIfNeeded()
+      let rect = self.capsuleRect()
+      if !rect.equalTo(self.lastReportedRect) {
+        self.lastReportedRect = rect
+        self.onCapsuleRectChanged?(rect)
+      }
+    }
+  }
 
   override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
     guard isTouchEnabled,
           let tabBar = managedTabBar,
           !tabBar.isHidden,
-          tabBar.alpha > 0.01
+          tabBar.alpha > 0.01,
+          capsuleRect().contains(point)
     else {
       return nil
     }
@@ -267,7 +315,6 @@ private final class TabBarPassthroughContainerView: UIView {
        let hit = tabBar.hitTest(pointInTabBar, with: event) {
       return hit
     }
-    // タブバーのカプセル外（左右・上部の余白）は背面の Flutter リストへスルーさせる。
     return nil
   }
 }
@@ -346,6 +393,17 @@ private final class LiquidGlassTabBarPlatformView: NSObject, FlutterPlatformView
 
     containerView.addSubview(tabBarController.view)
     containerView.managedTabBar = tabBarController.tabBar
+    containerView.onCapsuleRectChanged = { [weak self] rect in
+      self?.channel.invokeMethod(
+        "onHitRect",
+        arguments: [
+          "left": Double(rect.minX),
+          "top": Double(rect.minY),
+          "right": Double(rect.maxX),
+          "bottom": Double(rect.maxY),
+        ]
+      )
+    }
   }
 
   private func apply(_ dict: [String: Any]?) {

@@ -28,27 +28,25 @@ Future<T?> showAdaptiveModalSheet<T>({
     maxHeight: constraints?.maxHeight ?? double.infinity,
   );
 
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
   return showModalBottomSheet<T>(
     context: context,
     backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: isDark ? 0.44 : 0.22),
     elevation: 0,
     showDragHandle: false,
     isScrollControlled: isScrollControlled,
     constraints: effectiveConstraints,
     builder: (sheetContext) {
-      final theme = Theme.of(sheetContext);
-      final isDark = theme.brightness == Brightness.dark;
-      // クリーム基調の紙色（g <= r）を薄く混ぜ、ガラスの透過感と文字の読みやすさを両立する。
-      final sheetTint = theme.colorScheme.surfaceContainerLow.withValues(
-        alpha: isDark ? 0.82 : 0.84,
-      );
-
+      // UIGlassEffect.tintColor に色（クリーム等）を渡すと彩度が増幅されて
+      // 薄緑・オリーブ色に転ぶため、タブバーや検索欄と同じ無彩色（tintColor: null）の
+      // 純正 .regular ガラスを使う。
       return SizedBox(
         width: double.infinity,
         child: LiquidGlassSurface(
           shape: LiquidGlassShape.topRounded,
           cornerRadius: 32,
-          tintColor: sheetTint,
           child: Material(
             type: MaterialType.transparency,
             child: Column(
@@ -108,14 +106,13 @@ Future<T?> showAdaptiveAlertDialog<T>({
     );
   }
 
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
   return showDialog<T>(
     context: context,
+    barrierColor: Colors.black.withValues(alpha: isDark ? 0.44 : 0.22),
     builder: (dialogContext) {
       final theme = Theme.of(dialogContext);
-      final isDark = theme.brightness == Brightness.dark;
-      final dialogTint = theme.colorScheme.surfaceContainerLow.withValues(
-        alpha: isDark ? 0.82 : 0.85,
-      );
 
       return Dialog(
         backgroundColor: Colors.transparent,
@@ -127,7 +124,6 @@ Future<T?> showAdaptiveAlertDialog<T>({
           child: LiquidGlassSurface(
             shape: LiquidGlassShape.rounded,
             cornerRadius: 28,
-            tintColor: dialogTint,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
               child: Column(

@@ -21,25 +21,62 @@ import '../support/test_app.dart';
 
 void main() {
   group('Liquid Glass 表示（iOS 26 以降）', () {
-    testWidgets('HomeShell が LiquidGlassTabBar を使い4タブすべてを行き来できる', (
-      tester,
-    ) async {
+    testWidgets('トップ4画面は固定AppBarを持たず、タブバー左右の余白で縦スクロールできる', (tester) async {
       await pumpRootApp(tester, liquidGlass: true);
 
       expect(find.byType(LiquidGlassTabBar), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
       expect(find.byType(HomePage), findsOneWidget);
+      // トップ4画面には上部 AppBar を置かず、地区名はホーム本文の先頭に出す。
+      expect(find.byType(AppBar), findsNothing);
+      expect(find.textContaining('浦和区 テスト地区'), findsWidgets);
+
+      // タブバーの左右余白（x=8 および右端近く）から縦ドラッグしたとき、
+      // タブバーに遮られず背面の ListView がスクロールできることを検証する。
+      final homeScrollable = find.descendant(
+        of: find.byType(HomePage),
+        matching: find.byType(Scrollable),
+      );
+      final beforeLeftDrag = tester
+          .state<ScrollableState>(homeScrollable)
+          .position
+          .pixels;
+      final tabRect = tester.getRect(find.byType(LiquidGlassTabBar));
+      await tester.dragFrom(
+        Offset(8, tabRect.center.dy),
+        const Offset(0, -180),
+      );
+      await tester.pumpAndSettle();
+      final afterLeftDrag = tester
+          .state<ScrollableState>(homeScrollable)
+          .position
+          .pixels;
+      expect(afterLeftDrag, greaterThan(beforeLeftDrag));
+
+      await tester.dragFrom(
+        Offset(tabRect.right - 8, tabRect.center.dy),
+        const Offset(0, 180),
+      );
+      await tester.pumpAndSettle();
+      final afterRightDrag = tester
+          .state<ScrollableState>(homeScrollable)
+          .position
+          .pixels;
+      expect(afterRightDrag, lessThan(afterLeftDrag));
 
       await tester.tap(find.text('カレンダー'));
       await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsNothing);
       expect(find.text('2026年8月'), findsOneWidget);
 
       await tester.tap(find.text('分別'));
       await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsNothing);
       expect(find.byType(LiquidGlassSearchBar), findsOneWidget);
 
       await tester.tap(find.text('設定'));
       await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsNothing);
       expect(find.text('お住まいの地区'), findsOneWidget);
 
       await tester.tap(find.text('ホーム'));
@@ -47,10 +84,12 @@ void main() {
       expect(find.text('この先の収集'), findsOneWidget);
     });
 
-    testWidgets('カレンダーで月を送ると Liquid Glass の「今月に戻る」ピルが出て戻れる', (tester) async {
+    testWidgets('カレンダーで月を送ると月見出しの位置を動かさずに「今月に戻る」ピルが出て戻れる', (tester) async {
       await pumpApp(tester, const CalendarPage(), liquidGlass: true);
 
+      expect(find.byType(AppBar), findsNothing);
       expect(find.text('今月に戻る'), findsNothing);
+      final initialNextX = tester.getRect(find.byTooltip('次の月')).center.dx;
 
       await tester.tap(find.byTooltip('次の月'));
       await tester.pumpAndSettle();
@@ -59,6 +98,11 @@ void main() {
         find.widgetWithText(LiquidGlassPillButton, '今月に戻る'),
         findsOneWidget,
       );
+      // 「今月に戻る」が出ても矢印ボタンの横位置がずれない。
+      expect(
+        tester.getRect(find.byTooltip('次の月')).center.dx,
+        closeTo(initialNextX, 0.5),
+      );
 
       await tester.tap(find.text('今月に戻る'));
       await tester.pumpAndSettle();
@@ -66,7 +110,7 @@ void main() {
       expect(find.text('今月に戻る'), findsNothing);
     });
 
-    testWidgets('分別画面のガラス検索欄・五十音ピル・出典ダイアログが動作する', (tester) async {
+    testWidgets('分別画面のガラス検索欄・タッチ中のみ出る五十音ピル・出典ダイアログが動作する', (tester) async {
       final multiRowDict = WasteDictionary.fromJson({
         'source': 'テスト用の分別早見表',
         'sourceUrl': 'https://example.com/dictionary',
@@ -103,9 +147,19 @@ void main() {
         liquidGlass: true,
       );
 
+      expect(find.byType(AppBar), findsNothing);
       expect(find.byType(LiquidGlassSearchBar), findsOneWidget);
-      // 索引ピル用のガラス面が描かれている。
-      expect(find.byType(LiquidGlassSurface), findsWidgets);
+      // 通常時は検索欄と出典アイコンの2つだけがガラス面を持ち、五十音索引は枠を持たない。
+      expect(find.byType(LiquidGlassSurface), findsNWidgets(2));
+
+      // 右端の五十音索引を押さえている間だけガラスピルが浮かび、離すと消える。
+      final indexTa = tester.getCenter(find.text('た').last);
+      final gesture = await tester.startGesture(indexTa);
+      await tester.pump();
+      expect(find.byType(LiquidGlassSurface), findsNWidgets(3));
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.byType(LiquidGlassSurface), findsNWidgets(2));
 
       // 検索語を入れると消去ボタンが出て、押すと履歴チップが残り一覧は元に戻る。
       await tester.enterText(find.byType(TextField), 'たんす');
@@ -190,16 +244,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AreaEditorPage), findsOneWidget);
-      // 遷移先では丸型のガラス戻るボタンが出る。
+      // サブ画面では丸型のガラス戻るボタンと AppBar が出る。
+      expect(find.byType(AppBar), findsOneWidget);
       expect(find.byTooltip('戻る'), findsOneWidget);
+      final primaryBtn = find.widgetWithText(
+        LiquidGlassPrimaryBarButton,
+        'この設定ではじめる',
+      );
+      expect(primaryBtn, findsOneWidget);
+      // 主ボタンは全幅の緑ベタ塗りではなく、無彩色ガラスの中央カプセルである。
+      final btnSurface = tester.widget<LiquidGlassSurface>(
+        find.descendant(
+          of: primaryBtn,
+          matching: find.byType(LiquidGlassSurface),
+        ),
+      );
+      expect(btnSurface.tintColor, isNull);
+      final surfaceRect = tester.getRect(
+        find.descendant(
+          of: primaryBtn,
+          matching: find.byType(LiquidGlassSurface),
+        ),
+      );
       expect(
-        find.widgetWithText(LiquidGlassPrimaryBarButton, 'この設定ではじめる'),
-        findsOneWidget,
+        surfaceRect.width,
+        lessThan(TestViewport.standard.size.width - 60),
       );
 
       await tester.tap(find.text('この設定ではじめる'));
       await tester.pumpAndSettle();
-      expect(find.byType(LiquidGlassTabBar), findsOneWidget);
+      final tabSurfaceRect = tester.getRect(
+        find.descendant(
+          of: find.byType(LiquidGlassTabBar),
+          matching: find.byType(LiquidGlassSurface),
+        ),
+      );
+      // 主ボタンとボトムタブバーの高さ・下端位置が一致している。
+      expect(surfaceRect.height, closeTo(tabSurfaceRect.height, 0.5));
+      expect(surfaceRect.bottom, closeTo(tabSurfaceRect.bottom, 0.5));
     });
 
     testWidgets('下限画面サイズ（375×667）でもガラス表示の全画面・シートが溢れない', (tester) async {
