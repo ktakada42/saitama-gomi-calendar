@@ -149,17 +149,42 @@ void main() {
 
       expect(find.byType(AppBar), findsNothing);
       expect(find.byType(LiquidGlassSearchBar), findsOneWidget);
-      // 通常時は検索欄と出典アイコンの2つだけがガラス面を持ち、五十音索引は枠を持たない。
-      expect(find.byType(LiquidGlassSurface), findsNWidgets(2));
 
-      // 右端の五十音索引を押さえている間だけガラスピルが浮かび、離すと消える。
+      final focusLens = find.byKey(const ValueKey('kana_index_focus_lens'));
+      final trackPill = find.byKey(const ValueKey('kana_index_track_pill'));
+
+      // 通常時は五十音索引の背景ピルは出ず、現在地（「あ」）の丸いガラスレンズだけが出る。
+      expect(trackPill, findsNothing);
+      expect(focusLens, findsOneWidget);
+      expect(
+        tester.getCenter(focusLens).dy,
+        closeTo(tester.getCenter(find.text('あ').last).dy, 0.5),
+      );
+      // 緑ベタ塗りの丸（BoxShape.circle）は使わず、太字の緑文字で現在地を示す。
+      final solidCircles = find.byWidgetPredicate(
+        (w) =>
+            w is Container &&
+            w.decoration is BoxDecoration &&
+            (w.decoration! as BoxDecoration).shape == BoxShape.circle,
+      );
+      expect(solidCircles, findsNothing);
+
+      // 右端の五十音索引を押さえている間だけ背景の縦長ガラスピルが浮かび、
+      // ガラスレンズも触れた行（「た」）へ移動する。離すと背景ピルは消える。
       final indexTa = tester.getCenter(find.text('た').last);
       final gesture = await tester.startGesture(indexTa);
       await tester.pump();
-      expect(find.byType(LiquidGlassSurface), findsNWidgets(3));
+      expect(trackPill, findsOneWidget);
+      await gesture.moveBy(const Offset(0, 20));
+      await tester.pump();
+      expect(
+        tester.getCenter(focusLens).dy,
+        closeTo(tester.getCenter(find.text('た').last).dy, 0.5),
+      );
       await gesture.up();
       await tester.pumpAndSettle();
-      expect(find.byType(LiquidGlassSurface), findsNWidgets(2));
+      expect(trackPill, findsNothing);
+      expect(focusLens, findsOneWidget);
 
       // 検索語を入れると消去ボタンが出て、押すと履歴チップが残り一覧は元に戻る。
       await tester.enterText(find.byType(TextField), 'たんす');
