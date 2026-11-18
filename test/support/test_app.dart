@@ -317,6 +317,9 @@ Future<void> pumpApp(
 
   /// iOS 26 以降の Liquid Glass 表示を有効にして立ち上げるか。
   bool liquidGlass = false,
+
+  /// ネイティブの `UiKitView` ブリッジを有効にして立ち上げるか。
+  bool nativeLiquidGlass = false,
 }) async {
   _useViewport(tester, viewport);
   SharedPreferences.setMockInitialValues({
@@ -327,7 +330,7 @@ Future<void> pumpApp(
     ProviderScope(
       overrides: [
         liquidGlassProvider.overrideWithValue(liquidGlass),
-        nativeLiquidGlassViewProvider.overrideWithValue(false),
+        nativeLiquidGlassViewProvider.overrideWithValue(nativeLiquidGlass),
         nowProvider.overrideWithValue(
           now ?? (today ?? testToday).add(const Duration(hours: 12)),
         ),

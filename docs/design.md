@@ -382,8 +382,8 @@ iOS 18〜25 および Android では従来の Material 3 表示をそのまま�
 ```
 lib/domain/liquid_glass_support.dart   OSバージョン文字列から iOS 26 以降かを判定（純粋なDart）
 lib/providers.dart                     liquidGlassProvider / nativeLiquidGlassViewProvider
-lib/ui/liquid_glass/                   AdaptiveAppBar・LiquidGlassTabBar・ガラス面・検索欄・シート
-ios/Runner/AppDelegate.swift           UIVisualEffectView(UIGlassEffect) と UITabBarController の PlatformView
+lib/ui/liquid_glass/                   AdaptiveAppBar・LiquidGlassTabBar・五十音索引・ガラス面・検索欄・シート
+ios/Runner/AppDelegate.swift           UIVisualEffectView(UIGlassEffect)・UITabBarController・連続追従五十音索引の PlatformView
 ios/GomiWidget/GomiWidget.swift        widgetRenderingMode（クリア・色合い調整モード）対応
 ios/Runner/Assets.xcassets/AppIcon.*   Any / Dark / Tinted の3外観アプリアイコン
 ```
@@ -400,6 +400,9 @@ ios/Runner/Assets.xcassets/AppIcon.*   Any / Dark / Tinted の3外観アプリ�
   WCAG AA のコントラスト比を崩さない
 - **純正 UIKit 部品を `UiKitView` で使う**：シェーダーによる模倣ではなく、iOS 実機では
   `UIVisualEffectView(effect: UIGlassEffect)` と純正 `UITabBarController` を描画する。
+  五十音索引（`LiquidGlassKanaIndex`）も UIKit 専用ビュー（`CADisplayLink` スプリング追従＋
+  `UISelectionFeedbackGenerator`）として実装し、ボトムタブバーと同様に選択ガラスレンズが指の
+  Y 座標へ連続追従・収束するようにしている。
   タブバーは UIKit 側・Flutter 側（`RenderProxyBox`）の双方でカプセル矩形の内側だけを
   当たり判定の対象にし、左右・上下の余白タッチを背面の Flutter リストへ透過させる。
   モーダルシートや遷移先画面が重なっている間は `touchEnabled` を切って当たり判定を止める
