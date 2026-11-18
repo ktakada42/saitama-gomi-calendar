@@ -1,5 +1,4 @@
 import 'dart:async' show unawaited;
-import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
@@ -13,6 +12,7 @@ import '../../domain/waste_item.dart';
 import '../../providers.dart';
 import '../../ui/caution_style.dart';
 import '../../ui/liquid_glass/liquid_glass_app_bar.dart';
+import '../../ui/liquid_glass/liquid_glass_kana_index.dart';
 import '../../ui/liquid_glass/liquid_glass_search_bar.dart';
 import '../../ui/liquid_glass/liquid_glass_sheet.dart';
 import '../../ui/liquid_glass/liquid_glass_surface.dart';
@@ -679,9 +679,6 @@ class _KanaIndexState extends State<_KanaIndex> {
   /// なぞっている最中かどうか。触れている間は丸を濃くする。
   bool _dragging = false;
 
-  /// タップで押さえている最中かどうか。ドラッグへ移るまでの間もガラスピルを出す。
-  bool _pressing = false;
-
   /// 索引を操作している間は、現在地をスクロール位置から拾い直さない。
   ///
   /// 一覧の終わりに近い行は、送ってもその見出しが画面の上端まで来ない。
@@ -723,6 +720,20 @@ class _KanaIndexState extends State<_KanaIndex> {
     setState(() => _current = found);
   }
 
+  void _selectHead(String head, {required bool fromNative}) {
+    if (head == _current) return;
+    // 時刻のホイールと同じく、送るたびに手応えを返す。
+    // ネイティブ UIKit ビュー利用時は UISelectionFeedbackGenerator 側で鳴らす。
+    if (!fromNative) {
+      HapticFeedback.selectionClick();
+    }
+    setState(() {
+      _scrubbing = true;
+      _current = head;
+    });
+    _jumpTo(head);
+  }
+
   /// 指の位置から、その真下にある行へ送る。
   void _handleTouch(Offset localPosition, double itemHeight) {
     final heads = widget.offsets.keys.toList();
@@ -731,16 +742,7 @@ class _KanaIndexState extends State<_KanaIndex> {
       0,
       heads.length - 1,
     );
-    final head = heads[index];
-    if (head == _current) return;
-    // 時刻のホイールと同じく、送るたびに手応えを返す。
-    // どこまで来たかを画面から目を離さずに掴めるようにする。
-    HapticFeedback.selectionClick();
-    setState(() {
-      _scrubbing = true;
-      _current = head;
-    });
-    _jumpTo(head);
+    _selectHead(heads[index], fromNative: false);
   }
 
   /// [head] の見出しが一覧の先頭に来るまで送る。
@@ -765,7 +767,9 @@ class _KanaIndexState extends State<_KanaIndex> {
       return;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !widget.scrollController.hasClients) return;
+      if (!mounted || _current != head || !widget.scrollController.hasClients) {
+        return;
+      }
       final context = widget.headerKeys[head]?.currentContext;
       final box = context?.findRenderObject();
       final viewport = this.context.findRenderObject();
@@ -804,14 +808,28 @@ class _KanaIndexState extends State<_KanaIndex> {
   Widget build(BuildContext context) {
     final heads = widget.offsets.keys.toList();
 
+    if (widget.liquidGlass) {
+      final currentIndex = _current == null ? 0 : heads.indexOf(_current!);
+      return LiquidGlassKanaIndex(
+        heads: heads,
+        selectedIndex: currentIndex < 0 ? 0 : currentIndex,
+        onScrubStart: () {
+          _dragging = true;
+          _scrubbing = true;
+        },
+        onHeadSelected: (index, {required fromNative}) {
+          if (index < 0 || index >= heads.length) return;
+          _selectHead(heads[index], fromNative: fromNative);
+        },
+        onScrubEnd: _endDrag,
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // 枠の高さを行数で割って、1行ぶんの高さにする。指を滑らせたときに
         // 端から端まで途切れずに送れるよう、隙間を空けずに敷き詰める。
         final itemHeight = constraints.maxHeight / heads.length;
-        final active = _dragging || _pressing;
-        final currentIndex = _current == null ? -1 : heads.indexOf(_current!);
-        final lensSize = math.min(22.0, itemHeight);
         final column = Column(
           children: [
             for (final head in heads)
@@ -823,8 +841,7 @@ class _KanaIndexState extends State<_KanaIndex> {
                     child: _KanaIndexEntry(
                       head: head,
                       isCurrent: head == _current,
-                      isDragging: active,
-                      liquidGlass: widget.liquidGlass,
+                      isDragging: _dragging,
                     ),
                   ),
                 ),
@@ -832,72 +849,19 @@ class _KanaIndexState extends State<_KanaIndex> {
           ],
         );
 
-        final content = widget.liquidGlass && currentIndex >= 0
-            ? Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  AnimatedPositioned(
-                    duration: active
-                        ? Duration.zero
-                        : const Duration(milliseconds: 140),
-                    curve: Curves.easeOutCubic,
-                    top:
-                        currentIndex * itemHeight + (itemHeight - lensSize) / 2,
-                    width: lensSize,
-                    height: lensSize,
-                    child: const LiquidGlassSurface(
-                      key: ValueKey('kana_index_focus_lens'),
-                      shape: LiquidGlassShape.capsule,
-                      interactive: true,
-                      child: SizedBox.expand(),
-                    ),
-                  ),
-                  column,
-                ],
-              )
-            : column;
-
-        // TapGestureRecognizer は縦ドラッグと競合すると kPressTimeout（100ms）の
-        // 遅延が入るため、生のポインタイベント（Listener）で触れた瞬間にピルを出す。
-        return Listener(
-          onPointerDown: (_) {
-            if (!_pressing) setState(() => _pressing = true);
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onVerticalDragStart: (d) {
+            setState(() => _dragging = true);
+            _handleTouch(d.localPosition, itemHeight);
           },
-          onPointerUp: (_) {
-            if (_pressing) setState(() => _pressing = false);
-          },
-          onPointerCancel: (_) {
-            if (_pressing) setState(() => _pressing = false);
-          },
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onVerticalDragStart: (d) {
-              setState(() => _dragging = true);
-              _handleTouch(d.localPosition, itemHeight);
-            },
-            onVerticalDragUpdate: (d) =>
-                _handleTouch(d.localPosition, itemHeight),
-            onVerticalDragEnd: (_) => _endDrag(),
-            onVerticalDragCancel: _endDrag,
-            onTapDown: (d) => _handleTouch(d.localPosition, itemHeight),
-            onTapUp: (_) => widget.onReleased?.call(),
-            child: SizedBox(
-              width: 30,
-              // iOS 純正のセクションインデックスにならい、通常時は枠を出さず文字だけを並べ、
-              // 指で触れて操作している間だけガラスピルを浮かせる。
-              child: widget.liquidGlass && active
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      child: LiquidGlassSurface(
-                        key: const ValueKey('kana_index_track_pill'),
-                        shape: LiquidGlassShape.capsule,
-                        interactive: true,
-                        child: content,
-                      ),
-                    )
-                  : content,
-            ),
-          ),
+          onVerticalDragUpdate: (d) =>
+              _handleTouch(d.localPosition, itemHeight),
+          onVerticalDragEnd: (_) => _endDrag(),
+          onVerticalDragCancel: _endDrag,
+          onTapDown: (d) => _handleTouch(d.localPosition, itemHeight),
+          onTapUp: (_) => widget.onReleased?.call(),
+          child: SizedBox(width: 30, child: column),
         );
       },
     );
@@ -909,13 +873,11 @@ class _KanaIndexEntry extends StatelessWidget {
     required this.head,
     required this.isCurrent,
     required this.isDragging,
-    this.liquidGlass = false,
   });
 
   final String head;
   final bool isCurrent;
   final bool isDragging;
-  final bool liquidGlass;
 
   @override
   Widget build(BuildContext context) {
@@ -924,7 +886,7 @@ class _KanaIndexEntry extends StatelessWidget {
       width: 22,
       height: 22,
       alignment: Alignment.center,
-      decoration: isCurrent && !liquidGlass
+      decoration: isCurrent
           ? BoxDecoration(
               color: theme.colorScheme.primary,
               shape: BoxShape.circle,
@@ -936,9 +898,7 @@ class _KanaIndexEntry extends StatelessWidget {
           height: 1.0,
           fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
           color: isCurrent
-              ? (liquidGlass
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onPrimary)
+              ? theme.colorScheme.onPrimary
               // なぞっている間は触っていない行も少し濃くして、
               // 索引そのものが今の操作対象であることを示す。
               : isDragging

@@ -1,4 +1,5 @@
 import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoDatePicker;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:saitama_gomi/data/waste_dictionary.dart';
@@ -169,14 +170,37 @@ void main() {
       );
       expect(solidCircles, findsNothing);
 
-      // 右端の五十音索引を押さえている間だけ背景の縦長ガラスピルが浮かび、
-      // ガラスレンズも触れた行（「た」）へ移動する。離すと背景ピルは消える。
+      // 右端の五十音索引をなぞっている間は、行の境界でワープせず指のY座標へ連続追従し、
+      // 離すと最寄りの行の中央へスプリング収束する。
+      final centerA = tester.getCenter(find.text('あ').last).dy;
+      final centerKa = tester.getCenter(find.text('か').last).dy;
+      final midAKa = (centerA + centerKa) * 0.5 - 8;
+      final indexX = tester.getCenter(find.text('あ').last).dx;
+
+      final midGesture = await tester.startGesture(Offset(indexX, centerA));
+      await tester.pump();
+      expect(trackPill, findsOneWidget);
+      await midGesture.moveTo(Offset(indexX, midAKa));
+      await tester.pumpAndSettle();
+      // ドラッグ中は「あ」と「か」の中間座標そのものにレンズが留まる（デジタルに飛ばない）。
+      expect(tester.getCenter(focusLens).dy, closeTo(midAKa, 0.5));
+      await midGesture.up();
+      await tester.pumpAndSettle();
+      expect(trackPill, findsNothing);
+      // 指を離すと最寄りの「あ」の中央へ滑らかに戻る。
+      expect(tester.getCenter(focusLens).dy, closeTo(centerA, 0.5));
+
+      // 離れた行（「た」）を押さえたときも瞬間移動せず滑らかに遷移し、到着後は「た」に収まる。
       final indexTa = tester.getCenter(find.text('た').last);
       final gesture = await tester.startGesture(indexTa);
       await tester.pump();
       expect(trackPill, findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 24));
+      final inFlightDy = tester.getCenter(focusLens).dy;
+      expect(inFlightDy, greaterThan(centerA + 10));
+      expect(inFlightDy, lessThan(indexTa.dy - 10));
       await gesture.moveBy(const Offset(0, 20));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(
         tester.getCenter(focusLens).dy,
         closeTo(tester.getCenter(find.text('た').last).dy, 0.5),
@@ -348,5 +372,112 @@ void main() {
         expect(find.byType(AdaptiveAppBar), findsOneWidget);
       }
     });
+
+    testWidgets(
+      'ネイティブ UIKit 五十音索引ビューと MethodChannel で選択・モーダル遮断が同期する',
+      variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+      (tester) async {
+        int? kanaIndexViewId;
+        Map<Object?, Object?>? creationParams;
+        final updates = <Map<Object?, Object?>>[];
+
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform_views,
+          (call) async {
+            if (call.method == 'create') {
+              final args = call.arguments as Map<Object?, Object?>;
+              final id = args['id'] as int;
+              final viewType = args['viewType'] as String;
+              if (viewType ==
+                  'io.github.ktakada42.saitamagomicalendar/liquid_glass_kana_index') {
+                kanaIndexViewId = id;
+                creationParams =
+                    const StandardMessageCodec().decodeMessage(
+                          ByteData.sublistView(args['params'] as Uint8List),
+                        )
+                        as Map<Object?, Object?>;
+                tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+                  MethodChannel('${viewType}_$id'),
+                  (subCall) async {
+                    if (subCall.method == 'update') {
+                      updates.add(subCall.arguments as Map<Object?, Object?>);
+                    }
+                    return null;
+                  },
+                );
+              }
+              return id;
+            }
+            return null;
+          },
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            SystemChannels.platform_views,
+            null,
+          ),
+        );
+
+        final longDict = WasteDictionary.fromJson({
+          'source': 'テスト用の分別早見表',
+          'sourceUrl': 'https://example.com/dictionary',
+          'items': [
+            for (final head in ['あ', 'か', 'た'])
+              for (var i = 0; i < 15; i++)
+                {
+                  'name': '$head$i品目',
+                  'kanaHead': head,
+                  'category': 'burnable',
+                  'categoryLabel': 'もえるごみ',
+                  'note': '',
+                },
+          ],
+        });
+
+        await pumpApp(
+          tester,
+          const DictionaryPage(),
+          dictionary: longDict,
+          today: DateTime(2026, 10, 1),
+          liquidGlass: true,
+          nativeLiquidGlass: true,
+        );
+
+        expect(kanaIndexViewId, isNotNull);
+        expect(creationParams?['heads'], ['あ', 'か', 'た']);
+        expect(creationParams?['touchEnabled'], isTrue);
+
+        // ネイティブ側からドラッグ開始 → 「た」(index 2) 選択 → 指を離すイベントを送る。
+        final channelName =
+            'io.github.ktakada42.saitamagomicalendar/liquid_glass_kana_index_$kanaIndexViewId';
+        const codec = StandardMethodCodec();
+        await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+          channelName,
+          codec.encodeMethodCall(const MethodCall('onScrubStart')),
+          (_) {},
+        );
+        await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+          channelName,
+          codec.encodeMethodCall(const MethodCall('onSelect', 2)),
+          (_) {},
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('た0品目'), findsOneWidget);
+
+        await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+          channelName,
+          codec.encodeMethodCall(const MethodCall('onScrubEnd')),
+          (_) {},
+        );
+        await tester.pumpAndSettle();
+        // 指を離したタイミングで分別変更お知らせが畳まれる。
+        expect(find.text('市の最新の案内を見る'), findsNothing);
+
+        // モーダル（出典ダイアログ）を開くとネイティブ側の当たり判定が自動で無効化される。
+        await tester.tap(find.byTooltip('出典'));
+        await tester.pumpAndSettle();
+        expect(updates.last['touchEnabled'], isFalse);
+      },
+    );
   });
 }
