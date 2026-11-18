@@ -240,15 +240,13 @@ struct GomiWidgetView: View {
         .padding(.vertical, 2)
         .widgetAccentable()
 
-        if #available(iOS 26.0, *), isFullColor {
-            label.glassEffect(.clear, in: Capsule())
-        } else {
-            label.background(
-                Capsule().fill(
-                    isFullColor ? Color.white.opacity(0.2) : Color.primary.opacity(0.14)
-                )
+        // WidgetKit のアーカイブ描画ではサブビューの glassEffect が欠落して
+        // ピルごと空白になるため、fullColor でも半透明カプセルで描く。
+        label.background(
+            Capsule().fill(
+                isFullColor ? Color.white.opacity(0.2) : Color.primary.opacity(0.14)
             )
-        }
+        )
     }
 
     /// 一覧では幅が足りないので短い名前にする。アプリの shortLabel と揃えてある。
