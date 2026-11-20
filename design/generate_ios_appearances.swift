@@ -1,101 +1,78 @@
 #!/usr/bin/env swift
-// design/app_icon_master.svg と同じベクター座標から、iOS の Dark / Tinted（および
+// design/app_icon_master.svg と同じベクター構成から、iOS の Dark / Tinted（および
 // iOS 26 のクリア＝Liquid Glass 表示）向け 1024x1024 アイコンを生成する。
 //
-// Light（通常表示）はアルファなしの既存 Icon-App-1024x1024@1x.png をそのまま使う。
-// Dark / Tinted は背景を透過にしておくことで、iOS がダークプレートや Liquid Glass の
-// 屈折レイヤーをモチーフの背後に合成できるようにする。
+// Light（通常表示）はアルファなしの Icon-App-1024x1024@1x.png を使う。
+// Dark / Tinted は背景を透過（RGBA）にしておくことで、iOS がダークプレートや
+// Liquid Glass の屈折レイヤーをモチーフの背後に合成できるようにする。
 
 import AppKit
 import CoreGraphics
 import Foundation
+import WebKit
 
-let size = 1024
-let viewBox: CGFloat = 120.0
+@MainActor
+final class AppearanceSVGRasterizer: NSObject, WKNavigationDelegate {
+  private var webView: WKWebView!
+  private var continuation: CheckedContinuation<CGImage, Error>?
+  private let canvasSize: Int
 
-func makeBagPath() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 46, y: 30))
-  p.addCurve(to: CGPoint(x: 16, y: 60), control1: CGPoint(x: 30, y: 34), control2: CGPoint(x: 20, y: 45))
-  p.addCurve(to: CGPoint(x: 12, y: 98), control1: CGPoint(x: 13, y: 72), control2: CGPoint(x: 12, y: 85))
-  p.addCurve(to: CGPoint(x: 20, y: 109), control1: CGPoint(x: 12, y: 103), control2: CGPoint(x: 14, y: 106))
-  p.addCurve(to: CGPoint(x: 60, y: 113), control1: CGPoint(x: 35, y: 112), control2: CGPoint(x: 48, y: 113))
-  p.addCurve(to: CGPoint(x: 100, y: 109), control1: CGPoint(x: 72, y: 113), control2: CGPoint(x: 85, y: 112))
-  p.addCurve(to: CGPoint(x: 108, y: 98), control1: CGPoint(x: 106, y: 106), control2: CGPoint(x: 108, y: 103))
-  p.addCurve(to: CGPoint(x: 104, y: 60), control1: CGPoint(x: 108, y: 85), control2: CGPoint(x: 107, y: 72))
-  p.addCurve(to: CGPoint(x: 74, y: 30), control1: CGPoint(x: 100, y: 45), control2: CGPoint(x: 90, y: 34))
-  p.addCurve(to: CGPoint(x: 60, y: 27), control1: CGPoint(x: 68, y: 27), control2: CGPoint(x: 64, y: 26))
-  p.addCurve(to: CGPoint(x: 46, y: 30), control1: CGPoint(x: 56, y: 26), control2: CGPoint(x: 52, y: 27))
-  p.closeSubpath()
-  return p
+  init(canvasSize: Int) {
+    self.canvasSize = canvasSize
+    super.init()
+  }
+
+  func rasterizeTransparent(svgContent: String) async throws -> CGImage {
+    let config = WKWebViewConfiguration()
+    webView = WKWebView(
+      frame: NSRect(x: 0, y: 0, width: canvasSize, height: canvasSize),
+      configuration: config
+    )
+    webView.setValue(false, forKey: "drawsBackground")
+    webView.navigationDelegate = self
+
+    let html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: \(canvasSize)px; height: \(canvasSize)px; overflow: hidden; background: transparent; }
+      svg { display: block; width: \(canvasSize)px; height: \(canvasSize)px; }
+    </style>
+    </head>
+    <body>\(svgContent)</body>
+    </html>
+    """
+
+    return try await withCheckedThrowingContinuation { cont in
+      self.continuation = cont
+      webView.loadHTMLString(html, baseURL: nil)
+    }
+  }
+
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+      let snap = WKSnapshotConfiguration()
+      snap.rect = CGRect(x: 0, y: 0, width: self.canvasSize, height: self.canvasSize)
+      snap.snapshotWidth = NSNumber(value: self.canvasSize)
+      webView.takeSnapshot(with: snap) { image, error in
+        if let error = error {
+          self.continuation?.resume(throwing: error)
+        } else if let image = image,
+                  let cg = image.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+          self.continuation?.resume(returning: cg)
+        } else {
+          self.continuation?.resume(throwing: NSError(domain: "AppearanceSVGRasterizer", code: -1))
+        }
+        self.continuation = nil
+      }
+    }
+  }
 }
 
-func makeCrease1() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 40, y: 52))
-  p.addCurve(to: CGPoint(x: 44, y: 74), control1: CGPoint(x: 36, y: 60), control2: CGPoint(x: 38, y: 70))
-  p.addCurve(to: CGPoint(x: 46, y: 52), control1: CGPoint(x: 42, y: 64), control2: CGPoint(x: 42, y: 58))
-  p.closeSubpath()
-  return p
-}
-
-func makeCrease2() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 64, y: 50))
-  p.addCurve(to: CGPoint(x: 68, y: 64), control1: CGPoint(x: 62, y: 56), control2: CGPoint(x: 64, y: 62))
-  p.addCurve(to: CGPoint(x: 69, y: 50), control1: CGPoint(x: 67, y: 58), control2: CGPoint(x: 67, y: 54))
-  p.closeSubpath()
-  return p
-}
-
-func makeCreaseLeft() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 20, y: 75))
-  p.addCurve(to: CGPoint(x: 24, y: 99), control1: CGPoint(x: 17, y: 85), control2: CGPoint(x: 18, y: 94))
-  p.addCurve(to: CGPoint(x: 24, y: 75), control1: CGPoint(x: 22, y: 90), control2: CGPoint(x: 21, y: 83))
-  p.closeSubpath()
-  return p
-}
-
-func makeCreaseRight() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 100, y: 75))
-  p.addCurve(to: CGPoint(x: 96, y: 99), control1: CGPoint(x: 103, y: 85), control2: CGPoint(x: 102, y: 94))
-  p.addCurve(to: CGPoint(x: 96, y: 75), control1: CGPoint(x: 98, y: 90), control2: CGPoint(x: 99, y: 83))
-  p.closeSubpath()
-  return p
-}
-
-func makeEarLeft() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 60, y: 21))
-  p.addCurve(to: CGPoint(x: 37, y: 17), control1: CGPoint(x: 51, y: 15), control2: CGPoint(x: 42, y: 13))
-  p.addCurve(to: CGPoint(x: 60, y: 27), control1: CGPoint(x: 40, y: 22), control2: CGPoint(x: 49, y: 26))
-  p.closeSubpath()
-  return p
-}
-
-func makeEarRight() -> CGPath {
-  let p = CGMutablePath()
-  p.move(to: CGPoint(x: 60, y: 21))
-  p.addCurve(to: CGPoint(x: 83, y: 17), control1: CGPoint(x: 69, y: 15), control2: CGPoint(x: 78, y: 13))
-  p.addCurve(to: CGPoint(x: 60, y: 27), control1: CGPoint(x: 80, y: 22), control2: CGPoint(x: 71, y: 26))
-  p.closeSubpath()
-  return p
-}
-
-func makeKnot() -> CGPath {
-  CGPath(
-    ellipseIn: CGRect(x: 60 - 4.6, y: 22 - 4.6, width: 9.2, height: 9.2),
-    transform: nil
-  )
-}
-
-func rgba(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat = 1.0) -> CGColor {
-  CGColor(srgbRed: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
-}
-
-func renderIcon(to url: URL, draw: (CGContext) -> Void) throws {
+func writeTransparentRGBAPNG(_ source: CGImage, size: Int, to url: URL) throws {
   let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
   guard let ctx = CGContext(
     data: nil,
@@ -108,115 +85,298 @@ func renderIcon(to url: URL, draw: (CGContext) -> Void) throws {
   ) else {
     fatalError("CGContext creation failed")
   }
+  ctx.clear(CGRect(x: 0, y: 0, width: size, height: size))
+  ctx.interpolationQuality = .high
+  ctx.draw(source, in: CGRect(x: 0, y: 0, width: size, height: size))
 
-  ctx.setAllowsAntialiasing(true)
-  ctx.setShouldAntialias(true)
-  // CoreGraphics は左下原点なので、SVG の左上原点（120x120）に合わせる。
-  ctx.translateBy(x: 0, y: CGFloat(size))
-  let scale = CGFloat(size) / viewBox
-  ctx.scaleBy(x: scale, y: -scale)
-  ctx.setLineJoin(.round)
-  ctx.setLineCap(.round)
-
-  draw(ctx)
-
-  guard let cgImage = ctx.makeImage() else {
+  guard let outCG = ctx.makeImage() else {
     fatalError("makeImage failed")
   }
-  let rep = NSBitmapImageRep(cgImage: cgImage)
+  let rep = NSBitmapImageRep(cgImage: outCG)
   guard let pngData = rep.representation(using: .png, properties: [:]) else {
     fatalError("PNG encoding failed")
   }
   try pngData.write(to: url)
 }
 
+func extractSaitamaLogoPaths(from masterSVG: String) -> String {
+  guard let startRange = masterSVG.range(of: "<g id=\"saitama-logo\""),
+        let openTagEnd = masterSVG[startRange.lowerBound...].firstIndex(of: ">"),
+        let closeRange = masterSVG[openTagEnd...].range(of: "</g>") else {
+    fatalError("saitama-logo group not found in app_icon_master.svg")
+  }
+  let innerStart = masterSVG.index(after: openTagEnd)
+  return String(masterSVG[innerStart..<closeRange.lowerBound])
+}
+
 let scriptURL = URL(fileURLWithPath: CommandLine.arguments[0]).standardizedFileURL
 let repoRoot = scriptURL.deletingLastPathComponent().deletingLastPathComponent()
+let masterURL = repoRoot.appendingPathComponent("design/app_icon_master.svg")
 let appIconDir = repoRoot.appendingPathComponent("ios/Runner/Assets.xcassets/AppIcon.appiconset")
 
-let bag = makeBagPath()
-let c1 = makeCrease1()
-let c2 = makeCrease2()
-let cl = makeCreaseLeft()
-let cr = makeCreaseRight()
-let el = makeEarLeft()
-let er = makeEarRight()
-let knot = makeKnot()
+let masterSVG = try String(contentsOf: masterURL, encoding: .utf8)
+let saitamaPaths = extractSaitamaLogoPaths(from: masterSVG)
 
-func fillAndStroke(_ ctx: CGContext, path: CGPath, fill: CGColor, stroke: CGColor, width: CGFloat) {
-  ctx.addPath(path)
-  ctx.setFillColor(fill)
-  ctx.fillPath()
-  ctx.addPath(path)
-  ctx.setStrokeColor(stroke)
-  ctx.setLineWidth(width)
-  ctx.strokePath()
-}
+// 1. Dark バリアント SVG（透過背景＋ダークフロスト・カレンダーカード＋高視認ダーク区分セル＋純白袋）
+let darkSVG = """
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="d-card" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#22352C" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#1A2922" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#13201A" stop-opacity="0.94"/>
+    </linearGradient>
+    <linearGradient id="d-hdr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2B8A58" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1B633E" stop-opacity="0.96"/>
+    </linearGradient>
+    <linearGradient id="d-rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.72"/>
+      <stop offset="30%" stop-color="#80FFBF" stop-opacity="0.32"/>
+      <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="80%" stop-color="#72EFDD" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.68"/>
+    </linearGradient>
+    <linearGradient id="d-prism" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#66E3FF" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.0"/>
+      <stop offset="100%" stop-color="#A3F7BF" stop-opacity="0.45"/>
+    </linearGradient>
+    <radialGradient id="d-orb" cx="30%" cy="25%" r="75%">
+      <stop offset="0%" stop-color="#74F2B3" stop-opacity="0.68"/>
+      <stop offset="45%" stop-color="#278556" stop-opacity="0.86"/>
+      <stop offset="85%" stop-color="#11422B" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#5CE6A0" stop-opacity="0.85"/>
+    </radialGradient>
+    <filter id="d-blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="d-drop" x="-22%" y="-18%" width="145%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+      <feOffset in="blur" dx="0" dy="8" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.55"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="d-bag-drop" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="0" dy="3" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.34"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="d-card-clip">
+      <rect x="30" y="34" width="156" height="162" rx="30"/>
+    </clipPath>
+    <clipPath id="d-orb-clip">
+      <circle cx="172" cy="166" r="46"/>
+    </clipPath>
+  </defs>
 
-// 1. Dark バリアント：透過背景（OS がダークプレートやダークガラスを敷く）＋
-//    視認性の高いグリーンのアウトラインと落ち着いたライトグリーンの袋。
-let darkURL = appIconDir.appendingPathComponent("Icon-App-Dark-1024x1024@1x.png")
-try renderIcon(to: darkURL) { ctx in
-  let bagFill = rgba(232, 245, 237)
-  let bagStroke = rgba(47, 122, 79)
-  fillAndStroke(ctx, path: bag, fill: bagFill, stroke: bagStroke, width: 2.8)
+  <!-- 背面に傾いたセカンド・ダークガラスシート -->
+  <g transform="rotate(-5.5 110 115)">
+    <rect x="38" y="38" width="148" height="156" rx="29" fill="#2A4438" fill-opacity="0.42" stroke="url(#d-rim)" stroke-width="1.5"/>
+  </g>
 
-  ctx.addPath(c1)
-  ctx.setFillColor(rgba(143, 189, 162, 0.85))
-  ctx.fillPath()
+  <!-- メインのダークフロスト・カレンダーカード -->
+  <g filter="url(#d-drop)">
+    <rect x="30" y="34" width="156" height="162" rx="30" fill="url(#d-card)"/>
 
-  ctx.addPath(c2)
-  ctx.setFillColor(rgba(143, 189, 162, 0.85))
-  ctx.fillPath()
+    <g clip-path="url(#d-card-clip)">
+      <circle cx="165" cy="112" r="52" fill="#38D9A9" opacity="0.14" filter="url(#d-blur)"/>
+      <circle cx="52" cy="176" r="46" fill="#48CAE4" opacity="0.12" filter="url(#d-blur)"/>
 
-  ctx.addPath(cl)
-  ctx.setFillColor(rgba(122, 168, 141, 0.7))
-  ctx.fillPath()
+      <rect x="30" y="34" width="156" height="48" fill="url(#d-hdr)"/>
+      <path d="M30,52 Q95,34 186,60 L186,34 L30,34 Z" fill="#96F2D7" opacity="0.18"/>
+      <line x1="30" y1="82" x2="186" y2="82" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="1.2"/>
 
-  ctx.addPath(cr)
-  ctx.setFillColor(rgba(122, 168, 141, 0.7))
-  ctx.fillPath()
+      <circle cx="47" cy="48" r="3.8" fill="#FFFFFF" fill-opacity="0.32" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
+      <circle cx="169" cy="48" r="3.8" fill="#FFFFFF" fill-opacity="0.32" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
 
-  fillAndStroke(ctx, path: el, fill: bagFill, stroke: bagStroke, width: 2.4)
-  fillAndStroke(ctx, path: er, fill: bagFill, stroke: bagStroke, width: 2.4)
-  fillAndStroke(ctx, path: knot, fill: bagFill, stroke: bagStroke, width: 2.4)
-}
+      <g fill="#FFFFFF">
+        \(saitamaPaths)
+      </g>
 
-// 2. Tinted / Clear（Liquid Glass）バリアント：透過背景＋グレースケール濃淡マスク。
-//    結び目やシワの境界をアウトラインの減算（destinationOut）で抜くことで、
-//    単色ティントやガラス屈折でもゴミ袋のディテールが潰れずに立体的に出る。
-let tintedURL = appIconDir.appendingPathComponent("Icon-App-Tinted-1024x1024@1x.png")
-try renderIcon(to: tintedURL) { ctx in
-  let white = rgba(255, 255, 255, 0.96)
+      <!-- 7曜日ドット -->
+      <g transform="translate(46, 94)">
+        <circle cx="6" cy="0" r="2.8" fill="#FF8787"/>
+        <circle cx="26" cy="0" r="2.4" fill="#7D9488"/>
+        <circle cx="46" cy="0" r="2.4" fill="#7D9488"/>
+        <circle cx="66" cy="0" r="2.4" fill="#7D9488"/>
+        <circle cx="86" cy="0" r="2.4" fill="#7D9488"/>
+        <circle cx="106" cy="0" r="2.4" fill="#7D9488"/>
+        <circle cx="124" cy="0" r="2.8" fill="#74C0FC"/>
+      </g>
 
-  ctx.addPath(bag)
-  ctx.setFillColor(white)
-  ctx.fillPath()
+      <!-- ダークモード用 4×3 月間カレンダー格子（CategoryStyle.dark カラー連動） -->
+      <rect x="44" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="77" y="105" width="28" height="23" rx="6.5" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="81" y="119" width="20" height="5" rx="2.5" fill="#FF922B"/>
+      <rect x="110" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="143" y="105" width="28" height="23" rx="6.5" fill="#38D9A9" fill-opacity="0.24"/>
+      <rect x="147" y="119" width="20" height="5" rx="2.5" fill="#38D9A9"/>
 
-  // シワ部分を少し抜いてガラスの陰影差を作る
-  ctx.saveGState()
-  ctx.setBlendMode(.destinationOut)
-  for (path, alpha) in [(c1, 0.30), (c2, 0.30), (cl, 0.25), (cr, 0.25)] {
-    ctx.addPath(path)
-    ctx.setFillColor(rgba(0, 0, 0, alpha))
-    ctx.fillPath()
+      <rect x="44" y="134" width="28" height="23" rx="6.5" fill="#748FFC" fill-opacity="0.26"/>
+      <rect x="48" y="148" width="20" height="5" rx="2.5" fill="#748FFC"/>
+      <rect x="77" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="110" y="134" width="28" height="23" rx="6.5" fill="#38D9A9" fill-opacity="0.22" stroke="#63E6BE" stroke-width="2.2"/>
+      <circle cx="124" cy="145.5" r="4.5" fill="#63E6BE"/>
+      <rect x="143" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+
+      <rect x="44" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="77" y="163" width="28" height="23" rx="6.5" fill="#B197FC" fill-opacity="0.26"/>
+      <rect x="81" y="177" width="20" height="5" rx="2.5" fill="#B197FC"/>
+      <rect x="110" y="163" width="28" height="23" rx="6.5" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="114" y="177" width="20" height="5" rx="2.5" fill="#FF922B"/>
+    </g>
+
+    <rect x="31" y="35" width="154" height="160" rx="29" fill="none" stroke="url(#d-prism)" stroke-width="1.4"/>
+    <rect x="30" y="34" width="156" height="162" rx="30" fill="none" stroke="url(#d-rim)" stroke-width="1.8"/>
+  </g>
+
+  <!-- 右下プリズムガラス球 + 純白ゴミ袋（緑系持ち手・108%拡大） -->
+  <g filter="url(#d-drop)">
+    <circle cx="172" cy="166" r="46" fill="url(#d-orb)"/>
+    <g clip-path="url(#d-orb-clip)">
+      <ellipse cx="153" cy="136" rx="27" ry="12" fill="#FFFFFF" opacity="0.28" transform="rotate(-28 153 136)"/>
+      <ellipse cx="191" cy="196" rx="26" ry="10" fill="#72EFDD" opacity="0.32" transform="rotate(-25 191 196)"/>
+    </g>
+    <circle cx="172" cy="166" r="44.5" fill="none" stroke="url(#d-prism)" stroke-width="1.8"/>
+    <circle cx="172" cy="166" r="46" fill="none" stroke="url(#d-rim)" stroke-width="2.0"/>
+
+    <g filter="url(#d-bag-drop)" transform="translate(172, 167) scale(1.08) translate(-174, -168)">
+      <path d="M174,142 C166.5,135 158.5,134 155.5,138.5 C157.5,142.5 165,145.5 174,146.5 Z" fill="#FFFFFF"/>
+      <path d="M174,142 C181.5,135 189.5,134 192.5,138.5 C190.5,142.5 183,145.5 174,146.5 Z" fill="#B2F2BB"/>
+      <path d="M163.5,147.5 C152,151.5 145,161 143,173.5 C141.5,182.5 144.5,190.5 152.5,193.5 C161,196 187,196 195.5,193.5 C203.5,190.5 206.5,182.5 205,173.5 C203,161 196,151.5 184.5,147.5 Z" fill="#FFFFFF"/>
+      <path d="M159,159 C155.5,166.5 156,176 159.5,182" fill="none" stroke="#9EE6C4" stroke-width="2.8" stroke-linecap="round" opacity="0.82"/>
+      <rect x="166.5" y="142.8" width="15" height="7.4" rx="3.7" fill="#12B886"/>
+    </g>
+  </g>
+</svg>
+"""
+
+// 2. Tinted / Clear (Liquid Glass) バリアント SVG（透過背景＋グレースケール濃淡マスク）
+let tintedSVG = """
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- カレンダーカードと右下ガラス球が重なって濁らないよう球体領域をくり抜くマスク -->
+    <mask id="card-cutout-mask">
+      <rect width="240" height="240" fill="white"/>
+      <circle cx="172" cy="166" r="49" fill="black"/>
+    </mask>
+
+    <!-- ゴミ袋内部のシワと結束リング境界を抜いて単色ティントでも立体感を出すマスク -->
+    <mask id="bag-detail-mask">
+      <rect x="120" y="110" width="110" height="110" fill="white"/>
+      <path d="M159,159 C155.5,166.5 156,176 159.5,182" fill="none" stroke="black" stroke-width="3.2" stroke-linecap="round"/>
+      <rect x="165" y="141.6" width="18" height="9.8" rx="4.9" fill="black"/>
+    </mask>
+
+    <clipPath id="t-card-clip">
+      <rect x="30" y="34" width="156" height="162" rx="30"/>
+    </clipPath>
+  </defs>
+
+  <g mask="url(#card-cutout-mask)">
+    <!-- 傾いたセカンド・ガラスシート -->
+    <g transform="rotate(-5.5 110 115)">
+      <rect x="38" y="38" width="148" height="156" rx="29" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="1.6"/>
+    </g>
+
+    <!-- メインカレンダー・ガラス面 -->
+    <rect x="30" y="34" width="156" height="162" rx="30" fill="#FFFFFF" fill-opacity="0.28"/>
+
+    <g clip-path="url(#t-card-clip)">
+      <!-- ヘッダー帯 -->
+      <rect x="30" y="34" width="156" height="48" fill="#FFFFFF" fill-opacity="0.28"/>
+      <line x1="30" y1="82" x2="186" y2="82" stroke="#FFFFFF" stroke-opacity="0.65" stroke-width="1.4"/>
+
+      <circle cx="47" cy="48" r="3.8" fill="#FFFFFF" fill-opacity="0.45"/>
+      <circle cx="169" cy="48" r="3.8" fill="#FFFFFF" fill-opacity="0.45"/>
+
+      <!-- 「さいたま」ロゴ（最高輝度 100% 白） -->
+      <g fill="#FFFFFF">
+        \(saitamaPaths)
+      </g>
+
+      <!-- 7曜日ドット -->
+      <g transform="translate(46, 94)" fill="#FFFFFF" fill-opacity="0.65">
+        <circle cx="6" cy="0" r="2.8"/>
+        <circle cx="26" cy="0" r="2.4"/>
+        <circle cx="46" cy="0" r="2.4"/>
+        <circle cx="66" cy="0" r="2.4"/>
+        <circle cx="86" cy="0" r="2.4"/>
+        <circle cx="106" cy="0" r="2.4"/>
+        <circle cx="124" cy="0" r="2.8"/>
+      </g>
+
+      <!-- 4×3 月間セル（濃淡階層で収集日と選択日を区別） -->
+      <rect x="44" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+      <rect x="77" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
+      <rect x="81" y="119" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="110" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+      <rect x="143" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
+      <rect x="147" y="119" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+
+      <rect x="44" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
+      <rect x="48" y="148" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="77" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+      <rect x="110" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.32" stroke="#FFFFFF" stroke-width="2.4"/>
+      <circle cx="124" cy="145.5" r="4.5" fill="#FFFFFF"/>
+      <rect x="143" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+
+      <rect x="44" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+      <rect x="77" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
+      <rect x="81" y="177" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="110" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
+      <rect x="114" y="177" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+    </g>
+
+    <rect x="30" y="34" width="156" height="162" rx="30" fill="none" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="2.2"/>
+  </g>
+
+  <!-- 右下ガラス球 + 高コントラスト白ゴミ袋 -->
+  <circle cx="172" cy="166" r="46" fill="#FFFFFF" fill-opacity="0.30" stroke="#FFFFFF" stroke-opacity="0.90" stroke-width="2.4"/>
+  <ellipse cx="153" cy="136" rx="24" ry="10" fill="#FFFFFF" fill-opacity="0.22" transform="rotate(-28 153 136)"/>
+
+  <g transform="translate(172, 167) scale(1.08) translate(-174, -168)">
+    <g mask="url(#bag-detail-mask)">
+      <path d="M174,142 C166.5,135 158.5,134 155.5,138.5 C157.5,142.5 165,145.5 174,146.5 Z" fill="#FFFFFF"/>
+      <path d="M174,142 C181.5,135 189.5,134 192.5,138.5 C190.5,142.5 183,145.5 174,146.5 Z" fill="#FFFFFF" fill-opacity="0.76"/>
+      <path d="M163.5,147.5 C152,151.5 145,161 143,173.5 C141.5,182.5 144.5,190.5 152.5,193.5 C161,196 187,196 195.5,193.5 C203.5,190.5 206.5,182.5 205,173.5 C203,161 196,151.5 184.5,147.5 Z" fill="#FFFFFF"/>
+    </g>
+    <rect x="166.5" y="142.8" width="15" height="7.4" rx="3.7" fill="#FFFFFF" fill-opacity="0.88"/>
+  </g>
+</svg>
+"""
+
+Task { @MainActor in
+  do {
+    _ = NSApplication.shared
+    let rasterizer = AppearanceSVGRasterizer(canvasSize: 1024)
+
+    let darkCG = try await rasterizer.rasterizeTransparent(svgContent: darkSVG)
+    let darkURL = appIconDir.appendingPathComponent("Icon-App-Dark-1024x1024@1x.png")
+    try writeTransparentRGBAPNG(darkCG, size: 1024, to: darkURL)
+
+    let tintedCG = try await rasterizer.rasterizeTransparent(svgContent: tintedSVG)
+    let tintedURL = appIconDir.appendingPathComponent("Icon-App-Tinted-1024x1024@1x.png")
+    try writeTransparentRGBAPNG(tintedCG, size: 1024, to: tintedURL)
+
+    print("Generated Dark and Tinted icons in \(appIconDir.path)")
+    exit(0)
+  } catch {
+    fputs("Error: \(error)\n", stderr)
+    exit(1)
   }
-  ctx.restoreGState()
-
-  // 結び目の耳と中央の結び目をクリアな隙間付きで重ねる
-  for path in [el, er, knot] {
-    ctx.saveGState()
-    ctx.setBlendMode(.destinationOut)
-    ctx.addPath(path)
-    ctx.setStrokeColor(rgba(0, 0, 0, 1.0))
-    ctx.setLineWidth(3.0)
-    ctx.strokePath()
-    ctx.restoreGState()
-
-    ctx.addPath(path)
-    ctx.setFillColor(rgba(255, 255, 255, 1.0))
-    ctx.fillPath()
-  }
 }
 
-print("Generated Dark and Tinted icons in \(appIconDir.path)")
+RunLoop.main.run()
