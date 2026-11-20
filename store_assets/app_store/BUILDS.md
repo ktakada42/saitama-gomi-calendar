@@ -52,3 +52,4 @@ v1.1.1（ビルド23）の審査が通ったあと、ビルドしたコミット
 | 1.5.0+34 | 2026-11-18 00:09 | [`e5d4bee`](https://github.com/ktakada42/saitama-gomi-calendar/commit/e5d4beec5e66e8423e38d9016aad3b46c4d218d9) | clean | – | `715e526d-abf8-41cc-986f-23dd10d64728` |
 | 1.5.0+35 | 2026-11-18 10:27 | [`55bd5b3`](https://github.com/ktakada42/saitama-gomi-calendar/commit/55bd5b3c0003bbc2305d6a9842f6fa822c6362e6) | clean | – | `1a5b92df-f667-4af4-a3c5-af2bf9c8b6cb` |
 | 1.5.0+36 | 2026-11-19 08:52 | [`d66560c`](https://github.com/ktakada42/saitama-gomi-calendar/commit/d66560c75c5495b96230008a9eff4d5d2b48965e) | clean | – | `19099009-9960-45c0-b4d3-5e09fd607979` |
+| 1.5.1+37 | 2026-11-20 11:05 | [`324e3f9`](https://github.com/ktakada42/saitama-gomi-calendar/commit/324e3f91c199be1b2f5346a133fb05e2ca4da725) | clean | – | `eca6c803-b26d-4594-9a06-6b3d1afff3d5` |
