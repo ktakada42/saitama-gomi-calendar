@@ -154,40 +154,48 @@
         <path d="M138.39,55.41Q138.95,55.50 139.76,55.60Q140.57,55.70 141.41,55.75Q142.26,55.80 142.99,55.84Q143.73,55.87 144.15,55.87Q146.69,55.87 148.64,55.77Q150.59,55.68 152.19,55.53Q153.80,55.38 155.24,55.21L155.22,58.69Q153.95,58.84 152.76,58.94Q151.57,59.03 150.32,59.09Q149.07,59.16 147.56,59.18Q146.06,59.20 144.10,59.20Q143.46,59.20 142.42,59.17Q141.38,59.13 140.30,59.06Q139.22,58.98 138.44,58.89Z"/>
       </g>
 
-      <!-- 7曜日リズムドット（日〜土） -->
-      <g transform="translate(46, 94)">
-        <circle cx="6" cy="0" r="2.8" fill="#E05252"/>
-        <circle cx="26" cy="0" r="2.4" fill="#8C9B92"/>
-        <circle cx="46" cy="0" r="2.4" fill="#8C9B92"/>
-        <circle cx="66" cy="0" r="2.4" fill="#8C9B92"/>
-        <circle cx="86" cy="0" r="2.4" fill="#8C9B92"/>
-        <circle cx="106" cy="0" r="2.4" fill="#8C9B92"/>
-        <circle cx="124" cy="0" r="2.8" fill="#4263EB"/>
+      <!-- 平日5曜日ドット（月〜金） -->
+      <g>
+        <circle cx="54" cy="92.5" r="2.6" fill="#7A9084"/>
+        <circle cx="81" cy="92.5" r="2.6" fill="#7A9084"/>
+        <circle cx="108" cy="92.5" r="2.6" fill="#7A9084"/>
+        <circle cx="135" cy="92.5" r="2.6" fill="#7A9084"/>
+        <circle cx="162" cy="92.5" r="2.6" fill="#7A9084"/>
       </g>
 
-      <!-- 月間カレンダーセル格子（4×3 + 分別カラー + 選択セル） -->
+      <!-- 平日カレンダーセル格子（5列×3週・曜日ごとに縦一列で同色＆アンダーバー統一：月=もえる / 火=資源1 / 水=なし / 木=もえる / 金=もえない） -->
       <!-- 1週目 -->
-      <rect x="44" y="105" width="28" height="23" rx="6.5" fill="#DAE5DE" fill-opacity="0.88"/>
-      <rect x="77" y="105" width="28" height="23" rx="6.5" fill="#FADCD0"/>
-      <rect x="81" y="119" width="20" height="5" rx="2.5" fill="#D9480F"/>
-      <rect x="110" y="105" width="28" height="23" rx="6.5" fill="#DAE5DE" fill-opacity="0.88"/>
-      <rect x="143" y="105" width="28" height="23" rx="6.5" fill="#CEF2E5"/>
-      <rect x="147" y="119" width="20" height="5" rx="2.5" fill="#087F5B"/>
+      <rect x="43" y="102" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="46" y="115.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="70" y="102" width="22" height="22" rx="5.6" fill="#CEF2E5"/>
+      <rect x="73" y="115.6" width="16" height="4.4" rx="2.2" fill="#087F5B"/>
+      <rect x="97" y="102" width="22" height="22" rx="5.6" fill="#DAE5DE" fill-opacity="0.88"/>
+      <rect x="124" y="102" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="127" y="115.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="151" y="102" width="22" height="22" rx="5.6" fill="#DCE2FA"/>
+      <rect x="154" y="115.6" width="16" height="4.4" rx="2.2" fill="#364FC7"/>
 
       <!-- 2週目 -->
-      <rect x="44" y="134" width="28" height="23" rx="6.5" fill="#DCE2FA"/>
-      <rect x="48" y="148" width="20" height="5" rx="2.5" fill="#364FC7"/>
-      <rect x="77" y="134" width="28" height="23" rx="6.5" fill="#DAE5DE" fill-opacity="0.88"/>
-      <rect x="110" y="134" width="28" height="23" rx="6.5" fill="#DDF3E6" stroke="#2F7A4F" stroke-width="2.2"/>
-      <circle cx="124" cy="145.5" r="4.5" fill="#2F7A4F"/>
-      <rect x="143" y="134" width="28" height="23" rx="6.5" fill="#DAE5DE" fill-opacity="0.88"/>
+      <rect x="43" y="130" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="46" y="143.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="70" y="130" width="22" height="22" rx="5.6" fill="#CEF2E5"/>
+      <rect x="73" y="143.6" width="16" height="4.4" rx="2.2" fill="#087F5B"/>
+      <rect x="97" y="130" width="22" height="22" rx="5.6" fill="#DAE5DE" fill-opacity="0.88"/>
+      <rect x="124" y="130" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="127" y="143.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="151" y="130" width="22" height="22" rx="5.6" fill="#DCE2FA"/>
+      <rect x="154" y="143.6" width="16" height="4.4" rx="2.2" fill="#364FC7"/>
 
       <!-- 3週目 -->
-      <rect x="44" y="163" width="28" height="23" rx="6.5" fill="#DAE5DE" fill-opacity="0.88"/>
-      <rect x="77" y="163" width="28" height="23" rx="6.5" fill="#E7DFFC"/>
-      <rect x="81" y="177" width="20" height="5" rx="2.5" fill="#7048E8"/>
-      <rect x="110" y="163" width="28" height="23" rx="6.5" fill="#FADCD0"/>
-      <rect x="114" y="177" width="20" height="5" rx="2.5" fill="#D9480F"/>
+      <rect x="43" y="158" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="46" y="171.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="70" y="158" width="22" height="22" rx="5.6" fill="#CEF2E5"/>
+      <rect x="73" y="171.6" width="16" height="4.4" rx="2.2" fill="#087F5B"/>
+      <rect x="97" y="158" width="22" height="22" rx="5.6" fill="#DAE5DE" fill-opacity="0.88"/>
+      <rect x="124" y="158" width="22" height="22" rx="5.6" fill="#FADCD0"/>
+      <rect x="127" y="171.6" width="16" height="4.4" rx="2.2" fill="#D9480F"/>
+      <rect x="151" y="158" width="22" height="22" rx="5.6" fill="#DCE2FA"/>
+      <rect x="154" y="171.6" width="16" height="4.4" rx="2.2" fill="#364FC7"/>
 
       <!-- ガラス表面の斜めグレア -->
       <rect x="30" y="34" width="156" height="162" fill="url(#lg-sheen)"/>

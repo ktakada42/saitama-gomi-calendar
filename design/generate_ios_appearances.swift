@@ -205,37 +205,45 @@ let darkSVG = """
         \(saitamaPaths)
       </g>
 
-      <!-- 7曜日ドット -->
-      <g transform="translate(46, 94)">
-        <circle cx="6" cy="0" r="2.8" fill="#FF8787"/>
-        <circle cx="26" cy="0" r="2.4" fill="#7D9488"/>
-        <circle cx="46" cy="0" r="2.4" fill="#7D9488"/>
-        <circle cx="66" cy="0" r="2.4" fill="#7D9488"/>
-        <circle cx="86" cy="0" r="2.4" fill="#7D9488"/>
-        <circle cx="106" cy="0" r="2.4" fill="#7D9488"/>
-        <circle cx="124" cy="0" r="2.8" fill="#74C0FC"/>
+      <!-- 平日5曜日ドット -->
+      <g>
+        <circle cx="54" cy="92.5" r="2.6" fill="#88A094"/>
+        <circle cx="81" cy="92.5" r="2.6" fill="#88A094"/>
+        <circle cx="108" cy="92.5" r="2.6" fill="#88A094"/>
+        <circle cx="135" cy="92.5" r="2.6" fill="#88A094"/>
+        <circle cx="162" cy="92.5" r="2.6" fill="#88A094"/>
       </g>
 
-      <!-- ダークモード用 4×3 月間カレンダー格子（CategoryStyle.dark カラー連動） -->
-      <rect x="44" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
-      <rect x="77" y="105" width="28" height="23" rx="6.5" fill="#FF922B" fill-opacity="0.24"/>
-      <rect x="81" y="119" width="20" height="5" rx="2.5" fill="#FF922B"/>
-      <rect x="110" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
-      <rect x="143" y="105" width="28" height="23" rx="6.5" fill="#38D9A9" fill-opacity="0.24"/>
-      <rect x="147" y="119" width="20" height="5" rx="2.5" fill="#38D9A9"/>
+      <!-- ダークモード用 5列×3週 平日カレンダー格子（CategoryStyle.dark カラー連動・縦一列同色＆アンダーバー統一） -->
+      <rect x="43" y="102" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="46" y="115.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="70" y="102" width="22" height="22" rx="5.6" fill="#38D9A9" fill-opacity="0.24"/>
+      <rect x="73" y="115.6" width="16" height="4.4" rx="2.2" fill="#38D9A9"/>
+      <rect x="97" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="124" y="102" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="127" y="115.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="151" y="102" width="22" height="22" rx="5.6" fill="#748FFC" fill-opacity="0.26"/>
+      <rect x="154" y="115.6" width="16" height="4.4" rx="2.2" fill="#748FFC"/>
 
-      <rect x="44" y="134" width="28" height="23" rx="6.5" fill="#748FFC" fill-opacity="0.26"/>
-      <rect x="48" y="148" width="20" height="5" rx="2.5" fill="#748FFC"/>
-      <rect x="77" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
-      <rect x="110" y="134" width="28" height="23" rx="6.5" fill="#38D9A9" fill-opacity="0.22" stroke="#63E6BE" stroke-width="2.2"/>
-      <circle cx="124" cy="145.5" r="4.5" fill="#63E6BE"/>
-      <rect x="143" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="43" y="130" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="46" y="143.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="70" y="130" width="22" height="22" rx="5.6" fill="#38D9A9" fill-opacity="0.24"/>
+      <rect x="73" y="143.6" width="16" height="4.4" rx="2.2" fill="#38D9A9"/>
+      <rect x="97" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="124" y="130" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="127" y="143.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="151" y="130" width="22" height="22" rx="5.6" fill="#748FFC" fill-opacity="0.26"/>
+      <rect x="154" y="143.6" width="16" height="4.4" rx="2.2" fill="#748FFC"/>
 
-      <rect x="44" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.09"/>
-      <rect x="77" y="163" width="28" height="23" rx="6.5" fill="#B197FC" fill-opacity="0.26"/>
-      <rect x="81" y="177" width="20" height="5" rx="2.5" fill="#B197FC"/>
-      <rect x="110" y="163" width="28" height="23" rx="6.5" fill="#FF922B" fill-opacity="0.24"/>
-      <rect x="114" y="177" width="20" height="5" rx="2.5" fill="#FF922B"/>
+      <rect x="43" y="158" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="46" y="171.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="70" y="158" width="22" height="22" rx="5.6" fill="#38D9A9" fill-opacity="0.24"/>
+      <rect x="73" y="171.6" width="16" height="4.4" rx="2.2" fill="#38D9A9"/>
+      <rect x="97" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.09"/>
+      <rect x="124" y="158" width="22" height="22" rx="5.6" fill="#FF922B" fill-opacity="0.24"/>
+      <rect x="127" y="171.6" width="16" height="4.4" rx="2.2" fill="#FF922B"/>
+      <rect x="151" y="158" width="22" height="22" rx="5.6" fill="#748FFC" fill-opacity="0.26"/>
+      <rect x="154" y="171.6" width="16" height="4.4" rx="2.2" fill="#748FFC"/>
     </g>
 
     <rect x="31" y="35" width="154" height="160" rx="29" fill="none" stroke="url(#d-prism)" stroke-width="1.4"/>
@@ -307,37 +315,45 @@ let tintedSVG = """
         \(saitamaPaths)
       </g>
 
-      <!-- 7曜日ドット -->
-      <g transform="translate(46, 94)" fill="#FFFFFF" fill-opacity="0.65">
-        <circle cx="6" cy="0" r="2.8"/>
-        <circle cx="26" cy="0" r="2.4"/>
-        <circle cx="46" cy="0" r="2.4"/>
-        <circle cx="66" cy="0" r="2.4"/>
-        <circle cx="86" cy="0" r="2.4"/>
-        <circle cx="106" cy="0" r="2.4"/>
-        <circle cx="124" cy="0" r="2.8"/>
+      <!-- 平日5曜日ドット -->
+      <g fill="#FFFFFF" fill-opacity="0.65">
+        <circle cx="54" cy="92.5" r="2.6"/>
+        <circle cx="81" cy="92.5" r="2.6"/>
+        <circle cx="108" cy="92.5" r="2.6"/>
+        <circle cx="135" cy="92.5" r="2.6"/>
+        <circle cx="162" cy="92.5" r="2.6"/>
       </g>
 
-      <!-- 4×3 月間セル（濃淡階層で収集日と選択日を区別） -->
-      <rect x="44" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
-      <rect x="77" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
-      <rect x="81" y="119" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
-      <rect x="110" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
-      <rect x="143" y="105" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
-      <rect x="147" y="119" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+      <!-- 5列×3週 平日カレンダー格子（濃淡階層で収集日と非収集日を区別） -->
+      <rect x="43" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="46" y="115.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="70" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="73" y="115.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="97" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.12"/>
+      <rect x="124" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="127" y="115.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="151" y="102" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="154" y="115.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
 
-      <rect x="44" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
-      <rect x="48" y="148" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
-      <rect x="77" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
-      <rect x="110" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.32" stroke="#FFFFFF" stroke-width="2.4"/>
-      <circle cx="124" cy="145.5" r="4.5" fill="#FFFFFF"/>
-      <rect x="143" y="134" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
+      <rect x="43" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="46" y="143.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="70" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="73" y="143.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="97" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.12"/>
+      <rect x="124" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="127" y="143.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="151" y="130" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="154" y="143.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
 
-      <rect x="44" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.20"/>
-      <rect x="77" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
-      <rect x="81" y="177" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
-      <rect x="110" y="163" width="28" height="23" rx="6.5" fill="#FFFFFF" fill-opacity="0.44"/>
-      <rect x="114" y="177" width="20" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="43" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="46" y="171.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="70" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="73" y="171.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="97" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.12"/>
+      <rect x="124" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="127" y="171.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
+      <rect x="151" y="158" width="22" height="22" rx="5.6" fill="#FFFFFF" fill-opacity="0.40"/>
+      <rect x="154" y="171.6" width="16" height="4.4" rx="2.2" fill="#FFFFFF" fill-opacity="0.95"/>
     </g>
 
     <rect x="30" y="34" width="156" height="162" rx="30" fill="none" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="2.2"/>
