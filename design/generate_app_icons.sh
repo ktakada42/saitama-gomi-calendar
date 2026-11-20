@@ -2,11 +2,13 @@
 # design/app_icon_master.svg から iOS/Android のアプリアイコン一式を生成する。
 #
 # OSのマスク処理に合わせて、書き出すPNGは角丸なしの正方形フルブリード
-# （マスターSVG自体が角丸を持たない）。iOSのアイコンはアルファチャンネルを
-# 持たないことが要件（1024pxのマーケティング用アイコンは特に必須）なので、
-# 生成後にPillowでRGBへ変換しアルファを落とす。
+# （マスターSVG自体が角丸を持たない）。iOSの通常（Light）アイコンおよびAndroidの
+# ランチャーアイコンはアルファチャンネルを持たない 24-bit RGB PNG として書き出す
+# （1024pxのApp Store提出用アイコンはアルファ無しが必須要件）。
 #
-# 必要なもの: rsvg-convert（`brew install librsvg`）、Python3 + Pillow
+# macOS 標準の Swift（WebKit + CoreGraphics）だけで動作するため、外部ツールの
+# 追加インストールは不要。続けて design/generate_ios_appearances.swift を呼び出し、
+# iOS の Dark / Tinted（および Liquid Glass クリア表示）用バリアントも更新する。
 #
 # 使い方: bash design/generate_app_icons.sh
 set -euo pipefail
@@ -16,58 +18,154 @@ master="$repo_root/design/app_icon_master.svg"
 ios_dir="$repo_root/ios/Runner/Assets.xcassets/AppIcon.appiconset"
 android_res="$repo_root/android/app/src/main/res"
 
-command -v rsvg-convert >/dev/null || { echo "rsvg-convert が見つかりません。'brew install librsvg' を実行してください。" >&2; exit 1; }
+echo "== マスターSVGから Light (iOS) / Android アイコンを生成 =="
+swift - "$master" "$ios_dir" "$android_res" <<'SWIFTEOF'
+import AppKit
+import CoreGraphics
+import Foundation
+import ImageIO
+import UniformTypeIdentifiers
+import WebKit
 
-tmp=$(mktemp -d)
-trap 'rm -rf "$tmp"' EXIT
+@MainActor
+final class MasterSVGRasterizer: NSObject, WKNavigationDelegate {
+  private var webView: WKWebView!
+  private var continuation: CheckedContinuation<CGImage, Error>?
+  private let canvasSize: Int
 
-render() {
-  local size="$1" out="$2"
-  rsvg-convert -w "$size" -h "$size" "$master" -o "$tmp/$(basename "$out")"
+  init(canvasSize: Int) {
+    self.canvasSize = canvasSize
+    super.init()
+  }
+
+  func rasterize(svgContent: String) async throws -> CGImage {
+    let config = WKWebViewConfiguration()
+    webView = WKWebView(
+      frame: NSRect(x: 0, y: 0, width: canvasSize, height: canvasSize),
+      configuration: config
+    )
+    webView.setValue(false, forKey: "drawsBackground")
+    webView.navigationDelegate = self
+
+    let html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: \(canvasSize)px; height: \(canvasSize)px; overflow: hidden; background: #1E6444; }
+      svg { display: block; width: \(canvasSize)px; height: \(canvasSize)px; }
+    </style>
+    </head>
+    <body>\(svgContent)</body>
+    </html>
+    """
+
+    return try await withCheckedThrowingContinuation { cont in
+      self.continuation = cont
+      webView.loadHTMLString(html, baseURL: nil)
+    }
+  }
+
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+      let snap = WKSnapshotConfiguration()
+      snap.rect = CGRect(x: 0, y: 0, width: self.canvasSize, height: self.canvasSize)
+      snap.snapshotWidth = NSNumber(value: self.canvasSize)
+      webView.takeSnapshot(with: snap) { image, error in
+        if let error = error {
+          self.continuation?.resume(throwing: error)
+        } else if let image = image,
+                  let cg = image.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+          self.continuation?.resume(returning: cg)
+        } else {
+          self.continuation?.resume(throwing: NSError(domain: "MasterSVGRasterizer", code: -1))
+        }
+        self.continuation = nil
+      }
+    }
+  }
 }
 
-echo "== iOS =="
-# Xcode 15 以降の Single Size (1024x1024) 方式。各サイズはビルド時に actool が生成する。
-render 1024 "Icon-App-1024x1024@1x.png"
-echo "  Icon-App-1024x1024@1x.png (1024x1024)"
+func writeOpaqueRGBPNG(_ source: CGImage, size: Int, to url: URL) throws {
+  let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+  guard let ctx = CGContext(
+    data: nil,
+    width: size,
+    height: size,
+    bitsPerComponent: 8,
+    bytesPerRow: size * 4,
+    space: colorSpace,
+    bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+  ) else {
+    fatalError("CGContext creation failed")
+  }
 
-echo "== Android =="
-declare -a android_map=(
-  "48:mipmap-mdpi"
-  "72:mipmap-hdpi"
-  "96:mipmap-xhdpi"
-  "144:mipmap-xxhdpi"
-  "192:mipmap-xxxhdpi"
-)
-for entry in "${android_map[@]}"; do
-  size="${entry%%:*}"
-  dir="${entry#*:}"
-  render "$size" "ic_launcher_${dir}.png"
-  echo "  $dir/ic_launcher.png (${size}x${size})"
-done
+  ctx.interpolationQuality = .high
+  ctx.draw(source, in: CGRect(x: 0, y: 0, width: size, height: size))
 
-echo "== アルファチャンネルを落として配置 =="
-python3 - "$tmp" "$ios_dir" "$android_res" <<'PYEOF'
-import sys
-from pathlib import Path
-from PIL import Image
+  guard let opaqueCG = ctx.makeImage() else {
+    fatalError("makeImage failed")
+  }
 
-tmp, ios_dir, android_res = (Path(p) for p in sys.argv[1:4])
+  try FileManager.default.createDirectory(
+    at: url.deletingLastPathComponent(),
+    withIntermediateDirectories: true
+  )
 
-ios_names = ["Icon-App-1024x1024@1x.png"]
-for name in ios_names:
-    im = Image.open(tmp / name).convert("RGB")
-    im.save(ios_dir / name)
+  guard let dest = CGImageDestinationCreateWithURL(
+    url as CFURL,
+    UTType.png.identifier as CFString,
+    1,
+    nil
+  ) else {
+    fatalError("CGImageDestination creation failed")
+  }
+  CGImageDestinationAddImage(dest, opaqueCG, nil)
+  guard CGImageDestinationFinalize(dest) else {
+    fatalError("PNG finalize failed")
+  }
+}
 
-android_dirs = ["mipmap-mdpi", "mipmap-hdpi", "mipmap-xhdpi", "mipmap-xxhdpi", "mipmap-xxxhdpi"]
-for d in android_dirs:
-    im = Image.open(tmp / f"ic_launcher_{d}.png").convert("RGB")
-    out_dir = android_res / d
-    out_dir.mkdir(parents=True, exist_ok=True)
-    im.save(out_dir / "ic_launcher.png")
+let args = CommandLine.arguments
+let masterURL = URL(fileURLWithPath: args[1])
+let iosDir = URL(fileURLWithPath: args[2])
+let androidRes = URL(fileURLWithPath: args[3])
 
-print("done")
-PYEOF
+let svgContent = try String(contentsOf: masterURL, encoding: .utf8)
+
+Task { @MainActor in
+  do {
+    _ = NSApplication.shared
+    let rasterizer = MasterSVGRasterizer(canvasSize: 1024)
+    let hiRes = try await rasterizer.rasterize(svgContent: svgContent)
+
+    let iosOut = iosDir.appendingPathComponent("Icon-App-1024x1024@1x.png")
+    try writeOpaqueRGBPNG(hiRes, size: 1024, to: iosOut)
+    print("  iOS: Icon-App-1024x1024@1x.png (1024x1024, RGB)")
+
+    let androidTargets: [(Int, String)] = [
+      (48, "mipmap-mdpi"),
+      (72, "mipmap-hdpi"),
+      (96, "mipmap-xhdpi"),
+      (144, "mipmap-xxhdpi"),
+      (192, "mipmap-xxxhdpi"),
+    ]
+    for (px, dir) in androidTargets {
+      let out = androidRes.appendingPathComponent(dir).appendingPathComponent("ic_launcher.png")
+      try writeOpaqueRGBPNG(hiRes, size: px, to: out)
+      print("  Android: \(dir)/ic_launcher.png (\(px)x\(px), RGB)")
+    }
+    exit(0)
+  } catch {
+    fputs("Error: \(error)\n", stderr)
+    exit(1)
+  }
+}
+
+RunLoop.main.run()
+SWIFTEOF
 
 echo "== iOS Dark / Tinted バリアントを生成 =="
 swift "$repo_root/design/generate_ios_appearances.swift"

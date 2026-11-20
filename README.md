@@ -120,10 +120,12 @@ test/           domain層の単体テストと画面のウィジェットテス�
 
 ### アプリアイコン
 
-`design/app_icon_master.svg`（縛ったゴミ袋、120×120のシンプルなベクター）が唯一の原本。
-`bash design/generate_app_icons.sh`でiOS/Android向けの全サイズPNG（iOSはアルファチャンネル
-無しのRGB）を書き出し、`ios/`・`android/`配下に配置し直せる。デザインを直すときは
-マスターSVGを編集してこのスクリプトを再実行する。
+`design/app_icon_master.svg`（「さいたま」ヘッダーの月間カレンダーとゴミ袋バッジを重ねた
+Liquid Glass 調ベクター、240×240）が原本。`bash design/generate_app_icons.sh` で
+iOS 通常用（1024×1024・アルファ無しのRGB）、iOS Dark / Tinted 用（1024×1024・透過RGBA、
+`design/generate_ios_appearances.swift` 経由）、および Android 向けの全サイズPNGを書き出し、
+`ios/`・`android/` 配下に配置し直せる。macOS 標準の Swift（WebKit + CoreGraphics）だけで
+動くため追加ツールのインストールは不要。
 
 ## セットアップ
 
