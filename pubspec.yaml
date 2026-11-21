@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   # Flutter 3.50 でコア SDK から分離された Material / Cupertino ウィジェット群。
-  material_ui: ^1.11.0
+  material_ui: ^1.11.1
   cupertino_ui: ^1.1.7
   cupertino_icons: ^2.0.0
   # 状態管理。TenpAI と揃えて Riverpod を使う。
