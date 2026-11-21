@@ -116,12 +116,12 @@
   </g>
 
   <!-- 2. 背面に傾いたセカンド・ガラスシート -->
-  <g transform="rotate(-5.5 110 115)">
+  <g transform="translate(12 5) rotate(-5.5 110 115)">
     <rect x="38" y="38" width="148" height="156" rx="29" fill="#FFFFFF" fill-opacity="0.16" stroke="url(#lg-rim-spec)" stroke-width="1.6"/>
   </g>
 
   <!-- 3. メインのフロストガラス月間カレンダー -->
-  <g filter="url(#glass-drop)">
+  <g transform="translate(12 5)" filter="url(#glass-drop)">
     <rect x="30" y="34" width="156" height="162" rx="30" fill="url(#card-glass)"/>
 
     <g clip-path="url(#card-clip)">
@@ -207,7 +207,7 @@
   </g>
 
   <!-- 4. 右下クリアプリズムガラス球 + 純白ゴミ袋（緑系持ち手・108%拡大版 Final-3） -->
-  <g filter="url(#badge-drop)">
+  <g transform="translate(10 16)" filter="url(#badge-drop)">
     <circle cx="172" cy="166" r="46" fill="url(#orb-grad)"/>
 
     <!-- ガラス球越しに屈折して透けるカレンダー角と反射ハイライト -->
