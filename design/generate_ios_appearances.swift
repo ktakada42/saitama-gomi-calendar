@@ -182,12 +182,12 @@ let darkSVG = """
   </defs>
 
   <!-- 背面に傾いたセカンド・ダークガラスシート -->
-  <g transform="rotate(-5.5 110 115)">
+  <g transform="translate(12 5) rotate(-5.5 110 115)">
     <rect x="38" y="38" width="148" height="156" rx="29" fill="#2A4438" fill-opacity="0.42" stroke="url(#d-rim)" stroke-width="1.5"/>
   </g>
 
   <!-- メインのダークフロスト・カレンダーカード -->
-  <g filter="url(#d-drop)">
+  <g transform="translate(12 5)" filter="url(#d-drop)">
     <rect x="30" y="34" width="156" height="162" rx="30" fill="url(#d-card)"/>
 
     <g clip-path="url(#d-card-clip)">
@@ -251,7 +251,7 @@ let darkSVG = """
   </g>
 
   <!-- 右下プリズムガラス球 + 純白ゴミ袋（緑系持ち手・108%拡大） -->
-  <g filter="url(#d-drop)">
+  <g transform="translate(10 16)" filter="url(#d-drop)">
     <circle cx="172" cy="166" r="46" fill="url(#d-orb)"/>
     <g clip-path="url(#d-orb-clip)">
       <ellipse cx="153" cy="136" rx="27" ry="12" fill="#FFFFFF" opacity="0.28" transform="rotate(-28 153 136)"/>
@@ -278,7 +278,7 @@ let tintedSVG = """
     <!-- カレンダーカードと右下ガラス球が重なって濁らないよう球体領域をくり抜くマスク -->
     <mask id="card-cutout-mask">
       <rect width="240" height="240" fill="white"/>
-      <circle cx="172" cy="166" r="49" fill="black"/>
+      <circle cx="170" cy="177" r="49" fill="black"/>
     </mask>
 
     <!-- ゴミ袋内部のシワと結束リング境界を抜いて単色ティントでも立体感を出すマスク -->
@@ -293,7 +293,7 @@ let tintedSVG = """
     </clipPath>
   </defs>
 
-  <g mask="url(#card-cutout-mask)">
+  <g transform="translate(12 5)" mask="url(#card-cutout-mask)">
     <!-- 傾いたセカンド・ガラスシート -->
     <g transform="rotate(-5.5 110 115)">
       <rect x="38" y="38" width="148" height="156" rx="29" fill="#FFFFFF" fill-opacity="0.16" stroke="#FFFFFF" stroke-opacity="0.38" stroke-width="1.6"/>
@@ -360,16 +360,18 @@ let tintedSVG = """
   </g>
 
   <!-- 右下ガラス球 + 高コントラスト白ゴミ袋 -->
-  <circle cx="172" cy="166" r="46" fill="#FFFFFF" fill-opacity="0.30" stroke="#FFFFFF" stroke-opacity="0.90" stroke-width="2.4"/>
-  <ellipse cx="153" cy="136" rx="24" ry="10" fill="#FFFFFF" fill-opacity="0.22" transform="rotate(-28 153 136)"/>
+  <g transform="translate(10 16)">
+    <circle cx="172" cy="166" r="46" fill="#FFFFFF" fill-opacity="0.30" stroke="#FFFFFF" stroke-opacity="0.90" stroke-width="2.4"/>
+    <ellipse cx="153" cy="136" rx="24" ry="10" fill="#FFFFFF" fill-opacity="0.22" transform="rotate(-28 153 136)"/>
 
-  <g transform="translate(172, 167) scale(1.08) translate(-174, -168)">
-    <g mask="url(#bag-detail-mask)">
-      <path d="M174,142 C166.5,135 158.5,134 155.5,138.5 C157.5,142.5 165,145.5 174,146.5 Z" fill="#FFFFFF"/>
-      <path d="M174,142 C181.5,135 189.5,134 192.5,138.5 C190.5,142.5 183,145.5 174,146.5 Z" fill="#FFFFFF" fill-opacity="0.76"/>
-      <path d="M163.5,147.5 C152,151.5 145,161 143,173.5 C141.5,182.5 144.5,190.5 152.5,193.5 C161,196 187,196 195.5,193.5 C203.5,190.5 206.5,182.5 205,173.5 C203,161 196,151.5 184.5,147.5 Z" fill="#FFFFFF"/>
+    <g transform="translate(172, 167) scale(1.08) translate(-174, -168)">
+      <g mask="url(#bag-detail-mask)">
+        <path d="M174,142 C166.5,135 158.5,134 155.5,138.5 C157.5,142.5 165,145.5 174,146.5 Z" fill="#FFFFFF"/>
+        <path d="M174,142 C181.5,135 189.5,134 192.5,138.5 C190.5,142.5 183,145.5 174,146.5 Z" fill="#FFFFFF" fill-opacity="0.76"/>
+        <path d="M163.5,147.5 C152,151.5 145,161 143,173.5 C141.5,182.5 144.5,190.5 152.5,193.5 C161,196 187,196 195.5,193.5 C203.5,190.5 206.5,182.5 205,173.5 C203,161 196,151.5 184.5,147.5 Z" fill="#FFFFFF"/>
+      </g>
+      <rect x="166.5" y="142.8" width="15" height="7.4" rx="3.7" fill="#FFFFFF" fill-opacity="0.88"/>
     </g>
-    <rect x="166.5" y="142.8" width="15" height="7.4" rx="3.7" fill="#FFFFFF" fill-opacity="0.88"/>
   </g>
 </svg>
 """
