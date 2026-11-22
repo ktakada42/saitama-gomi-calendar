@@ -122,10 +122,10 @@ class _Body extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 5, right: 8),
+                  padding: const EdgeInsets.only(top: 6, right: 8),
                   child: Icon(
-                    Icons.remove,
-                    size: 14,
+                    Icons.circle,
+                    size: 5,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
