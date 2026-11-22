@@ -145,52 +145,50 @@ class _MyWardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Material(
         color: theme.colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.place_outlined,
-                size: 18,
-                color: theme.colorScheme.onPrimaryContainer,
+              Row(
+                children: [
+                  Icon(
+                    Icons.place_outlined,
+                    size: 18,
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${places.ward}の設置場所',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 6),
+              const SizedBox(height: 6),
+              for (final name in places.names)
+                _PlaceTile(
+                  ward: places.ward,
+                  name: name,
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
+              const SizedBox(height: 6),
               Text(
-                '${places.ward}の設置場所',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                hours,
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          for (final name in places.names)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text(
-                keepParenthesesTogether(name),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ),
-          const SizedBox(height: 6),
-          Text(
-            hours,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -293,25 +291,70 @@ class _WardTile extends StatelessWidget {
     return Theme(
       data: theme.copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16),
         title: Text(places.ward, style: theme.textTheme.bodyMedium),
         subtitle: Text(
           '${places.names.length}か所',
           style: theme.textTheme.bodySmall,
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final name in places.names)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text(
-                keepParenthesesTogether(name),
-                style: theme.textTheme.bodySmall,
-              ),
-            ),
+            _PlaceTile(ward: places.ward, name: name),
         ],
       ),
     );
+  }
+}
+
+class _PlaceTile extends StatelessWidget {
+  const _PlaceTile({required this.ward, required this.name, this.color});
+
+  final String ward;
+  final String name;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      minTileHeight: 48,
+      textColor: color,
+      iconColor: color,
+      titleTextStyle: Theme.of(context).textTheme.bodyMedium,
+      title: Text(keepParenthesesTogether(name)),
+      trailing: const Icon(
+        Icons.map_outlined,
+        size: 18,
+        semanticLabel: '地図で開く',
+      ),
+      onTap: () => _openMap(context),
+    );
+  }
+
+  Future<void> _openMap(BuildContext context) async {
+    final facility = name.replaceFirst('（民間）', '');
+    final query = 'さいたま市$ward $facility';
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      final appleMaps = Uri.parse('maps://?q=${Uri.encodeComponent(query)}');
+      if (await launchUrl(appleMaps, mode: LaunchMode.externalApplication)) {
+        return;
+      }
+    }
+
+    final googleMaps = Uri.https('www.google.com', '/maps/search/', {
+      'api': '1',
+      'query': query,
+    });
+    final opened = await launchUrl(
+      googleMaps,
+      mode: LaunchMode.externalApplication,
+    );
+    if (opened || !context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('地図を開けませんでした。')));
   }
 }
 

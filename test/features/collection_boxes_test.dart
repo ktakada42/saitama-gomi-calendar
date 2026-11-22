@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saitama_gomi/features/dictionary/collection_boxes_page.dart';
 
@@ -18,12 +19,70 @@ void main() {
 
     testWidgets('自分の区は、下の一覧には出さない', (tester) async {
       await pumpApp(tester, const CollectionBoxesPage());
-      await tester.pumpAndSettle();
 
       // 上に出したものを下でも繰り返すと、探しているものが2度出る。
-      expect(find.text('ほかの区の設置場所'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('ほかの区の設置場所'), 200);
+      await tester.scrollUntilVisible(find.text('岩槻区'), 200);
       expect(find.text('浦和区'), findsNothing);
     });
+
+    testWidgets('自分の区とほかの区の設置場所からマップを開ける', (tester) async {
+      final launches = <Uri>[];
+      _mockMapLaunches(tester, launches, succeeds: (_) => true);
+      await pumpApp(tester, const CollectionBoxesPage());
+
+      await tester.tap(find.text('浦和区役所'));
+      await tester.pumpAndSettle();
+
+      final ward = find.text('西区');
+      await tester.scrollUntilVisible(ward, 200);
+      await tester.tap(ward);
+      await tester.pumpAndSettle();
+
+      final place = find.text('西区役所');
+      expect(tester.getTopLeft(place).dx, tester.getTopLeft(ward).dx);
+      expect(
+        tester.getTopLeft(find.text('馬宮コミュニティセンター')).dx,
+        tester.getTopLeft(ward).dx,
+      );
+      await tester.ensureVisible(place);
+      await tester.tap(place);
+      await tester.pumpAndSettle();
+
+      expect(launches.map((url) => url.scheme), ['maps', 'maps']);
+      expect(launches.map((url) => url.queryParameters['q']), [
+        'さいたま市浦和区 浦和区役所',
+        'さいたま市西区 西区役所',
+      ]);
+    }, variant: const TargetPlatformVariant({TargetPlatform.iOS}));
+
+    testWidgets('Appleマップを開けないときはGoogleマップで施設名を検索する', (tester) async {
+      final launches = <Uri>[];
+      _mockMapLaunches(
+        tester,
+        launches,
+        succeeds: (url) => url.scheme == 'https',
+      );
+      await pumpApp(tester, const CollectionBoxesPage(), area: null);
+
+      final ward = find.text('北区');
+      await tester.scrollUntilVisible(ward, 200);
+      await tester.tap(ward);
+      await tester.pumpAndSettle();
+
+      final place = find.textContaining('東京ガスライフバル大宮 大宮店');
+      await tester.ensureVisible(place);
+      await tester.tap(place);
+      await tester.pumpAndSettle();
+
+      expect(launches.map((url) => url.scheme), ['maps', 'https']);
+      expect(launches.last.host, 'www.google.com');
+      expect(launches.last.path, '/maps/search/');
+      expect(launches.last.queryParameters, {
+        'api': '1',
+        'query': 'さいたま市北区 東京ガスライフバル大宮 大宮店',
+      });
+    }, variant: const TargetPlatformVariant({TargetPlatform.iOS}));
 
     testWidgets('地区を設定していなければ、全区を並べる', (tester) async {
       await pumpApp(tester, const CollectionBoxesPage(), area: null);
@@ -86,4 +145,21 @@ void main() {
       expect(find.textContaining('P12'), findsOneWidget);
     });
   });
+}
+
+void _mockMapLaunches(
+  WidgetTester tester,
+  List<Uri> launches, {
+  required bool Function(Uri) succeeds,
+}) {
+  const channel = MethodChannel('plugins.flutter.io/url_launcher');
+  final messenger = tester.binding.defaultBinaryMessenger;
+  messenger.setMockMethodCallHandler(channel, (call) async {
+    expect(call.method, 'launch');
+    expect(call.arguments['useWebView'], isFalse);
+    final url = Uri.parse(call.arguments['url'] as String);
+    launches.add(url);
+    return succeeds(url);
+  });
+  addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
 }
